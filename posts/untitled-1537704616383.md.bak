@@ -1,0 +1,280 @@
+---
+title: 欺骗GPS--破解校园运动APP
+tags: []
+categories: []
+date: 2018-09-23 20:10:16
+---
+
+> 科技发展的终极动力：懒
+
+### 0x01 想法
+
+先Google一下手机app定位怎么实现的
+* GPS定位：通过卫星定位，精度高耗电也高定位速度慢。但是需要搜索到三颗星以上才可以定位，室内的大多无法使用。
+* 网络定位：多指wifi／宽带ip定位，其实也包括移动网络也就是第三点。
+* 基站定位：通过运营商的基站三角定位，定位精度低功耗低。
+* 混合定位：结合上面多种方式，AGPS定位。
+* 第三方SDK: 百度地图／高德地图／谷歌地图，本质上还是使用上面4种方式。
+* 通常位置信息权重排序 ：GPS > WIFI > 基站 ，实际上还和信号强度，以及软件算法等多种因素有关。
+
+<!--more-->
+
+结合平时经验，应该是这么一回事
+* 室内：WIFI定位：通过手机扫描到的WIFI热点确定位置
+* 室外：主要通过GPS和基站定位
+* 定位精度：WIFI>GPS>基站
+
+### 0x02 收集信息
+
+##### WIFI定位
+
+Google一下有关资料
+> wifi实时定位是利用现有的无线网络，配合WIFI标签和相关的移动终端设备比如WIFI手机，PDA，笔记本电脑等，再结合相应的定位算法，来确定相关人员和物品位置的一种新技术。
+
+就是提供商收集WIFI热点的物理位置，客户端结合自己扫到的WIFI信号强度和提供商的数据，确定自己的位置
+
+欺骗方法
+1. 硬件层面：HackRF伪造信号
+![](https://naivekun.com/images/1537705949819.png)
+拉倒吧。。。买不起
+2. 软件层面：WIFI定位算法由应用程序实现，应用程序仅仅从操作系统获取WIFI列表，使用以下API，伪造难度大。
+
+```
+<!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+<!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+```
+
+##### 基站定位
+
+> 基站定位一般应用于手机用户，手机基站定位服务又叫做移动位置服务（LBS——Location Based Service），它是通过电信移动运营商的网络（如GSM网）获取移动终端用户的位置信息（经纬度坐标），在电子地图平台的支持下，为用户提供相应服务的一种增值业务。
+
+再查查，基站定位数据由这几部分组成
+> 
+运营商 
+MCC,MNC,区域代码,基站代码 
+纬度,经度 (坐标系) 
+
+使用这些API
+```
+<!--用于进行网络定位-->
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+<!--用于获取运营商信息，用于支持提供运营商信息相关的接口-->
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+<!--用于访问网络，网络定位需要上网-->
+<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+<!--用于读取手机当前的状态-->
+<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+```
+
+欺骗方法
+1. 硬件层面：HackRF
+再见
+2. 软件层面：该方法直接由操作系统返回位置信息，可以使用Xposed Hook操作系统API 
+
+##### GPS定位
+
+这个没啥说的
+```
+<!--用于访问GPS定位-->
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+```
+欺骗方法同基站定位
+
+### 0x03 思路
+
+首先想到adb
+网上查到了这个`geo fix <经度> <纬度>`
+但是只能虚拟机用。。。放弃
+
+HackRF买不起
+只能考虑从Xposed入手了
+
+Java -> 不会
+安卓 -> 只会开关机
+Xposed -> 只会安装和卸载
+
+这咋整。。。
+**用别人的轮子!!!**
+接下来从Github上找一找资源。
+都是安卓源码？？那，搭个开发环境吧
+。。。一上午过去了
+
+一开始使用这个东西->[传送门](https://github.com/spezifisch/ThreeStepsAhead)
+这个可以Hook基站定位和GPS定位。
+经过实地测试，在有GPS的地方可以很好的伪装位置，但是在室内等无GPS信号的地方，运动APP认为定位不准，不计入运动量；而且必须用手操作屏幕上的摇杆。
+什么？还要到室外，不行。。。
+
+整理一下思路：
+WIFI定位：WIFI关了就行，解决了
+基站定位：不想要，但在室内目前无解
+GPS：伪造手段复杂，难以自动化操作，必须手动拉屏幕上的摇杆
+
+我们注意一个细节：
+前文提到，GPS优先级>基站定位，也就是说如果应用程序得到了GPS已经定位的消息，就很有可能忽略基站定位的位置数据。
+所以从这里突破：Hook操作系统返回GPS状态的函数！
+
+什么都不会。。。所以。。。接着找轮子
+发现了这个东西：[lataclysm](http://repo.xposed.info/module/com.cataclysm.i)
+
+### 0x04 解决问题
+
+`lataclysm`帮助文件摘取几段：
+> 想只靠GPS而基站乱填的最好还是打开GPS于窗边/室外 或 GPS状态&卫星数据打勾。 
+可以用JuiceSSH(命令行/ADB), Qpython, Automate或Tasker发送广播改变位置 
+
+完全满足需求！
+我们只用它的GPS伪造功能
+> 保存的位置格式：纬度,经度,偏移,区域代码,基站代码,备注。半角逗号分隔。GPS位置会随机偏移，设置的偏移是上限(单位：米，方向随机)。区域代码不是行政区划代码，是基站信息的一部分。
+
+现在缺基站信息
+> 基站信息可以去http://opencellid.org 或者http://www.cellocation.com/recell.html (仅国内)找。如果你不想查也没关系，大部分支持GPS定位的就直接随便写吧，要求打开GPS开关 于窗边/室外 或 GPS状态&卫星数据打勾。
+
+![](https://naivekun.com/images/1537713780303.png)
+解决了
+再看一下怎么使用ADB控制
+```
+am broadcast -a lataclysm 
+附加 
+-e task 1 (1-3,指定更改某任务组,不指定则更改选择位置00的那组任务) 
+-e loc 10.1,12,1,123,456789,note 
+-e latlng 10.1566,59.9655 
+-e lat 10.1566 
+-e lng 59.9655 
+-e ssid MyWifi (Wifi名) 
+-e bssid 00:11:22:33:44:55 (路由器MAC) 
+-e speed 0.96 (速度,m/s，小于0不伪装) 
+-e altitude 90 (海拔,m，小于0不伪装) 
+-e bearing 90 (方位，度，小于0不伪装) 
+-e accuracy 1 (精度，m，小于0不伪装) 
+-e lac (区域代码/网络代码) 
+-e cid (基站号) 
+-e sid (系统号) 
+```
+神器啊！
+我们需要`-e loc`设定位置，`-e speed`设定速度，`-e bearing`设定方向。
+其中`-e loc`的参数如上文
+> 保存的位置格式：纬度,经度,偏移,区域代码,基站代码,备注。半角逗号分隔。
+
+现在可以通过ADB控制位置了
+我们需要把这个过程自动化起来
+
+考虑两个东西：路线数据来源，控制过程
+
+##### 数据来源
+Google Earth即可，打好路径点导出.kmz格式数据
+![](https://naivekun.com/images/1537716022815.png)
+Google一下，直接把这个kmz文件解压缩，得到kml文件
+用记事本打开，发现数据是个xml，在`<coordinates>`标签之间夹着每个路径点的三个数据：经度，纬度，高度。每组数据由空格分隔
+
+##### 自动化控制
+
+Python大法好
+
+读取路径点，通过计算每两个路径点的距离，除以可控范围的随机速度，得到延迟时间。
+这里有一个问题，打路径点时如果两点距离很长，会导致延迟很久，软件会判断你已经停了
+可以这样解决：对每一段路径二分，直到其长度小于程序第14行设定的`max_length`
+然后再伪造位置
+
+```
+import math
+import os
+import time
+import random
+from geographiclib.geodesic import Geodesic
+
+adb_path="D:\\杂软件\\adb"
+route_data_path="D:\\Code\\Python_study\\Project_LAZY\\route.txt"  #路径点数据，<coordinates>标签之间的内容
+command_str_loc="adb shell am broadcast -a lataclysm -e loc " #改位置命令
+command_str_velocity="adb shell am broadcast -a lataclysm -e speed " #改速度命令
+command_str_bear="adb shell am broadcast -a lataclysm -e bearing " #改方向命令
+velocity_base=4
+velocity_offset=1 #这两个用来随机速度，计算方式为base速度加减随机值，该值最大为offset
+max_length=5 #单个路径最大长度，防止软件判断你在瞬移，单位：米
+
+def get_random_velocity():
+    r1=random.random()
+    d1=[1,-1]
+    return velocity_base+r1*velocity_offset*d1[random.randint(0,1)]
+
+def calcDistance(Lat_A, Lng_A, Lat_B, Lng_B): #计算两个点的长度，lat 纬度, lng 经度
+    ra = 6378.140  # 赤道半径 (km)
+    rb = 6356.755  # 极半径 (km)
+    flatten = (ra - rb) / ra  # 地球扁率
+    rad_lat_A = math.radians(Lat_A)
+    rad_lng_A = math.radians(Lng_A)
+    rad_lat_B = math.radians(Lat_B)
+    rad_lng_B = math.radians(Lng_B)
+    pA = math.atan(rb / ra * math.tan(rad_lat_A))
+    pB = math.atan(rb / ra * math.tan(rad_lat_B))
+    xx = math.acos(math.sin(pA) * math.sin(pB) + math.cos(pA) * math.cos(pB) * math.cos(rad_lng_A - rad_lng_B))
+    c1 = (math.sin(xx) - xx) * (math.sin(pA) + math.sin(pB)) ** 2 / math.cos(xx / 2) ** 2
+    c2 = (math.sin(xx) + xx) * (math.sin(pA) - math.sin(pB)) ** 2 / math.sin(xx / 2) ** 2
+    dr = flatten / 8 * (c1 - c2)
+    distance = ra * (xx + dr)
+    return distance*1000 #单位 米
+
+def set_loc(lat,lng):
+    cmd=command_str_loc+str(lat)+","+str(lng)+",1,57621,143918309,note"
+    os.system(cmd)
+
+<为了您的身体健康，此处隐去三个函数>
+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
+cpPW6DJI1iprAWJoeD8vSA==
+        
+
+if __name__=="__main__":
+    main()
+```
+### 0x05 成果
+手机打开ADB，插电脑上。
+手机装好Xposed和lataclysm
+运行我的py脚本（缺的库自行安装）
+
+注意先打开运动软件，再启动脚本，然后进入软件点开始运动，最后在Console里输入Y即可。
+这样是为了防止你设定的起点和你的真实位置之间发生瞬移
+
+效果图（人和设备在寝室里）：
+![](https://naivekun.com/images/1537715306941.png)
+![](https://naivekun.com/images/1537715338714.png)
+
+### 0x06 后记
+倒腾这个东西的目的，不是偷懒获得的快感，而是享受折腾的过程！
+该项目一天搞定！

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Naivekun&#39;s blog</title>
+    <link>https://naivekun.com/tags/</link>
+    <description>Recent content in Tags on Naivekun&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 14 Mar 2020 00:20:37 +0000</lastBuildDate>
+    
+        <atom:link href="https://naivekun.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>68块钱MA5671A猫棒刷Openwrt</title>
+      <link>https://naivekun.com/2021/12/ma5671a-flash-openwrt/</link>
+      <pubDate>Thu, 09 Dec 2021 02:46:52 +0800</pubDate>
+      
+      <guid>https://naivekun.com/2021/12/ma5671a-flash-openwrt/</guid>
+      <description>最近这玩意非常火，闲鱼只要68块钱 于是买回来自己折腾了一下 材料准备 MA5671A猫棒 3.3v串口板子 SFP座子 几根线 文件 -&amp;gt; 传送门 下载那个MA</description>
+    </item>
+    
+    <item>
+      <title>nRF51系列单片机读取保护绕过</title>
+      <link>https://naivekun.com/2020/10/hack-on-nrf/</link>
+      <pubDate>Sat, 03 Oct 2020 23:58:09 +0800</pubDate>
+      
+      <guid>https://naivekun.com/2020/10/hack-on-nrf/</guid>
+      <description>前一段有个灵车pm2.5检测器，淘宝只要12块钱。搜了下大概是个放口袋里用蓝牙和手机连接，检测PM2.5浓度的。 搜到了前几年的新闻 -&amp;gt; 传送门 然</description>
+    </item>
+    
+    <item>
+      <title>一次对服务器主板IPMI BMC的漏洞挖掘</title>
+      <link>https://naivekun.com/2020/08/hack-bmc/</link>
+      <pubDate>Wed, 19 Aug 2020 01:58:07 +0800</pubDate>
+      
+      <guid>https://naivekun.com/2020/08/hack-bmc/</guid>
+      <description>0x0 背景 前几天在某鱼捡了个便宜主板 查了下应该是广达的工包测试板，全新，完全没资料网上查不到 服务器主板一般会有一个管理芯片独立于整个主板，管理主</description>
+    </item>
+    
+    <item>
+      <title>TN3399板子填坑</title>
+      <link>https://naivekun.com/2020/07/tn3399-more/</link>
+      <pubDate>Thu, 23 Jul 2020 18:03:36 +0800</pubDate>
+      
+      <guid>https://naivekun.com/2020/07/tn3399-more/</guid>
+      <description>分区扩容 看好自己的root分区在哪个设备，sd卡一般是/dev/mmcblk1，emmc是/dev/mmcblk2，用别人的dtb不一定，可</description>
+    </item>
+    
+    <item>
+      <title>闲鱼便宜板子TN3399折腾全攻略</title>
+      <link>https://naivekun.com/2020/07/tn3399/</link>
+      <pubDate>Tue, 14 Jul 2020 16:51:10 +0800</pubDate>
+      
+      <guid>https://naivekun.com/2020/07/tn3399/</guid>
+      <description>前一段某鱼有人卖便宜板子TN3399 V3 部分图片来自恩山 部分配置如下 部件名称 芯片型号 备注说明 CPU rk3399 Dual-core Cortex-A72 up to 1.8GHz;Quad-core Cortex-A53 up to 1.4GHz;Mali-T864 GPU RAM K4B8G16 Dual-channel DDR3 1GB;板载 4 颗 Flash</description>
+    </item>
+    
+    <item>
+      <title>Hackthebox Book and ForwardSlash</title>
+      <link>https://naivekun.com/2020/07/htb-book-and-forward-slash/</link>
+      <pubDate>Mon, 13 Jul 2020 21:39:34 +0800</pubDate>
+      
+      <guid>https://naivekun.com/2020/07/htb-book-and-forward-slash/</guid>
+      <description>Book 扫端口，只有80和22 80是个。。。图书cms 注册登录进入后台 没注入上传没法绕xss打了没反应 有个admin 注意到一段js 搜一下，发现了这</description>
+    </item>
+    
+    <item>
+      <title>WHUCTF 2020 WriteUp</title>
+      <link>https://naivekun.com/2020/05/whuctf-2020-wp/</link>
+      <pubDate>Fri, 29 May 2020 20:36:11 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2020/05/whuctf-2020-wp/</guid>
+      <description>Crypto Bivibivi from pwn import * r=remote(&amp;quot;218.197.154.9&amp;quot;,16387) r.recvline() po = r.recvline() import re nums_str = re.findall(&amp;quot;\d+&amp;quot;,po) nums=[] for i in nums_str: nums.append(int(i)) ans=0 for i in range(10000): if (i*nums[0]+nums[1] )%nums[3] == nums[2]%nums[3]: ans=i break r.recvuntil(&amp;quot;x :&amp;quot;) r.sendline(str(ans)) r.recvline() r.recvline() r.recvline() r.recvline() r.recvline() r.recvline() # r.interactive() table=&#39;fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF&#39; tr={} for i in range(58): tr[table[i]]=i s=[11,10,3,8,4,6] xor=177451812 add=8728348608 def dec(x): r=0 for i in range(6): r+=tr[x[s[i]]]*58**i return (r-add)^xor def enc(x): x=(x^xor)+add r=list(&#39;BV1 4</description>
+    </item>
+    
+    <item>
+      <title>魔改某防火墙，移植Openwrt</title>
+      <link>https://naivekun.com/2020/05/hack-on-firewall-seccn-ac80wt/</link>
+      <pubDate>Mon, 18 May 2020 20:19:44 +0800</pubDate>
+      
+      <guid>https://naivekun.com/2020/05/hack-on-firewall-seccn-ac80wt/</guid>
+      <description>不要把这篇文章透露给淘宝卖家 0x0 前言 闲鱼买了某防火墙，五个千兆口，60包邮 拆开看了下，是个Marvell的方案，有个pcie，有俩sata，5</description>
+    </item>
+    
+    <item>
+      <title>配置vscode在terminal中一键运行sagemath py文件</title>
+      <link>https://naivekun.com/2020/05/sagemath-vscode-window/</link>
+      <pubDate>Tue, 05 May 2020 23:31:34 +0800</pubDate>
+      
+      <guid>https://naivekun.com/2020/05/sagemath-vscode-window/</guid>
+      <description>今天密码学实验用到sagemath TMD 垃圾Jupyter notebook真难用 没有vi，没有补全，没有debug 受不了受不了，把他搞进VSCo</description>
+    </item>
+    
+    <item>
+      <title>De1CTF 2020 部分WP</title>
+      <link>https://naivekun.com/2020/05/de1ctf2020-wp/</link>
+      <pubDate>Mon, 04 May 2020 21:39:34 +0800</pubDate>
+      
+      <guid>https://naivekun.com/2020/05/de1ctf2020-wp/</guid>
+      <description>calc 一个计算器，玩了一下看到是SPEL表达式注入 过滤了# T( 那就花式反射呗 &#39;&#39;.class -&amp;gt; java.lang.String &#39;&#39;.class.class -&amp;gt; java.lang.Class 拿到class了就forName &#39;&#39;.class.class.forName(&amp;quot;java.util.Arrays&amp;quot;) 然后xjb 去invoke</description>
+    </item>
+    
+    <item>
+      <title>Hugo博客配置Drone CI &#43; Gitea</title>
+      <link>https://naivekun.com/2020/04/ci-hugo/</link>
+      <pubDate>Fri, 24 Apr 2020 01:39:34 +0800</pubDate>
+      
+      <guid>https://naivekun.com/2020/04/ci-hugo/</guid>
+      <description>迁移博客 受不了node啦 换Hugo 硬件 回不了学校。。。临时搞了套nas 前一段矿难，有一批矿机被便宜挂到某鱼了 底板9个PCI-E，其中最右边那</description>
+    </item>
+    
+    <item>
+      <title>Friends</title>
+      <link>https://naivekun.com/friends/</link>
+      <pubDate>Thu, 23 Apr 2020 21:02:32 +0800</pubDate>
+      
+      <guid>https://naivekun.com/friends/</guid>
+      <description>OIer    Friends Links     Fancy http://fancypei.github.io/   Menci http://menci.moe/   Franky http://www.cnblogs.com/Franky-ln/   Platypus http://PlatypusPro.github.io/   Criska http://criskaa.github.io/   JIECAO http://jiecao2233.github.io/    CTFer    Friends Links     BlackBinary https://blackbinary.net/   Mr.Liu https://yzddmr6.tk   Frank https://b.earthc.moe   pperk http://pperk.github.io    </description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://naivekun.com/about/</link>
+      <pubDate>Thu, 23 Apr 2020 20:35:12 +0800</pubDate>
+      
+      <guid>https://naivekun.com/about/</guid>
+      <description>Naivekun&amp;rsquo;s blog
+CTFer
+HUST
+Web/Pentest/Android
+naivekun0817#gmail.com</description>
+    </item>
+    
+    <item>
+      <title>高校抗疫CTF dooog write up</title>
+      <link>https://naivekun.com/2020/03/ctf-202003-dooog/</link>
+      <pubDate>Sat, 14 Mar 2020 00:20:37 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2020/03/ctf-202003-dooog/</guid>
+      <description>0x00 dooog 看下源码，给了三个flask搞得server，一个client一个kdc一个cmdserver 出题人用python模拟了一个Kerber</description>
+    </item>
+    
+    <item>
+      <title>20190831记一次AWD</title>
+      <link>https://naivekun.com/2019/09/a-awd-at-2019-8-31/</link>
+      <pubDate>Sun, 01 Sep 2019 16:31:40 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/09/a-awd-at-2019-8-31/</guid>
+      <description>0 星盟团队的内部awd训练，邀请我们团队参加，然后想着也没什么事情才怪就报名了。 0x1 日常操作 经常打比赛的师傅们都有事，Web方向就我一个打过a</description>
+    </item>
+    
+    <item>
+      <title>[Hackthebox] - Conceal</title>
+      <link>https://naivekun.com/2019/06/htb-conceal/</link>
+      <pubDate>Sun, 02 Jun 2019 21:54:33 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/06/htb-conceal/</guid>
+      <description>咕了几个月。。。 扫端口，啥都没开 常见套路，SNMP看看 解出md5 Dudecake1! google一下ike咋连 然后 ipsec start --nofork即可连接 另外之前snmp</description>
+    </item>
+    
+    <item>
+      <title>[vulnhub] basilic - Writeup</title>
+      <link>https://naivekun.com/2019/03/vulnhub-basilic-wp/</link>
+      <pubDate>Fri, 08 Mar 2019 18:42:25 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/03/vulnhub-basilic-wp/</guid>
+      <description>扫端口，开了22和5000 5000是个python写的web 简单看看 首先有个contact.html 公钥这么短，估计之后是要爆破一下 现在没啥</description>
+    </item>
+    
+    <item>
+      <title>[hackthebox] Giddy - Writeup</title>
+      <link>https://naivekun.com/2019/02/htb-giddy-wp/</link>
+      <pubDate>Sun, 17 Feb 2019 13:36:14 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/02/htb-giddy-wp/</guid>
+      <description>windows骚操作盒子 扫端口，有个80,443,3389 证书没啥东西 看web 并不是隐写 扫目录 发现两个 /remote /mvc 第一个是个web上的powersh</description>
+    </item>
+    
+    <item>
+      <title>[vulnhub] 6days - Writeup</title>
+      <link>https://naivekun.com/2019/02/vulnhub-6days-wp/</link>
+      <pubDate>Thu, 14 Feb 2019 21:30:05 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/02/vulnhub-6days-wp/</guid>
+      <description>玄学waf+注入盒子 注意到8080是filtered 先看web checkpromo.php可以POST，image.php可能有SSRF 但是</description>
+    </item>
+    
+    <item>
+      <title>[hackthebox] Dab - Writeup</title>
+      <link>https://naivekun.com/2019/02/htb-dab-wp/</link>
+      <pubDate>Sun, 03 Feb 2019 21:07:47 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/02/htb-dab-wp/</guid>
+      <description>暴力睡眠盒子 各种爆破。。。 扫端口 ftp允许匿名登录，但里面没东西 80端口看看 挂字典爆破 admin:Password1成功登录 然而里面没东西 源</description>
+    </item>
+    
+  </channel>
+</rss>

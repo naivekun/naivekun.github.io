@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        nRF51系列单片机读取保护绕过 - Naivekun&#39;s blog
+      </title>
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  
+  <meta name="theme-color" content="#000000" />
+  
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <meta name="description" content="前一段有个灵车pm2.5检测器，淘宝只要12块钱。搜了下大概是个放口袋里用蓝牙和手机连接，检测PM2.5浓度的。 搜到了前几年的新闻 -&amp;gt; 传送门 然" />
+  <meta name="generator" content="Hugo 0.70.0 with theme pure" />
+  <title>nRF51系列单片机读取保护绕过 - Naivekun&#39;s blog</title>
+  
+  
+  <link rel="stylesheet" href="https://naivekun.com/css/style.min.7dc20efbc53647d41aa9ddea0c48e59300223d084e66ea0cbe7c30bd88903acc.css">
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
+  <meta property="og:title" content="nRF51系列单片机读取保护绕过" />
+<meta property="og:description" content="前一段有个灵车pm2.5检测器，淘宝只要12块钱。搜了下大概是个放口袋里用蓝牙和手机连接，检测PM2.5浓度的。 搜到了前几年的新闻 -&gt; 传送门 然" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://naivekun.com/2020/10/hack-on-nrf/" />
+<meta property="article:published_time" content="2020-10-03T23:58:09+08:00" />
+<meta property="article:modified_time" content="2020-10-03T23:58:09+08:00" />
+<meta itemprop="name" content="nRF51系列单片机读取保护绕过">
+<meta itemprop="description" content="前一段有个灵车pm2.5检测器，淘宝只要12块钱。搜了下大概是个放口袋里用蓝牙和手机连接，检测PM2.5浓度的。 搜到了前几年的新闻 -&gt; 传送门 然">
+<meta itemprop="datePublished" content="2020-10-03T23:58:09&#43;08:00" />
+<meta itemprop="dateModified" content="2020-10-03T23:58:09&#43;08:00" />
+<meta itemprop="wordCount" content="1899">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="nRF51系列单片机读取保护绕过"/>
+<meta name="twitter:description" content="前一段有个灵车pm2.5检测器，淘宝只要12块钱。搜了下大概是个放口袋里用蓝牙和手机连接，检测PM2.5浓度的。 搜到了前几年的新闻 -&gt; 传送门 然"/>
+
+  <!--[if lte IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+    <![endif]-->
+
+  <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+  </head>
+
+  
+  
+
+  <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage"><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="slimContent">
+      <div class="navbar-header">
+        <div class="profile-block text-center">
+          <a id="avatar" href="https://github.com/naivekun" target="_blank">
+            <img class="img-circle img-rotate" src="https://naivekun.com/avatar.jpg" width="200" height="200">
+          </a>
+          <h2 id="name" class="hidden-xs hidden-sm">naivekun</h2>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md">CTFer</h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>Wuhan, China</small>
+        </div><div class="search" id="search-form-wrap">
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i
+                        class="icon icon-search"></i></button>
+            </span>
+        </div>
+        <div class="ins-search">
+            <div class="ins-search-mask"></div>
+            <div class="ins-search-container">
+                <div class="ins-input-wrapper">
+                    <input type="text" class="ins-search-input" placeholder="Type something..."
+                        x-webkit-speech />
+                    <button type="button" class="close ins-close ins-selectable" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="ins-section-wrapper">
+                    <div class="ins-section-container"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+        <ul class="nav navbar-nav main-nav">
+            <li class="menu-item menu-item-home">
+                <a href="/">
+                    <i class="icon icon-home-fill"></i>
+                  <span class="menu-title">Home</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-archives">
+                <a href="/posts/">
+                    <i class="icon icon-archives-fill"></i>
+                  <span class="menu-title">Archives</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-categories">
+                <a href="/categories/">
+                    <i class="icon icon-folder"></i>
+                  <span class="menu-title">Categories</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-tags">
+                <a href="/tags/">
+                    <i class="icon icon-tags"></i>
+                  <span class="menu-title">Tags</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-friends">
+                <a href="/friends/">
+                    <i class="icon icon-friendship"></i>
+                  <span class="menu-title">Friends</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-about">
+                <a href="/about/">
+                    <i class="icon icon-cup-fill"></i>
+                  <span class="menu-title">About</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content"><script src="https://www.hackthebox.eu/badge/60818"></script>
+            </div>
+        </div>
+    </div>
+</div>
+
+      <div class="widget">
+    <h3 class="widget-title"> Categories</h3>
+    <div class="widget-body">
+        <ul class="category-list">
+            <li class="category-list-item"><a href="https://naivekun.com/categories/ctf/" class="category-list-link">ctf</a><span class="category-list-count">1</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/hackthebox/" class="category-list-link">hackthebox</a><span class="category-list-count">13</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/vulnhub/" class="category-list-link">vulnhub</a><span class="category-list-count">21</span></li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> Tags</h3>
+    <div class="widget-body">
+        <ul class="tag-list">
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/ctf/" class="tag-list-link">ctf</a><span
+                    class="tag-list-count">2</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/hackthebox/" class="tag-list-link">hackthebox</a><span
+                    class="tag-list-count">13</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/vulnhub/" class="tag-list-link">vulnhub</a><span
+                    class="tag-list-count">21</span></li>
+            
+        </ul>
+
+    </div>
+</div>
+      
+<div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+        <ul class="recent-post-list list-unstyled no-thumbnail">
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" class="title">68块钱MA5671A猫棒刷Openwrt</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-12-09 02:46:52 &#43;0800 &#43;0800" itemprop="datePublished">2021-12-09</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/10/hack-on-nrf/" class="title">nRF51系列单片机读取保护绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-10-03 23:58:09 &#43;0800 &#43;0800" itemprop="datePublished">2020-10-03</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/08/hack-bmc/" class="title">一次对服务器主板IPMI BMC的漏洞挖掘</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-08-19 01:58:07 &#43;0800 &#43;0800" itemprop="datePublished">2020-08-19</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399-more/" class="title">TN3399板子填坑</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-23 18:03:36 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-23</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399/" class="title">闲鱼便宜板子TN3399折腾全攻略</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-14 16:51:10 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-14</time>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+  </div>
+</aside>
+
+    
+    
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <h4 class="toc-title">Catalogue</h4>
+    <nav id="toc" class="js-toc toc">
+
+    </nav>
+  </div>
+</aside>
+<main class="main" role="main"><div class="content">
+  <article id="-" class="article article-type-" itemscope
+    itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2020/10/hack-on-nrf/"
+    >nRF51系列单片机读取保护绕过</a
+  >
+</h1>
+
+      <div class="article-meta">
+        
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2020/10/hack-on-nrf/" class="article-date">
+  <time datetime="2020-10-03 23:58:09 &#43;0800 &#43;0800" itemprop="datePublished">2020-10-03</time>
+</a>
+</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i>&nbsp;<a href="/2020/10/hack-on-nrf/#comments"
+            class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1899words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 4minutes </span>
+      </div>
+    </div>
+    <div class="article-entry marked-body js-toc-content" itemprop="articleBody">
+      <p>前一段有个灵车pm2.5检测器，淘宝只要12块钱。搜了下大概是个放口袋里用蓝牙和手机连接，检测PM2.5浓度的。</p>
+<p>搜到了前几年的新闻 -&gt; <a href="http://3g.donews.com/News/donews_detail/2976798.html">传送门</a></p>
+<p><img src="/images/2020-10-04-00-05-07.png" alt=""></p>
+<p>然而买回来才发现，安卓客户端下载链接打不开。估计是厂子跑路了，不然怎么卖这么便宜。于是想自己日了玩玩</p>
+<h2 id="0x0-拆了玩玩">0x0 拆了玩玩</h2>
+<p><img src="/images/2020-10-04-00-05-50.png" alt=""></p>
+<p><img src="/images/2020-10-04-00-07-40.png" alt=""></p>
+<p>里面很简单一个主板一个PM2.5检测元件一个电池</p>
+<p>单片机是nRF51288，一个支持蓝牙的片子</p>
+<p>照着数据手册量了一圈发现这里是SWD调试口</p>
+<p><img src="/images/2020-10-04-00-08-32.png" alt=""></p>
+<p>从左到右依次是SWCLK,SWIO,GND,?</p>
+<p>于是，openocd启动！</p>
+<p>然而事情并没有这么简单&hellip;</p>
+<h2 id="0x1-初次尝试">0x1 初次尝试</h2>
+<p>因为没有客户端，为了能正常用它的PM2.5功能，最简单的方法就是逆一下它的蓝牙通信协议，写个土制客户端。</p>
+<p>swd排针是个1.54间距的。。。飞线到洞洞板再插到树莓派上。openocd可以用树莓派的gpio模拟swd或者jtag，不过坑不少。</p>
+<p><img src="/images/2020-10-04-00-13-18.png" alt=""></p>
+<p>焊的太丑就不给拍清楚了QAQ，盲猜第四个脚是vcc3.3，顺手接上</p>
+<p>openocd的配置文件只有树莓派1和2的，用了cpu频率算一个swd时钟频率，我这个pi3要改一些地方，配置文件改了改如下</p>
+<pre><code>#
+# Config for using Raspberry Pi's expansion header
+#
+# This is best used with a fast enough buffer but also
+# is suitable for direct connection if the target voltage
+# matches RPi's 3.3V and the cable is short enough.
+#
+# Do not forget the GND connection, pin 6 of the expansion header.
+#
+
+interface bcm2835gpio
+
+bcm2835gpio_peripheral_base 0x3F000000
+
+# Transition delay calculation: SPEED_COEFF/khz - SPEED_OFFSET
+# These depend on system clock, calibrated for stock 700MHz
+# bcm2835gpio_speed SPEED_COEFF SPEED_OFFSET
+#bcm2835gpio_speed_coeffs 146203 36
+bcm2835gpio_speed_coeffs 194938 48
+
+# Each of the JTAG lines need a gpio number set: tck tms tdi tdo
+# Header pin numbers: 23 22 19 21
+# bcm2835gpio_jtag_nums 11 25 10 9
+
+# or if you have both connected,
+# reset_config trst_and_srst srst_push_pull
+reset_config none separate
+# Each of the SWD lines need a gpio number set: swclk swdio
+# Header pin numbers: 22 18
+bcm2835gpio_swd_nums 25 24
+
+# If you define trst or srst, use appropriate reset_config
+# Header pin numbers: TRST - 26, SRST - 18
+
+# bcm2835gpio_trst_num 7
+# reset_config trst_only
+
+bcm2835gpio_srst_num 18
+#reset_config srst_only srst_push_pull
+
+# or if you have both connected,
+# reset_config trst_and_srst srst_push_pull
+
+#
+# script for Nordic nRF51 series, a Cortex-M0 chip
+#
+
+transport select swd
+source [find target/swj-dp.tcl]
+
+if { [info exists CHIPNAME] } {
+   set _CHIPNAME $CHIPNAME
+} else {
+   set _CHIPNAME nrf51
+}
+
+if { [info exists ENDIAN] } {
+   set _ENDIAN $ENDIAN
+} else {
+   set _ENDIAN little
+}
+
+# Work-area is a space in RAM used for flash programming
+# By default use 16kB
+if { [info exists WORKAREASIZE] } {
+   set _WORKAREASIZE $WORKAREASIZE
+} else {
+   set _WORKAREASIZE 0x4000
+}
+
+if { [info exists CPUTAPID] } {
+   set _CPUTAPID $CPUTAPID
+} else {
+   set _CPUTAPID 0x0bb11477
+}
+
+swj_newdap $_CHIPNAME cpu -expected-id $_CPUTAPID -irlen 4
+
+set _TARGETNAME $_CHIPNAME.cpu
+target create $_TARGETNAME cortex_m -chain-position $_TARGETNAME
+
+$_TARGETNAME configure -work-area-phys 0x20000000 -work-area-size $_WORKAREASIZE -work-area-backup 0
+
+if {![using_hla]} {
+   # The chip supports standard ARM/Cortex-M0 SYSRESETREQ signal
+   cortex_m reset_config sysresetreq
+}
+
+flash bank $_CHIPNAME.flash nrf51 0x00000000 0 1 1 $_TARGETNAME
+flash bank $_CHIPNAME.uicr nrf51 0x10001000 0 1 1 $_TARGETNAME
+
+#
+#  The chip should start up from internal 16Mhz RC, so setting adapter
+#  clock to 1Mhz should be OK
+#
+adapter_khz 1000
+
+proc enable_all_ram {} {
+        # nRF51822 Product Anomaly Notice (PAN) #16 explains that not all RAM banks
+        # are reliably enabled after reset on some revisions (contrary to spec.) So after
+        # resetting we enable all banks via the RAMON register
+        mww 0x40000524 0xF
+}
+$_TARGETNAME configure -event reset-end {  enable_all_ram }
+
+init
+targets
+</code></pre>
+<p>主要改了以下几个地方</p>
+<ul>
+<li><code>-irlen 4</code> // nrf51里面是个32位M0核，指令长度4字节</li>
+<li><code>bcm2835gpio_speed_coeffs 194938 48</code> // 树莓派3的cpu频率和2不一样，原来是拿2的配置文件改的</li>
+<li><code>reset_config none separate</code> // 没接reset脚，这里让openocd不要管rst信号，不然后面reset会卡住然后超时</li>
+<li><code>transport select swd</code> // 神秘问题，不指定swd会默认走jtag然后不让改</li>
+</ul>
+<p>然后板子通电，<code>openocd -f xxx.cfg</code>不出意外就可以看到芯片了</p>
+<p><img src="/images/2020-10-04-00-22-42.png" alt=""></p>
+<p>nc连上127.0.0.1:4444进openocd终端，试一下就可以正常调试了</p>
+<p>然而问题出在这里</p>
+<p><img src="/images/2020-10-04-00-33-05.png" alt=""></p>
+<p>读出来是全0</p>
+<p><img src="/images/2020-10-04-01-45-10.png" alt=""></p>
+<p>pc指向的代码也读不出来</p>
+<p><img src="/images/2020-10-04-00-34-12.png" alt=""></p>
+<p>查了下手册是芯片的特性，Readback protection</p>
+<p><img src="/images/2020-10-04-00-35-24.png" alt=""></p>
+<p>CR0标示代码地址不允许CR1部分代码或者调试口访问，该保护特性通过RBPCONF寄存器配置</p>
+<p><img src="/images/2020-10-04-00-37-06.png" alt=""></p>
+<p>RBPCONF属于User Information Configuration Registers (UICR)，这组寄存器配置了芯片的一些运行信息如bootloader地址，代码段长度等等</p>
+<p>UICR必须写NVMC(Non-Volatile Memory Controller)的ERASEALL寄存器才能改，nvmc用来控制内存地址到flash的映射</p>
+<p><img src="/images/2020-10-04-00-39-10.png" alt=""></p>
+<p><img src="/images/2020-10-04-00-39-38.png" alt=""></p>
+<p>艹？必须要全擦除才行，等于UICR不能改，改了全部木大</p>
+<p>是芯片的安全特性，不允许随便读写flash</p>
+<h2 id="0x2-利用pc读固件">0x2 利用pc读固件</h2>
+<p>看到了一篇文章 -&gt; <a href="https://www.pentestpartners.com/security-blog/nrf51822-code-readout-protection-bypass-a-how-to/">传送门</a></p>
+<p><img src="/images/2020-10-04-00-45-31.png" alt=""></p>
+<p>大概思路是</p>
+<ol>
+<li>arm thumb指令长度是16bit，想要32bit寻址就只能通过寄存器寻址，不能直接在指令里面塞立即数</li>
+<li>readback保护是通过一个硬件模块实现的，只保护内存操作</li>
+</ol>
+<p><img src="/images/2020-10-04-00-48-28.png" alt=""></p>
+<p>也就是说可以随意操作寄存器的</p>
+<p>改之前</p>
+<p><img src="/images/2020-10-04-00-50-06.png" alt=""></p>
+<p>改之后</p>
+<p><img src="/images/2020-10-04-00-50-21.png" alt=""></p>
+<ol start="3">
+<li>那么可以利用这句<code>LDR     R3, [R3]</code>，R3可以是任意寄存器。只要猜出某个指令是直接用寄存器寻址，就操控pc一直跑那条指令，控制存地址的寄存器为要读取的内存地址</li>
+</ol>
+<p>step过了几下，感觉我这个的R4拿来寻址了</p>
+<p><img src="/images/2020-10-04-00-52-56.png" alt=""></p>
+<p>应该是0x6d4这个地址上的指令完成的寻址</p>
+<p>把pc改过去试试，读一下RBPCONF配置</p>
+<p><img src="/images/2020-10-04-00-54-55.png" alt=""></p>
+<p>查了下手册在0x10001004上</p>
+<p><img src="/images/2020-10-04-00-54-32.png" alt=""></p>
+<p>成功读出来是0xffff0000，保护全开</p>
+<p>那么想要dump固件只需要重复执行这个过程把0x0-0x40000的数据读出来就行</p>
+<p><img src="/images/2020-10-04-00-57-28.png" alt=""></p>
+<p>存在flash上的代码是直接映射到0x0的</p>
+<h2 id="0x3-dump固件">0x3 dump固件</h2>
+<p>于是搓个脚本</p>
+<pre><code>from pwn import *
+import re
+
+p = remote(&quot;127.0.0.1&quot;, &quot;4444&quot;)
+
+p.recvuntil(&quot;&gt;&quot;)
+p.write(&quot;reset halt\n&quot;)
+p.recvuntil(&quot;&gt;&quot;)
+
+with open(&quot;firmware.bin&quot;, &quot;wb&quot;) as f:
+    for addr in range(0, 0x40000, 4):
+        p.write(&quot;reg pc 0x6d4\n&quot;)
+        p.recvuntil(&quot;&gt;&quot;)
+        p.write(&quot;reg r4 &quot; + hex(addr) + &quot;\n&quot;)
+        p.recvuntil(&quot;&gt;&quot;)
+        p.write(&quot;step\n&quot;)
+        p.recvuntil(&quot;&gt;&quot;)
+        p.write(&quot;reg r4\n&quot;)
+
+        ret = p.recvuntil(&quot;&gt;&quot;)
+        d = re.search('0x[0-9a-fA-F]{8}', ret.decode('utf-8'))[0]
+        f.write(p32(int(d, 16)))
+        if addr % 0x100 == 0:
+            print(&quot;reading:&quot;, addr)
+</code></pre>
+<p>跑一下大概半个小时就读出来了，丢进ida看下</p>
+<p><img src="/images/2020-10-04-00-59-21.png" alt=""></p>
+<p>果然0x6d4是直接拿R4寻址</p>
+<p>于是固件就成功提取了</p>
+<h2 id="彩蛋">彩蛋</h2>
+<p><img src="/images/2020-10-04-01-00-10.png" alt=""></p>
+<p>能被轻易完整取下的防拆标</p>
+<p><img src="/images/2020-10-04-01-00-34.png" alt=""></p>
+<p>焊线不小心把耳机夹在了中间</p>
+
+    </div>
+    <div class="article-footer">
+<blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <li class="post-copyright-link hidden-xs">
+      <strong>Permalink: </strong>
+      <a href="https://naivekun.com/2020/10/hack-on-nrf/" title="nRF51系列单片机读取保护绕过" target="_blank" rel="external">https://naivekun.com/2020/10/hack-on-nrf/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>License：</strong><a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN</a>
+    </li>
+  </ul>
+</blockquote>
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/naivekun" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://naivekun.com/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/naivekun" target="_blank"><span class="text-dark">naivekun</span><small class="ml-1x">CTFer</small></a></h3>
+        <div>Web/Pentest/Android</div>
+      </div>
+    </figure>
+  </div>
+</div>
+    </div>
+  </article>
+<section id="comments">
+</section>
+
+</div><nav class="bar bar-footer clearfix" data-stick-bottom>
+    <div class="bar-inner">
+        <ul class="pager pull-left">
+            <li class="prev">
+                <a href="https://naivekun.com/2020/08/hack-bmc/" title="一次对服务器主板IPMI BMC的漏洞挖掘"><i
+                        class="icon icon-angle-left"
+                        aria-hidden="true"></i><span>&nbsp;&nbsp;Older</span></a>
+            </li>
+            <li class="next">
+                <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/"
+                    title="68块钱MA5671A猫棒刷Openwrt"><span>Newer&nbsp;&nbsp;</span><i
+                        class="icon icon-angle-right" aria-hidden="true"></i></a>
+            </li>
+            
+            <li class="toggle-toc">
+                <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false"
+                    title="Catalogue" role="button">
+                    <span>[&nbsp;</span><span>Catalogue</span>
+                    <i class="text-collapsed icon icon-anchor"></i>
+                    <i class="text-in icon icon-close"></i>
+                    <span>]</span>
+                </a>
+            </li>
+        </ul>
+        
+        <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal"
+            data-target="#donateModal"><span>$</span></button>
+        
+        <div class="bar-right">
+        </div>
+    </div>
+</nav>
+
+
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content donate">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <div class="donate-box">
+                    <div class="donate-head">
+                        <p>Maybe you could buy me a cup of coffee.</p>
+                    </div>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/alipayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/wechatpayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                    </div>
+                    <div class="donate-footer">
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay"
+                                    aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab"
+                                    aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i>
+                                    wechat payment</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main><footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<ul class="social-links">
+    <li><a href="https://github.com/naivekun" target="_blank" title="github" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-github"></i></a></li>
+    <li><a href="https://naivekun.com/index.xml" target="_blank" title="rss" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-rss"></i></a></li>
+</ul>
+  <div class="copyright">
+    &copy;&nbsp;2018  -
+    2021
+    <div class="publishby">
+        Theme by naivekun base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/python.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/javascript.min.js" defer></script><script>
+    hljs.configure({
+        tabReplace: '    ', 
+        classPrefix: ''     
+        
+    })
+    hljs.initHighlightingOnLoad();
+</script>
+<script src="https://naivekun.com/js/application.min.bdeb64b910570b6c41badc6a05b7afb0c8ad9efd8525de3c7257d59e786326a3.js"></script>
+<script src="https://naivekun.com/js/plugin.min.51ff8c7317566f82259170fa36e09c4493adc9b9378b427a01ad3f017ebac7dd.js"></script>
+
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            ROOT_URL: 'https:\/\/naivekun.com',
+            CONTENT_URL: 'https:\/\/naivekun.com\/searchindex.json ',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script type="text/javascript" src="https://naivekun.com/js/insight.min.a343cd9a5a7698336b28ef3a7c16a3a1b1d2d5fb17dc8ed04022bbe08cc5459073a15bdafa3a8a58cdd56080784bdd69fa70b1ae8597565c799c57ed00f0e120.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+<script>
+    tocbot.init({
+        
+        tocSelector: '.js-toc',
+        
+        contentSelector: '.js-toc-content',
+        
+        headingSelector: 'h1, h2, h3',
+        
+        hasInnerContainers: true,
+    });
+</script>
+
+
+  </body>
+</html>

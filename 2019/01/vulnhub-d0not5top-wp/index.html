@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        [Vulnhub] d0not5top: 1.2 - Writeup - Naivekun&#39;s blog
+      </title>
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  
+  <meta name="theme-color" content="#000000" />
+  
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <meta name="description" content="超级好玩的盒子 共7个flag 扫端口 开了好多东西 25端口的SMTP看一下 那一串欢迎信息是啥？？？ 16进制？ 解码看看 得到第三个flag FL46_3:29dryf67uheht2r1dd4qppuey474svxya 80端口" />
+  <meta name="generator" content="Hugo 0.70.0 with theme pure" />
+  <title>[Vulnhub] d0not5top: 1.2 - Writeup - Naivekun&#39;s blog</title>
+  
+  
+  <link rel="stylesheet" href="https://naivekun.com/css/style.min.7dc20efbc53647d41aa9ddea0c48e59300223d084e66ea0cbe7c30bd88903acc.css">
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
+  <meta property="og:title" content="[Vulnhub] d0not5top: 1.2 - Writeup" />
+<meta property="og:description" content="超级好玩的盒子 共7个flag 扫端口 开了好多东西 25端口的SMTP看一下 那一串欢迎信息是啥？？？ 16进制？ 解码看看 得到第三个flag FL46_3:29dryf67uheht2r1dd4qppuey474svxya 80端口" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://naivekun.com/2019/01/vulnhub-d0not5top-wp/" />
+<meta property="article:published_time" content="2019-01-07T19:09:32+00:00" />
+<meta property="article:modified_time" content="2019-01-07T19:09:32+00:00" />
+<meta itemprop="name" content="[Vulnhub] d0not5top: 1.2 - Writeup">
+<meta itemprop="description" content="超级好玩的盒子 共7个flag 扫端口 开了好多东西 25端口的SMTP看一下 那一串欢迎信息是啥？？？ 16进制？ 解码看看 得到第三个flag FL46_3:29dryf67uheht2r1dd4qppuey474svxya 80端口">
+<meta itemprop="datePublished" content="2019-01-07T19:09:32&#43;00:00" />
+<meta itemprop="dateModified" content="2019-01-07T19:09:32&#43;00:00" />
+<meta itemprop="wordCount" content="1612">
+
+
+
+<meta itemprop="keywords" content="vulnhub," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[Vulnhub] d0not5top: 1.2 - Writeup"/>
+<meta name="twitter:description" content="超级好玩的盒子 共7个flag 扫端口 开了好多东西 25端口的SMTP看一下 那一串欢迎信息是啥？？？ 16进制？ 解码看看 得到第三个flag FL46_3:29dryf67uheht2r1dd4qppuey474svxya 80端口"/>
+
+  <!--[if lte IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+    <![endif]-->
+
+  <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+  </head>
+
+  
+  
+
+  <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage"><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="slimContent">
+      <div class="navbar-header">
+        <div class="profile-block text-center">
+          <a id="avatar" href="https://github.com/naivekun" target="_blank">
+            <img class="img-circle img-rotate" src="https://naivekun.com/avatar.jpg" width="200" height="200">
+          </a>
+          <h2 id="name" class="hidden-xs hidden-sm">naivekun</h2>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md">CTFer</h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>Wuhan, China</small>
+        </div><div class="search" id="search-form-wrap">
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i
+                        class="icon icon-search"></i></button>
+            </span>
+        </div>
+        <div class="ins-search">
+            <div class="ins-search-mask"></div>
+            <div class="ins-search-container">
+                <div class="ins-input-wrapper">
+                    <input type="text" class="ins-search-input" placeholder="Type something..."
+                        x-webkit-speech />
+                    <button type="button" class="close ins-close ins-selectable" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="ins-section-wrapper">
+                    <div class="ins-section-container"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+        <ul class="nav navbar-nav main-nav">
+            <li class="menu-item menu-item-home">
+                <a href="/">
+                    <i class="icon icon-home-fill"></i>
+                  <span class="menu-title">Home</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-archives">
+                <a href="/posts/">
+                    <i class="icon icon-archives-fill"></i>
+                  <span class="menu-title">Archives</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-categories">
+                <a href="/categories/">
+                    <i class="icon icon-folder"></i>
+                  <span class="menu-title">Categories</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-tags">
+                <a href="/tags/">
+                    <i class="icon icon-tags"></i>
+                  <span class="menu-title">Tags</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-friends">
+                <a href="/friends/">
+                    <i class="icon icon-friendship"></i>
+                  <span class="menu-title">Friends</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-about">
+                <a href="/about/">
+                    <i class="icon icon-cup-fill"></i>
+                  <span class="menu-title">About</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content"><script src="https://www.hackthebox.eu/badge/60818"></script>
+            </div>
+        </div>
+    </div>
+</div>
+
+      <div class="widget">
+    <h3 class="widget-title"> Categories</h3>
+    <div class="widget-body">
+        <ul class="category-list">
+            <li class="category-list-item"><a href="https://naivekun.com/categories/ctf/" class="category-list-link">ctf</a><span class="category-list-count">1</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/hackthebox/" class="category-list-link">hackthebox</a><span class="category-list-count">13</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/vulnhub/" class="category-list-link">vulnhub</a><span class="category-list-count">21</span></li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> Tags</h3>
+    <div class="widget-body">
+        <ul class="tag-list">
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/ctf/" class="tag-list-link">ctf</a><span
+                    class="tag-list-count">2</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/hackthebox/" class="tag-list-link">hackthebox</a><span
+                    class="tag-list-count">13</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/vulnhub/" class="tag-list-link">vulnhub</a><span
+                    class="tag-list-count">21</span></li>
+            
+        </ul>
+
+    </div>
+</div>
+      
+<div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+        <ul class="recent-post-list list-unstyled no-thumbnail">
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" class="title">68块钱MA5671A猫棒刷Openwrt</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-12-09 02:46:52 &#43;0800 &#43;0800" itemprop="datePublished">2021-12-09</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/10/hack-on-nrf/" class="title">nRF51系列单片机读取保护绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-10-03 23:58:09 &#43;0800 &#43;0800" itemprop="datePublished">2020-10-03</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/08/hack-bmc/" class="title">一次对服务器主板IPMI BMC的漏洞挖掘</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-08-19 01:58:07 &#43;0800 &#43;0800" itemprop="datePublished">2020-08-19</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399-more/" class="title">TN3399板子填坑</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-23 18:03:36 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-23</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399/" class="title">闲鱼便宜板子TN3399折腾全攻略</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-14 16:51:10 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-14</time>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+  </div>
+</aside>
+
+    
+    
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <h4 class="toc-title">Catalogue</h4>
+    <nav id="toc" class="js-toc toc">
+
+    </nav>
+  </div>
+</aside>
+<main class="main" role="main"><div class="content">
+  <article id="-" class="article article-type-" itemscope
+    itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2019/01/vulnhub-d0not5top-wp/"
+    >[Vulnhub] d0not5top: 1.2 - Writeup</a
+  >
+</h1>
+
+      <div class="article-meta">
+        
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2019/01/vulnhub-d0not5top-wp/" class="article-date">
+  <time datetime="2019-01-07 19:09:32 &#43;0000 UTC" itemprop="datePublished">2019-01-07</time>
+</a>
+</span>
+<span class="article-category">
+  <i class="icon icon-folder"></i>&nbsp;
+  <a class="article-category-link" href="/categories/vulnhub/"> vulnhub </a>
+</span>  
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>&nbsp;
+    <a class="article-tag-link" href="/tags/vulnhub/"> vulnhub </a>
+  </span>
+
+        <span class="post-comment"><i class="icon icon-comment"></i>&nbsp;<a href="/2019/01/vulnhub-d0not5top-wp/#comments"
+            class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1612words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 4minutes </span>
+      </div>
+    </div>
+    <div class="article-entry marked-body js-toc-content" itemprop="articleBody">
+      <p>超级好玩的盒子
+共7个flag</p>
+<p>扫端口
+<img src="https://naivekun.com/images/1546859505289.png" alt="image">
+开了好多东西
+25端口的SMTP看一下
+<img src="https://naivekun.com/images/1546859553878.png" alt="image">
+那一串欢迎信息是啥？？？
+16进制？
+解码看看
+<img src="https://naivekun.com/images/1546859699058.png" alt="image">
+得到第三个flag
+<code>FL46_3:29dryf67uheht2r1dd4qppuey474svxya</code></p>
+<p>80端口看看
+<img src="https://naivekun.com/images/1546859757931.png" alt="image">
+robots.txt一堆东西
+<img src="https://naivekun.com/images/1546860013625.png" alt="image">
+这咋整。。。
+一个个试。。。都没啥用
+扫目录
+<img src="https://naivekun.com/images/1546860113410.png" alt="image">
+一个一个试
+发现<code>/control</code>有东西
+<img src="https://naivekun.com/images/1546860164163.png" alt="image">
+翻一下。。。
+woc是个纯静态页面。。。
+看源码
+第一个flag
+<img src="https://naivekun.com/images/1546860197084.png" alt="image">
+<code>FL46_1:urh8fu3i039rfoy254sx2xtrs5wc6767w</code></p>
+<p>再翻翻，发现<code>/control/js</code>目录下有东西
+<img src="https://naivekun.com/images/1546860367344.png" alt="image">
+<img src="https://naivekun.com/images/1546860383628.png" alt="image">
+这是第二个flag
+把0和1换成十进制
+<code>FL46_2:39331r42q2svdfsxk9i13ry4f2srtr98h2</code>
+这里有个问题。。。
+考虑换行符，flag比其他的多一位，不考虑换行符，flag比其他的少一位。。。
+网上的其他writeup都是多一位的。。。</p>
+<p>网页源码还有个注释
+<img src="https://naivekun.com/images/1546860231335.png" alt="image">
+提示了个新域名
+<code>D0Not5topMe.ctf</code>
+加进hosts里
+<img src="https://naivekun.com/images/1546860551319.png" alt="image">
+进去看看
+<img src="https://naivekun.com/images/1546860581214.png" alt="image">
+是个phpbb
+这。。。
+慢慢翻
+注册页面发现个标签
+<img src="https://naivekun.com/images/1546860784811.png" alt="image">
+访问<code>/FLaR6yF1nD3rZ_html</code>
+<img src="https://naivekun.com/images/1546860816229.png" alt="image">
+brainfuck解码
+<img src="https://naivekun.com/images/1546860858446.png" alt="image">
+得到第4个flag
+<code>FL46_4:n02bv1rx5se4560984eedchjs72hsusu9</code></p>
+<p>接着日cms
+本来想着注入。。。
+<img src="https://naivekun.com/images/1546860956523.png" alt="image">
+报错信息包含了个邮箱
+<code>Megusta@G4M35.ctf</code>
+把域名<code>G4M35.ctf</code>加进hosts里，进去看看
+<img src="https://naivekun.com/images/1546861107642.png" alt="image">
+是个游戏
+拿burp一点点翻
+猜测可能游戏逻辑存在提示
+找通关或者gameover的地方
+<img src="https://naivekun.com/images/1546861197357.png" alt="image">
+提示目录<code>/H3x6L64m3</code>
+去看看</p>
+<p><img src="https://naivekun.com/images/1546861236274.png" alt="image">
+woc
+<img src="https://naivekun.com/images/1546861273754.png" alt="image">
+是个逮虾户游戏
+还是翻源码。。。翻了半天没东西
+那就回去玩会游戏
+<img src="https://naivekun.com/images/1546861378205.png" alt="image">
+注意到天空贴图有一些字符？？？
+刷新一下，翻翻贴图文件
+找到这张图
+<img src="https://naivekun.com/images/1546861433742.png" alt="image">
+把这些数字手敲出来</p>
+<pre><code>106 114 64 66 137 65 72 60 71 153 70 67 150 66 147 64 145 62 65 147 150 64 64 167 141 61 162 171 142 171 146 151 70 71 70 150 156 143 144 164
+</code></pre>
+<p>这是ASCII？？？
+出来是乱码
+那。。。8进制？
+拿python转成10进制，再按ASCII转成字符
+<img src="https://naivekun.com/images/1546861607494.png" alt="image">
+得到第五个flag
+<code>FL46_5:09k87h6g4e25gh44wa1rybyfi898hncdt</code></p>
+<p>回头翻游戏逻辑
+艹
+原来漏掉了
+<img src="https://naivekun.com/images/1546861929711.png" alt="image">
+<code>t3rm1n4l.ctf</code>
+加到hosts里</p>
+<p>去看看
+<img src="https://naivekun.com/images/1546862040263.png" alt="image">
+是个辣鸡terminal
+密码直接就是域名<code>t3rm1n4l.ctf</code>
+瞎胡试试。。。
+只有pwd id grep能用
+<code>grep *</code>看看
+<img src="https://naivekun.com/images/1546862190237.png" alt="image">
+提示下一个域名<code>M36u574.ctf</code>
+加到hosts里</p>
+<p>访问<code>M36u574.ctf</code>
+<img src="https://naivekun.com/images/1546862263887.png" alt="image">
+大概每秒刷新一张图片？？？
+看看burp
+<img src="https://naivekun.com/images/1546862319428.png" alt="image">
+一直是<code>megusta+数字.jpg</code>
+写个脚本，把<code>megusta001.jpg</code>到<code>megusta010.jpg</code>下下来
+隐写？？？
+exif没东西鸭
+是不是漏了什么
+继续刷新
+终于发现
+<img src="https://naivekun.com/images/1546862439110.png" alt="image">
+exiftool发现comment有东西
+<img src="https://naivekun.com/images/1546862507069.png" alt="image">
+base64
+解码结果是
+<code>MeGustaKing:$6$e1.2NcUo$96SfkpUHG25LFZfA5AbJVZjtD4fs6fGetDdeSA9HRpbkDw6y5nauwMwRNPxQnydsLzQGvYOU84B2nY/O40pZ30</code></p>
+<p>hashcat+rockyou
+直接跑
+<img src="https://naivekun.com/images/1546862579826.png" alt="image">
+密码是？？？
+10个<code>*</code>
+艹
+还以为是hashcat坏了。。。
+ssh登录
+<img src="https://naivekun.com/images/1546862655099.png" alt="image"></p>
+<p>？？？
+什么鬼
+先把上面那一长串解码
+<img src="https://naivekun.com/images/1546862712987.png" alt="image">
+这啥。。。
+不管，把中间那段<code>Rkw0Nl82OnBxcGQyamZuNHJ1cTFvYnl2M3Rodzg0OHRlNjd0ZWpleSAK</code>解码
+得到第六个flag
+<code>FL46_6:pqpd2jfn4ruq1obyv3thw848te67tejey</code></p>
+<p>分析ssh的输出信息
+<img src="https://naivekun.com/images/1546862797707.png" alt="image">
+提示用户<code>burtieo</code>
+密码是啥。。。
+<img src="https://naivekun.com/images/1546862927320.png" alt="image">
+提示rockyou.txt
+hydra爆破
+艹
+太慢了。。。
+<img src="https://naivekun.com/images/1546863240156.png" alt="image">
+瞎胡试，发现密码试这个。。。
+<code>Lets you update your FunNotes and more!</code>
+登录</p>
+<p><img src="https://naivekun.com/images/1546863336070.png" alt="image">
+是个rbash
+没法逃逸。。。
+发现个suedoh
+运行一下
+什么智障设计，居然要卡30秒。。
+<img src="https://naivekun.com/images/1546863458210.png" alt="image">
+可以运行<code>/usr/bin/wmstrt</code>
+这是个啥。。。
+倒计时？？？
+<img src="https://naivekun.com/images/1546863571956.png" alt="image">
+还带嘲讽的？？？
+<img src="https://naivekun.com/images/1546863590670.png" alt="image">
+注意到运行的时候10000端口打开了
+<img src="https://naivekun.com/images/1546863724020.png" alt="image">
+是个http服务
+webmin???
+登录？？？
+20秒爆破个锤子。。。
+找洞吧
+发现这个能用
+<img src="https://naivekun.com/images/1546863805962.png" alt="image">
+<img src="https://naivekun.com/images/1546863832489.png" alt="image">
+读shadow
+<img src="https://naivekun.com/images/1546863852270.png" alt="image">
+跑了一下，发现密码是<code>password</code>
+然而ssh不让登录
+那。。。找ssh私钥
+<img src="https://naivekun.com/images/1546863902185.png" alt="image">
+拿私钥登录
+发现要密码
+ssh2john之后拿john跑rockyou即可
+<img src="https://naivekun.com/images/1546864120168.png" alt="image">
+密码是<code>gustateamo</code>
+登录</p>
+<p><img src="https://naivekun.com/images/1546864176649.png" alt="image">
+拿到root
+第七个flag呢
+<img src="https://naivekun.com/images/1546864201005.png" alt="image">
+发现两个文件
+第一个是个elf
+丢进ida
+<img src="https://naivekun.com/images/1546864229468.png" alt="image">
+艹
+就个printf
+第二个看看</p>
+<pre><code class="language-perl">#!/usr/bin/perl -w
+######################################################
+#                                                    #
+#  W311 D0n3                                         #
+#  Y0u D1d N0t5top                                   #
+#  Much0 M3Gu5t4 :D                                  #
+#                                                    #
+#  3mrgnc3                                           #
+#                                                    #
+#  Hope you had fun...                               #
+#  8ut...                                            #
+#                                                    #
+#  p.s..                                             #
+#  571ll 1 M0r3 f146 :D                              #
+#                                                    #
+######################################################
+
+
+use IO::Socket;
+
+if(!($ARGV[1]))
+{
+ print &quot;Usage: L45T_fl46.pl &lt;user&gt; &lt;flag&gt;\n\n&quot;;
+ exit;
+}
+
+$shellcode =	&quot;\x6a\x0b\x58\x99\x52\x66\x68\x2d\x63\x89\xe7\x68\x2f&quot; .
+                &quot;\x73\x68\x00\x68\x2f\x62\x69\x6e\x89\xe3\x52\xe8\x38&quot; .
+                &quot;\x00\x00\x00\x59\x41\x59\x20\x46\x4c\x34\x36\x5f\x37&quot; .
+                &quot;\x3a\x39\x74\x6a\x74\x38\x36\x65\x76\x76\x63\x79\x77&quot; .
+                &quot;\x75\x75\x66\x37\x37\x34\x68\x72\x38\x38\x65\x75\x69&quot; .
+                &quot;\x33\x6e\x75\x73\x38\x64\x6c\x6b\x20\x32\x3e\x2f\x74&quot; .
+                &quot;\x6d\x70\x2f\x68\x75\x68\x00\x57\x53\x89\xe1\xcd\x80&quot; .
+                &quot;\x6a\x0b\x58\x99\x52\x66\x68\x2d\x63\x89\xe7\x68\x2f&quot; .
+                &quot;\x73\x68\x00\x68\x2f\x62\x69\x6e\x89\xe3\x52\xe8\x38&quot; .
+                &quot;\x00\x00\x00\x59\x41\x59\x20\x46\x4c\x34\x36\x5f\x37&quot; .
+                &quot;\x3a\x39\x74\x6a\x74\x38\x36\x65\x76\x76\x63\x79\x77&quot; .
+                &quot;\x75\x75\x66\x37\x37\x34\x68\x72\x38\x38\x65\x75\x69&quot; .
+                &quot;\x33\x6e\x75\x73\x38\x64\x6c\x6b\x20\x32\x3e\x2f\x74&quot; .
+                &quot;\x6d\x70\x2f\x68\x75\x68\x00\x57\x53\x89\xe1\xcd\x80&quot; .
+                &quot;\x6a\x0b\x58\x99\x52\x66\x68\x2d\x63\x89\xe7\x68\x2f&quot; .
+                &quot;\x73\x68\x00\x68\x2f\x62\x69\x6e\x89\xe3\x52\xe8\x38&quot; .
+                &quot;\x00\x00\x00\x59\x41\x59\x20\x46\x4c\x34\x36\x5f\x37&quot; .
+                &quot;\x3a\x39\x74\x6a\x74\x38\x36\x65\x76\x76\x63\x79\x77&quot; .
+                &quot;\x75\x75\x66\x37\x37\x34\x68\x72\x38\x38\x65\x75\x69&quot; .
+                &quot;\x33\x6e\x75\x73\x38\x64\x6c\x6b\x20\x32\x3e\x2f\x74&quot; .
+                &quot;\x6d\x70\x2f\x68\x75\x68\x00\x57\x53\x89\xe1\xcd\x80&quot; .
+                &quot;\x6a\x0b\x58\x99\x52\x66\x68\x2d\x63\x89\xe7\x68\x2f&quot; .
+                &quot;\x73\x68\x00\x68\x2f\x62\x69\x6e\x89\xe3\x52\xe8\x38&quot; .
+                &quot;\x00\x00\x00\x59\x41\x59\x20\x46\x4c\x34\x36\x5f\x37&quot; .
+                &quot;\x3a\x39\x74\x6a\x74\x38\x36\x65\x76\x76\x63\x79\x77&quot; .
+                &quot;\x75\x75\x66\x37\x37\x34\x68\x72\x38\x38\x65\x75\x69&quot; .
+                &quot;\x33\x6e\x75\x73\x38\x64\x6c\x6b\x20\x32\x3e\x2f\x74&quot; .
+                &quot;\x6d\x70\x2f\x68\x75\x68\x00\x57\x53\x89\xe1\xcd\x80&quot; .
+                &quot;\x6a\x0b\x58\x99\x52\x66\x68\x2d\x63\x89\xe7\x68\x2f&quot; .
+                &quot;\x73\x68\x00\x68\x2f\x62\x69\x6e\x89\xe3\x52\xe8\x38&quot; .
+                &quot;\x00\x00\x00\x59\x41\x59\x20\x46\x4c\x34\x36\x5f\x37&quot; .
+                &quot;\x3a\x39\x74\x6a\x74\x38\x36\x65\x76\x76\x63\x79\x77&quot; .
+                &quot;\x75\x75\x66\x37\x37\x34\x68\x72\x38\x38\x65\x75\x69&quot; .
+                &quot;\x33\x6e\x75\x73\x38\x64\x6c\x6b\x20\x32\x3e\x2f\x74&quot; .
+                &quot;\x6d\x70\x2f\x68\x75\x68\x00\x57\x53\x89\xe1\xcd\x80&quot; .
+                &quot;\x6a\x0b\x58\x99\x52\x66\x68\x2d\x63\x89\xe7\x68\x2f&quot; .
+                &quot;\x73\x68\x00\x68\x2f\x62\x69\x6e\x89\xe3\x52\xe8\x2d&quot; .
+                &quot;\x00\x00\x00\x4e\x33\x76\x33\x72\x20\x41\x73\x35\x75&quot; .
+                &quot;\x6d\x33\x21\x20\x31\x74\x20\x4d\x34\x6b\x33\x35\x20&quot; .
+                &quot;\x34\x6e\x20\x34\x35\x35\x20\x30\x66\x20\x79\x30\x75&quot; .
+                &quot;\x20\x26\x20\x6d\x33\x20\x3a\x44\x00\x57\x53\x89\xe1&quot; .
+                &quot;\xcd\x80&quot; ;
+
+$root = IO::Socket::INET-&gt;new(Proto=&gt;'tcp',
+                                PeerAddr=&gt;$ARGV[0],
+                                PeerPort=&gt;$ARGV[1])
+                            or die &quot;Unable to use [$ARGV[0]] to open [$ARGV[1]]&quot;;
+$ebp = &quot;TROLLOOOLLO&quot;;
+$eip = &quot;\xBA\xDF\x00\xD0&quot;;
+$flag7 = &quot;RUN /&quot; . &quot;a&quot;x1036 . $ebp . $eip . $shellcode . &quot; HTTTPEE/1.1\n\n&quot;;
+
+print $root $flag7;
+sleep(5);
+print &quot;Done.\n&quot;;
+
+close($root);
+exit;
+</code></pre>
+<p>shellcode???
+我不会逆向啊。。。
+把那个shellcode变量暴力转成ascii
+<img src="https://naivekun.com/images/1546864377602.png" alt="image">
+哈
+找到第七个flag
+<code>FL46_7:9tjt86evvcywuuf774hr88eui3nus8dlk</code></p>
+<hr>
+<p>累死了。。。</p>
+
+    </div>
+    <div class="article-footer">
+<blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <li class="post-copyright-link hidden-xs">
+      <strong>Permalink: </strong>
+      <a href="https://naivekun.com/2019/01/vulnhub-d0not5top-wp/" title="[Vulnhub] d0not5top: 1.2 - Writeup" target="_blank" rel="external">https://naivekun.com/2019/01/vulnhub-d0not5top-wp/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>License：</strong><a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN</a>
+    </li>
+  </ul>
+</blockquote>
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/naivekun" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://naivekun.com/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/naivekun" target="_blank"><span class="text-dark">naivekun</span><small class="ml-1x">CTFer</small></a></h3>
+        <div>Web/Pentest/Android</div>
+      </div>
+    </figure>
+  </div>
+</div>
+    </div>
+  </article>
+<section id="comments">
+</section>
+
+</div><nav class="bar bar-footer clearfix" data-stick-bottom>
+    <div class="bar-inner">
+        <ul class="pager pull-left">
+            <li class="prev">
+                <a href="https://naivekun.com/2019/01/vulnhub-bb2-wp/" title="[Vulnhub] billu: b0x 2 - Writeup"><i
+                        class="icon icon-angle-left"
+                        aria-hidden="true"></i><span>&nbsp;&nbsp;Older</span></a>
+            </li>
+            <li class="next">
+                <a href="https://naivekun.com/2019/01/vulnhub-homeless-wp/"
+                    title="[Vulnhub] Homeless - Writeup"><span>Newer&nbsp;&nbsp;</span><i
+                        class="icon icon-angle-right" aria-hidden="true"></i></a>
+            </li>
+            
+            <li class="toggle-toc">
+                <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false"
+                    title="Catalogue" role="button">
+                    <span>[&nbsp;</span><span>Catalogue</span>
+                    <i class="text-collapsed icon icon-anchor"></i>
+                    <i class="text-in icon icon-close"></i>
+                    <span>]</span>
+                </a>
+            </li>
+        </ul>
+        
+        <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal"
+            data-target="#donateModal"><span>$</span></button>
+        
+        <div class="bar-right">
+        </div>
+    </div>
+</nav>
+
+
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content donate">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <div class="donate-box">
+                    <div class="donate-head">
+                        <p>Maybe you could buy me a cup of coffee.</p>
+                    </div>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/alipayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/wechatpayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                    </div>
+                    <div class="donate-footer">
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay"
+                                    aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab"
+                                    aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i>
+                                    wechat payment</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main><footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<ul class="social-links">
+    <li><a href="https://github.com/naivekun" target="_blank" title="github" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-github"></i></a></li>
+    <li><a href="https://naivekun.com/index.xml" target="_blank" title="rss" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-rss"></i></a></li>
+</ul>
+  <div class="copyright">
+    &copy;&nbsp;2018  -
+    2021
+    <div class="publishby">
+        Theme by naivekun base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/python.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/javascript.min.js" defer></script><script>
+    hljs.configure({
+        tabReplace: '    ', 
+        classPrefix: ''     
+        
+    })
+    hljs.initHighlightingOnLoad();
+</script>
+<script src="https://naivekun.com/js/application.min.bdeb64b910570b6c41badc6a05b7afb0c8ad9efd8525de3c7257d59e786326a3.js"></script>
+<script src="https://naivekun.com/js/plugin.min.51ff8c7317566f82259170fa36e09c4493adc9b9378b427a01ad3f017ebac7dd.js"></script>
+
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            ROOT_URL: 'https:\/\/naivekun.com',
+            CONTENT_URL: 'https:\/\/naivekun.com\/searchindex.json ',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script type="text/javascript" src="https://naivekun.com/js/insight.min.a343cd9a5a7698336b28ef3a7c16a3a1b1d2d5fb17dc8ed04022bbe08cc5459073a15bdafa3a8a58cdd56080784bdd69fa70b1ae8597565c799c57ed00f0e120.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+<script>
+    tocbot.init({
+        
+        tocSelector: '.js-toc',
+        
+        contentSelector: '.js-toc-content',
+        
+        headingSelector: 'h1, h2, h3',
+        
+        hasInnerContainers: true,
+    });
+</script>
+
+
+  </body>
+</html>

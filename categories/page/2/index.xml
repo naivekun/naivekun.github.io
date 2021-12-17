@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Naivekun&#39;s blog</title>
+    <link>https://naivekun.com/categories/</link>
+    <description>Recent content in Categories on Naivekun&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 01 Sep 2019 16:31:40 +0000</lastBuildDate>
+    
+        <atom:link href="https://naivekun.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>[hackthebox] Reddish - Writeup</title>
+      <link>https://naivekun.com/2019/01/htb-reddish-wp/</link>
+      <pubDate>Tue, 29 Jan 2019 22:23:07 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/01/htb-reddish-wp/</guid>
+      <description>超级无敌神仙盒子 扫端口 就开了个1880 是个nodejs 网页图标？？？ google搜一下 是node red 网页提示不能get 换成post 访问http</description>
+    </item>
+    
+    <item>
+      <title>[hackthebox] Irked - Writeup</title>
+      <link>https://naivekun.com/2019/01/htb-irked-wp/</link>
+      <pubDate>Sun, 20 Jan 2019 21:07:41 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/01/htb-irked-wp/</guid>
+      <description>扫端口 好多 web啥都没有 irc? 找洞直接日 拿到低权限shell 这里可以直接提权到root 先看user.txt 没法读 有个.backup 提示隐写 隐写？</description>
+    </item>
+    
+    <item>
+      <title>[hackthebox] Secnotes - Writeup</title>
+      <link>https://naivekun.com/2019/01/htb-secnotes-wp/</link>
+      <pubDate>Sun, 20 Jan 2019 19:25:02 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/01/htb-secnotes-wp/</guid>
+      <description>扫端口，开了80，445，8808 8808是个helloworld页面 445匿名用户没权限 先看80的web 弱密码没有，注入没有 注册个用户，登</description>
+    </item>
+    
+    <item>
+      <title>[hackthebox] Oz - Writeup</title>
+      <link>https://naivekun.com/2019/01/htb-oz-writeup/</link>
+      <pubDate>Sun, 13 Jan 2019 15:33:03 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/01/htb-oz-writeup/</guid>
+      <description>第一次日这种难度的盒子。。。 4个docker跑在一个母鸡上。。。 flag在母鸡上。。。 然而网络端口全是docker里的 扫端口 两个都是pyth</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] Temple of Doom - Writeup</title>
+      <link>https://naivekun.com/2019/01/vulnhub-temple-of-doom-wp/</link>
+      <pubDate>Sat, 12 Jan 2019 20:08:24 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/01/vulnhub-temple-of-doom-wp/</guid>
+      <description>只开了22和666 666上是一个nodejs的web 抓包 cookies有个base64串 直接刷新会报错 看到serialize 把之前那个串ba</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] CTF-USV-2017 - Writeup</title>
+      <link>https://naivekun.com/2019/01/vulnhub-ctf-usv-2017-wp/</link>
+      <pubDate>Wed, 09 Jan 2019 22:30:05 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/01/vulnhub-ctf-usv-2017-wp/</guid>
+      <description>盒子介绍 Flags: There are 5 flags that should be discovered in form of: Country_name Flag: [md5 hash]. In CTF platform of the CTF-USV competition there was a hint available for each flag, but accessing it would imply a penalty. If you need any of those hints to solve the challenge, send me a message on Twitter @gusu_oana and I will be glad to help. The countries that</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] Homeless - Writeup</title>
+      <link>https://naivekun.com/2019/01/vulnhub-homeless-wp/</link>
+      <pubDate>Tue, 08 Jan 2019 20:32:20 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/01/vulnhub-homeless-wp/</guid>
+      <description>只开了80和22 web看看 这里会显示UA 这里没啥东西 源码就这一点 UA 首先想到shellshock () {:;}; echo &amp;quot;fuck&amp;quot;;没用。</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] d0not5top: 1.2 - Writeup</title>
+      <link>https://naivekun.com/2019/01/vulnhub-d0not5top-wp/</link>
+      <pubDate>Mon, 07 Jan 2019 19:09:32 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/01/vulnhub-d0not5top-wp/</guid>
+      <description>超级好玩的盒子 共7个flag 扫端口 开了好多东西 25端口的SMTP看一下 那一串欢迎信息是啥？？？ 16进制？ 解码看看 得到第三个flag FL46_3:29dryf67uheht2r1dd4qppuey474svxya 80端口</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] billu: b0x 2 - Writeup</title>
+      <link>https://naivekun.com/2019/01/vulnhub-bb2-wp/</link>
+      <pubDate>Mon, 07 Jan 2019 12:40:35 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/01/vulnhub-bb2-wp/</guid>
+      <description>80端口是个drupal 直接上msf得到低权限shell 之后提权 有两条路 1. SUID find / -perm -u+s -type f 2&amp;gt;/dev/null 发现/opt下有东西 是个elf strings看一下</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] lin.security - Writeup</title>
+      <link>https://naivekun.com/2018/12/vulnhub-lin-security-wp/</link>
+      <pubDate>Sun, 30 Dec 2018 21:40:19 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/12/vulnhub-lin-security-wp/</guid>
+      <description>教学用盒子 。。。 1. NFS 挂载 看到uid gid分别为1001 1005 本地建个用户，暴力改uid gid su过去 可以看到用户已经变成了自己的 写ssh公钥 2. docker pe</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] jarbas - Writeup</title>
+      <link>https://naivekun.com/2018/12/vulnhub-jarbas-wp/</link>
+      <pubDate>Sun, 30 Dec 2018 21:02:01 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/12/vulnhub-jarbas-wp/</guid>
+      <description>扫端口 80端口是个啥都没有的静态页面 8080是个jenkins登录框 扫目录 去看看 跑一下md5 得到用户凭据 尝试登录8080上的jenkins后</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] JIS-CTF - Writeup</title>
+      <link>https://naivekun.com/2018/12/vulnhub-jis-ctf-wp/</link>
+      <pubDate>Sat, 29 Dec 2018 23:26:20 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/12/vulnhub-jis-ctf-wp/</guid>
+      <description>扫端口 就开了22和80 看web 一个登录框 robots.txt有东西 看看 第一个flag 用户凭据和第二个flag 拿这个凭据登录 一个上传。。。 没有</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] SolidState - Writeup</title>
+      <link>https://naivekun.com/2018/12/vulnhub-solidstate-wp/</link>
+      <pubDate>Tue, 25 Dec 2018 00:41:20 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/12/vulnhub-solidstate-wp/</guid>
+      <description>从web入手？？？ 啥都没找到。。。 4555端口有个james-admin??? 浏览器打不开。。。 Google一下 原来是拿nc连的 弱密码roo</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] typhoon - Writeup</title>
+      <link>https://naivekun.com/2018/12/vulnhub-typhoon-wp/</link>
+      <pubDate>Fri, 21 Dec 2018 19:24:24 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/12/vulnhub-typhoon-wp/</guid>
+      <description>扫端口 卧槽，，， 太长了。。。 先看80 有个/mongoadmin/目录 去看看 什么鬼。。。没认证 得到一个凭据typhoon:789456123 接</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] BLACKNIGHT - Writeup</title>
+      <link>https://naivekun.com/2018/12/vulnhub-blacknight-wp/</link>
+      <pubDate>Wed, 19 Dec 2018 23:14:51 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/12/vulnhub-blacknight-wp/</guid>
+      <description>超级脑洞盒子 扫端口 先看80 主页没啥 robots.txt看看 读取flag1 提示9072 正好刚才扫端口发现9072端口 nc连上去看看 试了几下，只</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] Fowsniff - Writeup</title>
+      <link>https://naivekun.com/2018/12/vulnhub-fowsniff-wp/</link>
+      <pubDate>Wed, 19 Dec 2018 22:02:41 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/12/vulnhub-fowsniff-wp/</guid>
+      <description>信息收集 开了pop3和imap端口。。。 还是先看web吧 大概是。。。被日了 敏感信息还被挂到了Twitter上。。。 去Twitter看看@fo</description>
+    </item>
+    
+    <item>
+      <title>[HackTheBox] Waldo - WriteUp</title>
+      <link>https://naivekun.com/2018/12/htb-waldo-wp/</link>
+      <pubDate>Sun, 16 Dec 2018 20:05:30 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/12/htb-waldo-wp/</guid>
+      <description>扫端口，有个奇怪的8888端口。。。 先从web入手 试试几个功能，抓包看看 发现这几个功能 尝试读源码 好难受。。。丢进python print一下 发</description>
+    </item>
+    
+    <item>
+      <title>[HackTheBox] Active - WriteUp</title>
+      <link>https://naivekun.com/2018/12/htb-active-wp/</link>
+      <pubDate>Sun, 16 Dec 2018 12:02:33 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/12/htb-active-wp/</guid>
+      <description>是个辣鸡windows 无从下手.jpg 先从445入手 ms17什么的不用想了，这盒子不可能这么水 smbmap看看有什么可以访问的 发现Repli</description>
+    </item>
+    
+    <item>
+      <title>[HackTheBox] Hawk - WriteUp</title>
+      <link>https://naivekun.com/2018/12/htb-hawk-wp/</link>
+      <pubDate>Sun, 02 Dec 2018 23:31:13 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/12/htb-hawk-wp/</guid>
+      <description>扫端口 ftp允许匿名登录 列文件，发现 把那个.drupal.txt.enc下载下来，发现是一个加密的文件 网上找到个工具 bruteforce-salted-openssl 直接apt安装就行 翻翻</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] Moonraker:1 - Writeup</title>
+      <link>https://naivekun.com/2018/11/vulnhub-moonraker-wp/</link>
+      <pubDate>Fri, 30 Nov 2018 21:02:11 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/11/vulnhub-moonraker-wp/</guid>
+      <description>扫端口 太长了，截图放不下 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10+deb9u4 (protocol 2.0) | ssh-hostkey: | 2048 5f:bf:c0:33:51:4f:4a:a7:4a:7e:15:80:aa:d7:2a:0b (RSA) | 256 53:59:87:1e:a4:46:bd:a7:fd:9a:5f:f9:b7:40:9d:2f (ECDSA) |_ 256 0d:88:d9:fa:af:08:ce:2b:13:66:a7:70:ec:49:02:10 (ED25519) 80/tcp open http Apache httpd 2.4.25 ((Debian)) | http-methods: |_ Supported Methods: OPTIONS HEAD GET POST | http-robots.txt: 1 disallowed entry |_/ |_http-server-header: Apache/2.4.25 (Debian) |_http-title: MOONRAKER 3000/tcp open http Node.js</description>
+    </item>
+    
+  </channel>
+</rss>

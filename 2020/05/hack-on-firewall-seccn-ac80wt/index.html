@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        魔改某防火墙，移植Openwrt - Naivekun&#39;s blog
+      </title>
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  
+  <meta name="theme-color" content="#000000" />
+  
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <meta name="description" content="不要把这篇文章透露给淘宝卖家 0x0 前言 闲鱼买了某防火墙，五个千兆口，60包邮 拆开看了下，是个Marvell的方案，有个pcie，有俩sata，5" />
+  <meta name="generator" content="Hugo 0.70.0 with theme pure" />
+  <title>魔改某防火墙，移植Openwrt - Naivekun&#39;s blog</title>
+  
+  
+  <link rel="stylesheet" href="https://naivekun.com/css/style.min.7dc20efbc53647d41aa9ddea0c48e59300223d084e66ea0cbe7c30bd88903acc.css">
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
+  <meta property="og:title" content="魔改某防火墙，移植Openwrt" />
+<meta property="og:description" content="不要把这篇文章透露给淘宝卖家 0x0 前言 闲鱼买了某防火墙，五个千兆口，60包邮 拆开看了下，是个Marvell的方案，有个pcie，有俩sata，5" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://naivekun.com/2020/05/hack-on-firewall-seccn-ac80wt/" />
+<meta property="article:published_time" content="2020-05-18T20:19:44+08:00" />
+<meta property="article:modified_time" content="2020-05-18T20:19:44+08:00" />
+<meta itemprop="name" content="魔改某防火墙，移植Openwrt">
+<meta itemprop="description" content="不要把这篇文章透露给淘宝卖家 0x0 前言 闲鱼买了某防火墙，五个千兆口，60包邮 拆开看了下，是个Marvell的方案，有个pcie，有俩sata，5">
+<meta itemprop="datePublished" content="2020-05-18T20:19:44&#43;08:00" />
+<meta itemprop="dateModified" content="2020-05-18T20:19:44&#43;08:00" />
+<meta itemprop="wordCount" content="1708">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="魔改某防火墙，移植Openwrt"/>
+<meta name="twitter:description" content="不要把这篇文章透露给淘宝卖家 0x0 前言 闲鱼买了某防火墙，五个千兆口，60包邮 拆开看了下，是个Marvell的方案，有个pcie，有俩sata，5"/>
+
+  <!--[if lte IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+    <![endif]-->
+
+  <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+  </head>
+
+  
+  
+
+  <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage"><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="slimContent">
+      <div class="navbar-header">
+        <div class="profile-block text-center">
+          <a id="avatar" href="https://github.com/naivekun" target="_blank">
+            <img class="img-circle img-rotate" src="https://naivekun.com/avatar.jpg" width="200" height="200">
+          </a>
+          <h2 id="name" class="hidden-xs hidden-sm">naivekun</h2>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md">CTFer</h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>Wuhan, China</small>
+        </div><div class="search" id="search-form-wrap">
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i
+                        class="icon icon-search"></i></button>
+            </span>
+        </div>
+        <div class="ins-search">
+            <div class="ins-search-mask"></div>
+            <div class="ins-search-container">
+                <div class="ins-input-wrapper">
+                    <input type="text" class="ins-search-input" placeholder="Type something..."
+                        x-webkit-speech />
+                    <button type="button" class="close ins-close ins-selectable" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="ins-section-wrapper">
+                    <div class="ins-section-container"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+        <ul class="nav navbar-nav main-nav">
+            <li class="menu-item menu-item-home">
+                <a href="/">
+                    <i class="icon icon-home-fill"></i>
+                  <span class="menu-title">Home</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-archives">
+                <a href="/posts/">
+                    <i class="icon icon-archives-fill"></i>
+                  <span class="menu-title">Archives</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-categories">
+                <a href="/categories/">
+                    <i class="icon icon-folder"></i>
+                  <span class="menu-title">Categories</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-tags">
+                <a href="/tags/">
+                    <i class="icon icon-tags"></i>
+                  <span class="menu-title">Tags</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-friends">
+                <a href="/friends/">
+                    <i class="icon icon-friendship"></i>
+                  <span class="menu-title">Friends</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-about">
+                <a href="/about/">
+                    <i class="icon icon-cup-fill"></i>
+                  <span class="menu-title">About</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content"><script src="https://www.hackthebox.eu/badge/60818"></script>
+            </div>
+        </div>
+    </div>
+</div>
+
+      <div class="widget">
+    <h3 class="widget-title"> Categories</h3>
+    <div class="widget-body">
+        <ul class="category-list">
+            <li class="category-list-item"><a href="https://naivekun.com/categories/ctf/" class="category-list-link">ctf</a><span class="category-list-count">1</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/hackthebox/" class="category-list-link">hackthebox</a><span class="category-list-count">13</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/vulnhub/" class="category-list-link">vulnhub</a><span class="category-list-count">21</span></li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> Tags</h3>
+    <div class="widget-body">
+        <ul class="tag-list">
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/ctf/" class="tag-list-link">ctf</a><span
+                    class="tag-list-count">2</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/hackthebox/" class="tag-list-link">hackthebox</a><span
+                    class="tag-list-count">13</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/vulnhub/" class="tag-list-link">vulnhub</a><span
+                    class="tag-list-count">21</span></li>
+            
+        </ul>
+
+    </div>
+</div>
+      
+<div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+        <ul class="recent-post-list list-unstyled no-thumbnail">
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" class="title">68块钱MA5671A猫棒刷Openwrt</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-12-09 02:46:52 &#43;0800 &#43;0800" itemprop="datePublished">2021-12-09</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/10/hack-on-nrf/" class="title">nRF51系列单片机读取保护绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-10-03 23:58:09 &#43;0800 &#43;0800" itemprop="datePublished">2020-10-03</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/08/hack-bmc/" class="title">一次对服务器主板IPMI BMC的漏洞挖掘</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-08-19 01:58:07 &#43;0800 &#43;0800" itemprop="datePublished">2020-08-19</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399-more/" class="title">TN3399板子填坑</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-23 18:03:36 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-23</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399/" class="title">闲鱼便宜板子TN3399折腾全攻略</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-14 16:51:10 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-14</time>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+  </div>
+</aside>
+
+    
+    
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <h4 class="toc-title">Catalogue</h4>
+    <nav id="toc" class="js-toc toc">
+
+    </nav>
+  </div>
+</aside>
+<main class="main" role="main"><div class="content">
+  <article id="-" class="article article-type-" itemscope
+    itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2020/05/hack-on-firewall-seccn-ac80wt/"
+    >魔改某防火墙，移植Openwrt</a
+  >
+</h1>
+
+      <div class="article-meta">
+        
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2020/05/hack-on-firewall-seccn-ac80wt/" class="article-date">
+  <time datetime="2020-05-18 20:19:44 &#43;0800 &#43;0800" itemprop="datePublished">2020-05-18</time>
+</a>
+</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i>&nbsp;<a href="/2020/05/hack-on-firewall-seccn-ac80wt/#comments"
+            class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1708words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 4minutes </span>
+      </div>
+    </div>
+    <div class="article-entry marked-body js-toc-content" itemprop="articleBody">
+      <blockquote>
+<p>不要把这篇文章透露给淘宝卖家</p>
+</blockquote>
+<h1 id="0x0-前言">0x0 前言</h1>
+<p>闲鱼买了某防火墙，五个千兆口，60包邮</p>
+<p><img src="/images/2020-05-18-19-54-36.png" alt="图是随便找的，实物比这个少1个口"></p>
+<p>拆开看了下，是个Marvell的方案，有个pcie，有俩sata，512MB的内存，1G NAND</p>
+<p><img src="/images/2020-05-18-19-59-06.png" alt=""></p>
+<p>于是xjb搜了一波，发现了这个帖子 -&gt; <a href="https://www.right.com.cn/forum/forum.php?mod=viewthread&amp;tid=178876&amp;page=1&amp;authorid=146282">传送门</a></p>
+<p>很老了，2015年的帖子，作者给了个dts的patch。试了下发现不行，交换机那部分dts作者没写，只能用他自己做的。于是想自己移植一个玩一下。</p>
+<h1 id="0x1-xjb玩一下">0x1 xjb玩一下</h1>
+<p>插串口看下U-boot</p>
+<p><img src="/images/2020-05-18-20-07-53.png" alt=""></p>
+<p>u-boot功能还挺全，tftp有关的ip啥的改一下，准备刷机。</p>
+<p>玩了一圈，uboot太老了不支持ubi分区。。。垃圾</p>
+<p>然后进系统看看，后台好丑。。。这里没截图，它不给shell，但是ping功能可以命令注入。。。</p>
+<h1 id="0x2-编译固件">0x2 编译固件</h1>
+<p>准备固件</p>
+<p>原作者直接改了pogoplug e02的固件，然后交换机部分没写，估计是防淘宝卖家的。</p>
+<p>于是xjb翻翻翻找了找同配置方案，把交换机芯片配置搞了一下</p>
+<p>顺便把分区改了下，后面900多M全给ubifs</p>
+<p><img src="/images/2020-05-18-20-38-37.png" alt=""></p>
+<p>贴下我的patch，也是直接改的pogoplug e02</p>
+<pre><code>debian@debian-iot:~/seccn/openwrt/target/linux/kirkwood/patches-5.4$ ls
+100-ib62x0.patch    103-iomega-ix2-200.patch  107-01-zyxel-nsa3x0-common-nand-partitions.patch  110-pogo_e02.patch                                                      
+101-iconnect.patch  105-ea4500.patch          107-03-nsa325.patch                               201-enable-sata-port-specific-led-triggers.patch                        
+102-dockstar.patch  106-goflexnet.patch       109-pogoplug_v4.patch                             202-linksys-find-active-root.patch                                      
+debian@debian-iot:~/seccn/openwrt/target/linux/kirkwood/patches-5.4$ cat 110-pogo_e02.patch 
+
+-       model = &quot;Cloud Engines Pogoplug E02&quot;;
+-       compatible = &quot;cloudengines,pogoe02&quot;, &quot;marvell,kirkwood-88f6281&quot;,
+-                    &quot;marvell,kirkwood&quot;;
+-
+-       memory {
+-               device_type = &quot;memory&quot;;
+-               reg = &lt;0x00000000 0x10000000&gt;;
+-       };
++        model = &quot;SECCN AC80WT by naivekun&quot;;
++        compatible = &quot;cloudengines,pogoe02&quot;, &quot;marvell,kirkwood-88f6281&quot;,
++                     &quot;marvell,kirkwood&quot;;
++
++        memory {
++                device_type = &quot;memory&quot;;
++                reg = &lt;0x00000000 0x10000000&gt;;
++        };
++
++        chosen {
++                bootargs = &quot;console=ttyS0,115200n8 earlyprintk&quot;;
++        };
++
++       mbus {
++               pcie-controller {
++                       status = &quot;okay&quot;;
++
++                       pcie@1,0 {
++                               status = &quot;okay&quot;;
++                       };
+ 
+-       chosen {
+-               bootargs = &quot;console=ttyS0,115200n8&quot;;
+-               stdout-path = &amp;uart0;
++               };
++       };
++       ocp@f1000000 {
++               pinctrl: pin-controller@10000 {
++                       pmx_usb_power_enable: pmx-usb-power-enable {
++                               marvell,pins = &quot;mpp29&quot;;
++                               marvell,function = &quot;gpio&quot;;
++                       };
++                       pmx_led_green: pmx-led_green {
++                               marvell,pins = &quot;mpp48&quot;;
++
++                       };
++
++                       port@5 {
++                               reg = &lt;5&gt;;
++                               label = &quot;cpu&quot;;
++                               ethernet = &lt;&amp;eth0port&gt;;
++                               fixed-link {
++                                       speed = &lt;1000&gt;;
++                                       full-duplex;
++                               };
++                       };
++                       port@6 {
++                               reg = &lt;6&gt;;
++                               label = &quot;cpu&quot;;
++                               ethernet = &lt;&amp;eth1port&gt;;
++                               fixed-link {
++                                       speed = &lt;1000&gt;;
++                                       full-duplex;
++                               };
++                       };
++               };
++        };
+ 
+-       ethphy0: ethernet-phy@0 {
+-               reg = &lt;0&gt;;
+-       };
+ };
+ 
+ &amp;eth0 {
+-       status = &quot;okay&quot;;
++        status = &quot;okay&quot;;
+        ethernet0-port@0 {
+-               phy-handle = &lt;&amp;ethphy0&gt;;
++               speed = &lt;1000&gt;;
++               duplex = &lt;1&gt;;
++       };
++};
++
++&amp;eth1 {
++        status = &quot;okay&quot;;
++       ethernet1-port@0 {
++               speed = &lt;1000&gt;;
++               duplex = &lt;1&gt;;
+        };
+ };
+
+</code></pre>
+<p>然后改几个地方</p>
+<h3 id="0x21-makefile">0x2.1 Makefile</h3>
+<p>加上ubifs打包的参数</p>
+<ul>
+<li>FEATURES加个ubifs</li>
+<li>MKUBIFS_OPTS和UBIFS_OPTS填一下，后面那些试出来的，写炸了会kernel panic</li>
+</ul>
+<p><img src="/images/2020-05-18-20-19-19.png" alt=""></p>
+<h3 id="0x22-make-menuconfig">0x2.2 make menuconfig</h3>
+<p>改下target，选那个魔改的pogoplug</p>
+<p><img src="/images/2020-05-18-20-23-47.png" alt=""></p>
+<p>文件系统选上ubifs</p>
+<p><img src="/images/2020-05-18-20-25-23.png" alt=""></p>
+<h3 id="0x23-boardd">0x2.3 board.d</h3>
+<p>改这个文件</p>
+<pre><code>~/seccn/openwrt/target/linux/kirkwood/base-files/etc/board.d/02_network
+</code></pre>
+<p>pogoplug那里改下默认配置</p>
+<p><img src="/images/2020-05-18-20-28-32.png" alt=""></p>
+<hr>
+<p>好了，选上常用的包，wireguard，pppoe，nat6啥的，make即可</p>
+<p>make的时候建议挂上代理，要下很多东西</p>
+<p>make完会生成这些东西</p>
+<p><img src="/images/2020-05-18-20-29-30.png" alt=""></p>
+<p>这里只需要上图的<code>openwrt-kirkwood-cloudengines_pogoe02-ubifs-sysupgrade.bin</code></p>
+<p>和下图的<code>root.ubifs</code></p>
+<p><img src="/images/2020-05-18-20-31-44.png" alt=""></p>
+<h1 id="0x3-来点骚操作">0x3 来点骚操作</h1>
+<p>默认配置用的squashfs和overlay，不知道为啥挂不上。。。而且一个nand设备，用ubifs更清真</p>
+<p>所以设法让这个东西跑在ubifs上</p>
+<p>前文提到了u-boot不支持ubi，但是又不敢自己做u-boot。。。刷炸了就gg了，nand编程器好几百</p>
+<p>于是这么搞</p>
+<h3 id="0x31-kernel">0x3.1 kernel</h3>
+<p>找到前文提到的<code>openwrt-kirkwood-cloudengines_pogoe02-ubifs-sysupgrade.bin</code>，解压缩，有个名字是kernel的文件，把他拿出来。</p>
+<p>这个就是内核。它源码有bug，uboot给他的bootargs里mtdparts无效。。。。懒得修，不影响用</p>
+<h3 id="0x32-ubi">0x3.2 ubi</h3>
+<p>接下来制作ubifs文件系统</p>
+<p>找到前文提到的<code>root.ubifs</code></p>
+<p>注意这个东西不能直接塞进去用，它是ubifs，要刷进去的是ubi分区</p>
+<p>于是找到了这个工具 -&gt; <code>ubinize</code></p>
+<p>用它把ubifs做成ubi分区</p>
+<p>写个配置文件</p>
+<p><img src="/images/2020-05-18-20-37-53.png" alt=""></p>
+<p>然后打包</p>
+<pre><code>ubinize seccn.ini -p 128KiB -m 2048 -s 512 -o seccn.ubi.img
+</code></pre>
+<h1 id="0x4-刷进去">0x4 刷进去</h1>
+<p>插上网线插上串口，开机进uboot</p>
+<p>如图先把kernel刷进去</p>
+<p><img src="/images/2020-05-18-20-41-59.png" alt=""></p>
+<p>然后刷文件系统</p>
+<p><img src="/images/2020-05-18-20-42-31.png" alt=""></p>
+<p>后面还有一行<code>nand write 0x02000000 0x00900000 0x5e0000</code></p>
+<p>自己编译出来文件系统的话，改下最后一个大小</p>
+<p>偏移看好别写错。。。uboot写没了就凉了</p>
+<p>最后改下bootargs</p>
+<p><img src="/images/2020-05-18-20-44-14.png" alt=""></p>
+<p>就搞完了</p>
+<h1 id="0x5-end">0x5 end</h1>
+<p>开机正常跑过kernel，挂载ubi，进系统就没问题了，出现玄学就把报错塞google里面</p>
+<p><img src="/images/2020-05-18-20-47-26.png" alt=""></p>
+<p>随便玩了一下，挺快的，果然防火墙就是牛逼，比那些路由器不知道好到哪里去了</p>
+<p>网卡和交换机+VLAN都OK</p>
+<p>sata口和pcie也没问题，后续找个万兆卡接上去。板子后面那个6pin接口就是给sata用的，顺时针两个gnd两个5v两个12v</p>
+<p><img src="/images/2020-05-18-20-48-27.png" alt=""></p>
+<p><img src="/images/2020-05-18-20-48-38.png" alt=""></p>
+<p>后续用它做个轻nas+软路由也行，查了下好多商用nas就是用的同款cpu</p>
+<p>要固件的给我发邮件</p>
+
+    </div>
+    <div class="article-footer">
+<blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <li class="post-copyright-link hidden-xs">
+      <strong>Permalink: </strong>
+      <a href="https://naivekun.com/2020/05/hack-on-firewall-seccn-ac80wt/" title="魔改某防火墙，移植Openwrt" target="_blank" rel="external">https://naivekun.com/2020/05/hack-on-firewall-seccn-ac80wt/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>License：</strong><a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN</a>
+    </li>
+  </ul>
+</blockquote>
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/naivekun" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://naivekun.com/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/naivekun" target="_blank"><span class="text-dark">naivekun</span><small class="ml-1x">CTFer</small></a></h3>
+        <div>Web/Pentest/Android</div>
+      </div>
+    </figure>
+  </div>
+</div>
+    </div>
+  </article>
+<section id="comments">
+</section>
+
+</div><nav class="bar bar-footer clearfix" data-stick-bottom>
+    <div class="bar-inner">
+        <ul class="pager pull-left">
+            <li class="prev">
+                <a href="https://naivekun.com/2020/05/sagemath-vscode-window/" title="配置vscode在terminal中一键运行sagemath py文件"><i
+                        class="icon icon-angle-left"
+                        aria-hidden="true"></i><span>&nbsp;&nbsp;Older</span></a>
+            </li>
+            <li class="next">
+                <a href="https://naivekun.com/2020/05/whuctf-2020-wp/"
+                    title="WHUCTF 2020 WriteUp"><span>Newer&nbsp;&nbsp;</span><i
+                        class="icon icon-angle-right" aria-hidden="true"></i></a>
+            </li>
+            
+            <li class="toggle-toc">
+                <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false"
+                    title="Catalogue" role="button">
+                    <span>[&nbsp;</span><span>Catalogue</span>
+                    <i class="text-collapsed icon icon-anchor"></i>
+                    <i class="text-in icon icon-close"></i>
+                    <span>]</span>
+                </a>
+            </li>
+        </ul>
+        
+        <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal"
+            data-target="#donateModal"><span>$</span></button>
+        
+        <div class="bar-right">
+        </div>
+    </div>
+</nav>
+
+
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content donate">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <div class="donate-box">
+                    <div class="donate-head">
+                        <p>Maybe you could buy me a cup of coffee.</p>
+                    </div>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/alipayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/wechatpayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                    </div>
+                    <div class="donate-footer">
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay"
+                                    aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab"
+                                    aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i>
+                                    wechat payment</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main><footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<ul class="social-links">
+    <li><a href="https://github.com/naivekun" target="_blank" title="github" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-github"></i></a></li>
+    <li><a href="https://naivekun.com/index.xml" target="_blank" title="rss" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-rss"></i></a></li>
+</ul>
+  <div class="copyright">
+    &copy;&nbsp;2018  -
+    2021
+    <div class="publishby">
+        Theme by naivekun base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/python.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/javascript.min.js" defer></script><script>
+    hljs.configure({
+        tabReplace: '    ', 
+        classPrefix: ''     
+        
+    })
+    hljs.initHighlightingOnLoad();
+</script>
+<script src="https://naivekun.com/js/application.min.bdeb64b910570b6c41badc6a05b7afb0c8ad9efd8525de3c7257d59e786326a3.js"></script>
+<script src="https://naivekun.com/js/plugin.min.51ff8c7317566f82259170fa36e09c4493adc9b9378b427a01ad3f017ebac7dd.js"></script>
+
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            ROOT_URL: 'https:\/\/naivekun.com',
+            CONTENT_URL: 'https:\/\/naivekun.com\/searchindex.json ',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script type="text/javascript" src="https://naivekun.com/js/insight.min.a343cd9a5a7698336b28ef3a7c16a3a1b1d2d5fb17dc8ed04022bbe08cc5459073a15bdafa3a8a58cdd56080784bdd69fa70b1ae8597565c799c57ed00f0e120.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+<script>
+    tocbot.init({
+        
+        tocSelector: '.js-toc',
+        
+        contentSelector: '.js-toc-content',
+        
+        headingSelector: 'h1, h2, h3',
+        
+        hasInnerContainers: true,
+    });
+</script>
+
+
+  </body>
+</html>

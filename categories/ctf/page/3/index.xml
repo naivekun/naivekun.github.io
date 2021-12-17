@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ctf on Naivekun&#39;s blog</title>
+    <link>https://naivekun.com/categories/ctf/</link>
+    <description>Recent content in ctf on Naivekun&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 01 Sep 2019 16:31:40 +0000</lastBuildDate>
+    
+        <atom:link href="https://naivekun.com/categories/ctf/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>[Vulnhub] CTF-KIOFan - WriteUp</title>
+      <link>https://naivekun.com/2018/11/ctf-kiofan-wp/</link>
+      <pubDate>Tue, 27 Nov 2018 19:41:45 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/11/ctf-kiofan-wp/</guid>
+      <description>&lt;p&gt;看看端口
+就开了个80和22
+懒得放图&lt;/p&gt;
+&lt;p&gt;从web入手
+打开网页，提示需要登录
+&lt;img src=&#34;https://naivekun.com/images/1543319056230.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] FourAndSix: 2.01 - WriteUp</title>
+      <link>https://naivekun.com/2018/11/untitled-1543229695957/</link>
+      <pubDate>Mon, 26 Nov 2018 18:54:55 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/11/untitled-1543229695957/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;挺好的盒子，学到很多新东西&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;nmap开路
+&lt;img src=&#34;https://naivekun.com/images/1543229863106.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] XXE Lab:1 - WriteUp</title>
+      <link>https://naivekun.com/2018/11/vulnhub-xxe-lab/</link>
+      <pubDate>Mon, 19 Nov 2018 20:41:54 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/11/vulnhub-xxe-lab/</guid>
+      <description>&lt;p&gt;看题知漏洞&lt;/p&gt;
+&lt;p&gt;扫端口
+就开了个80
+主页是apache默认页面
+robots.txt有点东西
+&lt;img src=&#34;https://naivekun.com/images/1542631410979.png&#34; alt=&#34;image&#34;&gt;
+访问&lt;code&gt;/xxe&lt;/code&gt;
+发现是个登陆框。。。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] Matrix:1 - WriteUp</title>
+      <link>https://naivekun.com/2018/11/vulnhub-matrix-wp/</link>
+      <pubDate>Mon, 19 Nov 2018 18:57:12 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/11/vulnhub-matrix-wp/</guid>
+      <description>&lt;p&gt;&lt;del&gt;懒得写目录&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;扫端口，记得加&lt;code&gt;-p-&lt;/code&gt;
+&lt;img src=&#34;https://naivekun.com/images/1542625117729.png&#34; alt=&#34;image&#34;&gt;
+80看了看，没东西
+31337端口上也有个类似的网页。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>[HackTheBox]Bounty - WriteUp</title>
+      <link>https://naivekun.com/2018/10/htb-bounty/</link>
+      <pubDate>Mon, 29 Oct 2018 20:41:04 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/10/htb-bounty/</guid>
+      <description>&lt;h3 id=&#34;0x01-discovery&#34;&gt;0x01 Discovery&lt;/h3&gt;
+&lt;p&gt;就开了个80
+扫目录，发现这样一个东西
+&lt;img src=&#34;https://naivekun.com/images/1540816948276.png&#34; alt=&#34;image&#34;&gt;
+aspx的站，去看看&lt;/p&gt;
+&lt;h3 id=&#34;0x02-web-exploit&#34;&gt;0x02 Web Exploit&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://naivekun.com/images/1540817003087.png&#34; alt=&#34;image&#34;&gt;
+有个上传点
+怼点东西上去&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>[HackTheBox]DevOops - WriteUp</title>
+      <link>https://naivekun.com/2018/10/htb-devoops-writeup/</link>
+      <pubDate>Thu, 18 Oct 2018 09:56:33 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/10/htb-devoops-writeup/</guid>
+      <description>&lt;h3 id=&#34;discover&#34;&gt;Discover&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://naivekun.com/images/1539828067751.png&#34; alt=&#34;image&#34;&gt;
+开了个ssh和http
+Gunicorn是什么鬼。。。
+从http入手&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>[Vulnhub] Node:1 - Writeup</title>
+      <link>https://naivekun.com/2018/10/untitled-1538912211656/</link>
+      <pubDate>Sun, 07 Oct 2018 19:36:51 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/10/untitled-1538912211656/</guid>
+      <description>&lt;h3 id=&#34;0x01-discovery&#34;&gt;0x01 Discovery&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://naivekun.com/images/1538912379234.png&#34; alt=&#34;image&#34;&gt;
+有个Node.js的web
+有个ssh&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>[HackTheBox]Canape - Writeup</title>
+      <link>https://naivekun.com/2018/09/hackthebox-canape-writeup/</link>
+      <pubDate>Sat, 22 Sep 2018 13:19:38 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/09/hackthebox-canape-writeup/</guid>
+      <description>&lt;h3 id=&#34;0x01-discovery&#34;&gt;0x01 Discovery&lt;/h3&gt;
+&lt;p&gt;就开了个&lt;code&gt;80 http&lt;/code&gt;，懒得放图。&lt;/p&gt;
+&lt;h3 id=&#34;0x02-web-exploit&#34;&gt;0x02 Web Exploit&lt;/h3&gt;
+&lt;p&gt;进去看看
+&lt;img src=&#34;https://naivekun.com/images/1537594046552.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>[HackTheBox]Poison - Writeup</title>
+      <link>https://naivekun.com/2018/09/hackthebox-poison-writeup/</link>
+      <pubDate>Fri, 21 Sep 2018 22:12:13 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/09/hackthebox-poison-writeup/</guid>
+      <description>&lt;p&gt;知识点&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;PHP LFI
+ssh隧道&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;0x01-discovery&#34;&gt;0x01 Discovery&lt;/h3&gt;
+&lt;p&gt;nmap开路
+&lt;img src=&#34;https://naivekun.com/images/1537539443912.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>信息安全入坑笔记</title>
+      <link>https://naivekun.com/2018/08/ns-note/</link>
+      <pubDate>Mon, 27 Aug 2018 23:38:29 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/08/ns-note/</guid>
+      <description>题库 实验吧 Pentest-it WeChall Hack The Box Root-Me HackThis CTF Time</description>
+    </item>
+    
+    <item>
+      <title>新的开始</title>
+      <link>https://naivekun.com/2018/08/new/</link>
+      <pubDate>Thu, 02 Aug 2018 16:25:37 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2018/08/new/</guid>
+      <description>毕业了。</description>
+    </item>
+    
+  </channel>
+</rss>
