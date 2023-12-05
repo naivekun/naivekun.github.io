@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        Spectrum SAX1V1K 安全启动绕过 - Naivekun&#39;s blog
+      </title>
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  
+  <meta name="theme-color" content="#000000" />
+  
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <meta name="description" content="貌似高通的QSDK默认都有这个安全问题 背景 最近发现一个便宜路由器Spectrum SAX1V1K，配置挺高的，只要200 RMB IPQ8072A &#43; QCN5054 &#43; QCN5024 4x4 WiFi 6 2G RAM" />
+  <meta name="generator" content="Hugo 0.70.0 with theme pure" />
+  <title>Spectrum SAX1V1K 安全启动绕过 - Naivekun&#39;s blog</title>
+  
+  
+  <link rel="stylesheet" href="https://naivekun.com/css/style.min.c4bc7071f132c964c2116bca53b392933f377e5ca7b7051ed245187c621a2d3e.css">
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
+  <meta property="og:title" content="Spectrum SAX1V1K 安全启动绕过" />
+<meta property="og:description" content="貌似高通的QSDK默认都有这个安全问题 背景 最近发现一个便宜路由器Spectrum SAX1V1K，配置挺高的，只要200 RMB IPQ8072A &#43; QCN5054 &#43; QCN5024 4x4 WiFi 6 2G RAM" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://naivekun.com/2023/07/spectrum-sax1v1k-secboot-bypass/" />
+<meta property="article:published_time" content="2023-07-29T20:00:35+08:00" />
+<meta property="article:modified_time" content="2023-07-29T20:00:35+08:00" />
+<meta itemprop="name" content="Spectrum SAX1V1K 安全启动绕过">
+<meta itemprop="description" content="貌似高通的QSDK默认都有这个安全问题 背景 最近发现一个便宜路由器Spectrum SAX1V1K，配置挺高的，只要200 RMB IPQ8072A &#43; QCN5054 &#43; QCN5024 4x4 WiFi 6 2G RAM">
+<meta itemprop="datePublished" content="2023-07-29T20:00:35&#43;08:00" />
+<meta itemprop="dateModified" content="2023-07-29T20:00:35&#43;08:00" />
+<meta itemprop="wordCount" content="7851">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spectrum SAX1V1K 安全启动绕过"/>
+<meta name="twitter:description" content="貌似高通的QSDK默认都有这个安全问题 背景 最近发现一个便宜路由器Spectrum SAX1V1K，配置挺高的，只要200 RMB IPQ8072A &#43; QCN5054 &#43; QCN5024 4x4 WiFi 6 2G RAM"/>
+
+  <!--[if lte IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+    <![endif]-->
+
+  <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+  </head>
+
+  
+  
+
+  <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage"><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="slimContent">
+      <div class="navbar-header">
+        <div class="profile-block text-center">
+          <a id="avatar" href="https://github.com/naivekun" target="_blank">
+            <img class="img-circle img-rotate" src="https://naivekun.com/avatar.jpg" width="200" height="200">
+          </a>
+          <h2 id="name" class="hidden-xs hidden-sm">naivekun</h2>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>BeiJing, China</small>
+        </div><div class="search" id="search-form-wrap">
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i
+                        class="icon icon-search"></i></button>
+            </span>
+        </div>
+        <div class="ins-search">
+            <div class="ins-search-mask"></div>
+            <div class="ins-search-container">
+                <div class="ins-input-wrapper">
+                    <input type="text" class="ins-search-input" placeholder="Type something..."
+                        x-webkit-speech />
+                    <button type="button" class="close ins-close ins-selectable" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="ins-section-wrapper">
+                    <div class="ins-section-container"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+        <ul class="nav navbar-nav main-nav">
+            <li class="menu-item menu-item-home">
+                <a href="/">
+                    <i class="icon icon-home-fill"></i>
+                  <span class="menu-title">Home</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-archives">
+                <a href="/posts/">
+                    <i class="icon icon-archives-fill"></i>
+                  <span class="menu-title">Archives</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-categories">
+                <a href="/categories/">
+                    <i class="icon icon-folder"></i>
+                  <span class="menu-title">Categories</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-tags">
+                <a href="/tags/">
+                    <i class="icon icon-tags"></i>
+                  <span class="menu-title">Tags</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-friends">
+                <a href="/friends/">
+                    <i class="icon icon-friendship"></i>
+                  <span class="menu-title">Friends</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-about">
+                <a href="/about/">
+                    <i class="icon icon-cup-fill"></i>
+                  <span class="menu-title">About</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content"><script src="https://www.hackthebox.eu/badge/60818"></script>
+            </div>
+        </div>
+    </div>
+</div>
+
+      <div class="widget">
+    <h3 class="widget-title"> Categories</h3>
+    <div class="widget-body">
+        <ul class="category-list">
+            <li class="category-list-item"><a href="https://naivekun.com/categories/ctf/" class="category-list-link">ctf</a><span class="category-list-count">1</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/hackthebox/" class="category-list-link">hackthebox</a><span class="category-list-count">13</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/vulnhub/" class="category-list-link">vulnhub</a><span class="category-list-count">21</span></li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> Tags</h3>
+    <div class="widget-body">
+        <ul class="tag-list">
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/ctf/" class="tag-list-link">ctf</a><span
+                    class="tag-list-count">2</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/hackthebox/" class="tag-list-link">hackthebox</a><span
+                    class="tag-list-count">13</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/vulnhub/" class="tag-list-link">vulnhub</a><span
+                    class="tag-list-count">21</span></li>
+            
+        </ul>
+
+    </div>
+</div>
+      
+<div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+        <ul class="recent-post-list list-unstyled no-thumbnail">
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2023/12/loongson-3a6000-overclock/" class="title">Loongson 3A6000官方EVB超频</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2023-12-06 01:59:26 &#43;0800 &#43;0800" itemprop="datePublished">2023-12-06</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2023/07/spectrum-sax1v1k-secboot-bypass/" class="title">Spectrum SAX1V1K 安全启动绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2023-07-29 20:00:35 &#43;0800 &#43;0800" itemprop="datePublished">2023-07-29</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" class="title">68块钱MA5671A猫棒刷Openwrt</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-12-09 02:46:52 &#43;0800 &#43;0800" itemprop="datePublished">2021-12-09</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/10/hack-on-nrf/" class="title">nRF51系列单片机读取保护绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-10-03 23:58:09 &#43;0800 &#43;0800" itemprop="datePublished">2020-10-03</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/08/hack-bmc/" class="title">一次对服务器主板IPMI BMC的漏洞挖掘</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-08-19 01:58:07 &#43;0800 &#43;0800" itemprop="datePublished">2020-08-19</time>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+  </div>
+</aside>
+
+    
+    
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <h4 class="toc-title">Catalogue</h4>
+    <nav id="toc" class="js-toc toc">
+
+    </nav>
+  </div>
+</aside>
+<main class="main" role="main"><div class="content">
+  <article id="-" class="article article-type-" itemscope
+    itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2023/07/spectrum-sax1v1k-secboot-bypass/"
+    >Spectrum SAX1V1K 安全启动绕过</a
+  >
+</h1>
+
+      <div class="article-meta">
+        
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2023/07/spectrum-sax1v1k-secboot-bypass/" class="article-date">
+  <time datetime="2023-07-29 20:00:35 &#43;0800 &#43;0800" itemprop="datePublished">2023-07-29</time>
+</a>
+</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i>&nbsp;<a href="/2023/07/spectrum-sax1v1k-secboot-bypass/#comments"
+            class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 7851words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 16minutes </span>
+      </div>
+    </div>
+    <div class="article-entry marked-body js-toc-content" itemprop="articleBody">
+      <blockquote>
+<p>貌似高通的QSDK默认都有这个安全问题</p>
+</blockquote>
+<h1 id="背景">背景</h1>
+<p>最近发现一个便宜路由器Spectrum SAX1V1K，配置挺高的，只要200 RMB</p>
+<ul>
+<li>IPQ8072A + QCN5054 + QCN5024 4x4 WiFi 6</li>
+<li>2G RAM</li>
+<li>16G emmc</li>
+<li>3x 1Gbps RJ45</li>
+<li>1x 2.5Gbps RJ45</li>
+</ul>
+<p><img src="/images/2023-07-29-20-25-45.png" alt=""></p>
+<p>FCC上有拆机图 <a href="https://fccid.io/H8NSAX1V1K/Internal-Photos/Internal-Photos-4757296">https://fccid.io/H8NSAX1V1K/Internal-Photos/Internal-Photos-4757296</a></p>
+<p>openwrt forum有讨论帖 <a href="https://forum.openwrt.org/t/spectrum-sax1v1k-askey-rt5010w-openwrt-support/149923/121">https://forum.openwrt.org/t/spectrum-sax1v1k-askey-rt5010w-openwrt-support/149923/121</a></p>
+<h1 id="到手草怎么不能刷机">到手，草怎么不能刷机</h1>
+<p>原装固件极其难用，要下个APP配置。拆机，接串口看看</p>
+<pre><code>Format: Log Type - Time(microsec) - Message - Optional Info
+Log Type: B - Since Boot(Power On Reset),  D - Delta,  S - Statistic
+S - QC_IMAGE_VERSION_STRING=BOOT.BF.3.3.1-00163
+S - IMAGE_VARIANT_STRING=HAASANAZA
+S - OEM_IMAGE_VERSION_STRING=CRM
+S - Boot Config, 0x000002e3
+B -       202 - PBL, Start
+B -      2739 - bootable_media_detect_entry, Start
+B -     88728 - bootable_media_detect_success, Start
+B -     88732 - elf_loader_entry, Start
+B -     90157 - auth_hash_seg_entry, Start
+B -    128232 - auth_hash_seg_exit, Start
+B -    142789 - elf_segs_hash_verify_entry, Start
+B -    205423 - PBL, End
+B -    220606 - SBL1, Start
+B -    273432 - GCC [RstStat:0x10, RstDbg:0x600000] WDog Stat : 0x4
+B -    279990 - pm_device_init, Start
+B -    409127 - PM_SET_VAL:Skip
+D -    128618 - pm_device_init, Delta
+B -    411536 - pm_driver_init, Start
+D -      5215 - pm_driver_init, Delta
+B -    417758 - clock_init, Start
+D -      2135 - clock_init, Delta
+B -    421906 - boot_flash_init, Start
+D -      7869 - boot_flash_init, Delta
+B -    433466 - boot_config_data_table_init, Start
+D -      1067 - boot_config_data_table_init, Delta - (575 Bytes)
+B -    441091 - Boot Setting :  0x00000618
+B -    444842 - CDT version:2,Platform ID:8,Major ID:117,Minor ID:1,Subtype:6
+B -    451918 - sbl1_ddr_set_params, Start
+B -    455761 - CPR configuration: 0x30c
+B -    459116 - cpr_init, Start
+B -    461983 - Rail:0 Mode: 5 Voltage: 808000
+B -    467107 - CL CPR settled at 760000mV
+B -    470035 - Rail:1 Mode: 5 Voltage: 880000
+B -    474214 - Rail:1 Mode: 7 Voltage: 920000
+D -     16531 - cpr_init, Delta
+B -    481015 - Pre_DDR_clock_init, Start
+B -    485102 - Pre_DDR_clock_init, End
+B -    488427 - DDR Type : PCDDR4
+B -    495259 - do ddr sanity test, Start
+D -      1037 - do ddr sanity test, Delta
+B -    498858 - DDR: Start of HAL DDR Boot Training
+B -    503585 - DDR: End of HAL DDR Boot Training
+B -    509380 - DDR: Checksum to be stored on flash is -1525685476
+B -    519781 - Image Load, Start
+D -    344955 - QSEE Image Loaded, Delta - (1380440 Bytes)
+B -    864827 - Image Load, Start
+D -       457 - SEC Image Loaded, Delta - (0 Bytes)
+B -    872330 - Image Load, Start
+D -    287859 - DEVCFG Image Loaded, Delta - (32468 Bytes)
+B -   1160281 - Image Load, Start
+D -    292861 - RPM Image Loaded, Delta - (93060 Bytes)
+B -   1453233 - Image Load, Start
+D -    312595 - APPSBL Image Loaded, Delta - (617384 Bytes)
+B -   1765950 - QSEE Execution, Start
+D -        61 - QSEE Execution, Delta
+B -   1771745 - USB D+ check, Start
+D -         0 - USB D+ check, Delta
+B -   1778150 - SBL1, End
+D -   1559831 - SBL1, Delta
+S - Flash Throughput, 34403 KB/s  (2124599 Bytes,  61756 us)
+S - DDR Frequency, 600 MHz
+S - Core 0 Frequency, 1651 MHz
+
+
+U-Boot 1.3.3 [spf11.1_csu2] (Apr 22 2021 - 18:02:25 +0800)
+
+DRAM:  smem ram ptable found: ver: 1 len: 4
+2 GiB
+[Askey] Led init ...
+NAND:  Could not find nand_gpio in dts, using defaults
+Not an ONFI device
+ONFI probe failed
+ID = ffffffff
+Vendor = ff
+Device = ff
+qpic_nand: unknown NAND device manufacturer: ff device: ff
+U-Boot BUG at drivers/mtd/mtdcore.c:420!
+SF: Unsupported flash IDs: manuf ff, jedec ffff, ext_jedec ffff
+ipq_spi: SPI Flash not found (bus/cs/speed/mode) = (0/0/48000000/0)
+0 MiB
+MMC:   &lt;NULL&gt;: 0 (eMMC)
+In:    serial@78B3000
+Out:   serial@78B3000
+Err:   serial@78B3000
+machid: 8750106
+eth5 MAC Address from ART is not valid
+Hit space key to stop autoboot:  0 
+
+
+[Askey] do_bootaskey()
+ check temperature of soc 36 ,and threshold 80
+
+[Askey] thermal_check_temp pass
+mmc:mmcargs=mmc_mid=15
+[Askey] do_boot_signedimg_askey()
+debug cert - not found
+verify init: active_part [0], bak_part [1]
+verify FW [0] start
+do verify start
+verify kernel start
+
+MMC read: dev # 0, block # 35362, count 16384 ... 16384 blocks read: OK
+qca_verify.c [29] load_addr:0x44000000 size:0x800000
+Kernel image authentication success 
+verify rootfs start
+
+MMC read: dev # 0, block # 68130, count 64809 ... 64809 blocks read: OK
+qca_verify.c [57] load_addr:0x41000000 size:0x1fa6928
+Rootfs image authentication success 
+do verify success
+verify FW [0] success
+backup start ...
+
+MMC read: dev # 0, block # 51746, count 16384 ... 16384 blocks read: OK
+no need backup, FW &amp; FW_1 is same.
+secure boot fuse is enabled
+## Loading kernel from FIT Image at 44000028 ...
+   Using 'config@rt5010w-d187-rev6' configuration
+   Trying 'kernel@1' kernel subimage
+     Description:  ARM64 OpenWrt Linux-4.4.60
+     Type:         Kernel Image
+     Compression:  gzip compressed
+     Data Start:   0x44000110
+     Data Size:    3989414 Bytes = 3.8 MiB
+     Architecture: AArch64
+     OS:           Linux
+     Load Address: 0x41080000
+     Entry Point:  0x41080000
+     Hash algo:    crc32
+     Hash value:   42372119
+     Hash algo:    sha1
+     Hash value:   e9dfebf3bd70909a5490b9b1e24d570415bb70bc
+   Verifying Hash Integrity ... crc32+ sha1+ OK
+## Loading fdt from FIT Image at 44000028 ...
+   Using 'config@rt5010w-d187-rev6' configuration
+   Trying 'fdt@rt5010w-d187-rev6' fdt subimage
+     Description:  ARM64 OpenWrt rt5010w-d187 device tree blob
+     Type:         Flat Device Tree
+     Compression:  uncompressed
+     Data Start:   0x44433a0c
+     Data Size:    82580 Bytes = 80.6 KiB
+     Architecture: AArch64
+     Hash algo:    crc32
+     Hash value:   80b58082
+     Hash algo:    sha1
+     Hash value:   8a27020c37af23b6f83437f66ee6957fe764db2a
+   Verifying Hash Integrity ... crc32+ sha1+ OK
+   Booting using the fdt blob at 0x44433a0c
+   Uncompressing Kernel Image ... OK
+   Loading Device Tree to 4a1e8000, end 4a1ff293 ... OK
+Using machid 0x8750106 from environment
+
+Starting kernel ...
+
+Jumping to AARCH64 kernel via monitor
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Initializing cgroup subsys cpuset
+[    0.000000] Initializing cgroup subsys cpu
+[    0.000000] Initializing cgroup subsys cpuacct
+[    0.000000] Linux version 4.4.60 (jenkins@ip-47-228-8-81) (gcc version 5.2.0 (OpenWrt GCC 5.2.0 49a007675+r49254) ) #1 SMP PREEMPT Mon Oct 11 18:15:52 UTC 2021
+[    0.000000] Boot CPU: AArch64 Processor [410fd034]
+[    0.000000] Ignoring memory range 0x40000000 - 0x41000000
+[    0.000000] Machine: Askey RT5010W-D187/REV6
+[    0.000000] efi: Getting EFI parameters from FDT:
+[    0.000000] efi: UEFI not found.
+[    0.000000] Reserved memory: OVERLAP DETECTED!
+[    0.000000] wifi_dump@51100000 (0x0000000051100000--0x0000000051700000) overlaps with wigig_dump@51300000 (0x0000000051300000--0x0000000051700000)
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.0 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: MIGRATE_INFO_TYPE not supported.
+[    0.000000] PERCPU: Embedded 15 pages/cpu @ffffffc07ef4a000 s20864 r8192 d32384 u61440
+[    0.000000] Detected VIPT I-cache on CPU0
+[    0.000000] CPU features: enabling workaround for ARM erratum 845719
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 482112
+[    0.000000] Kernel command line: console=ttyMSM0,115200n8 mmc_mid=0x15 boot_signedimg root=PARTUUID=3f6c8b45-381d-2e4d-a72c-4a59900be353 gpt uboot-version=1.3.3 rootwait secboot=1 swiotlb=1 coherent_pool=2M
+[    0.000000] PID hash table entries: 4096 (order: 3, 32768 bytes)
+[    0.000000] Dentry cache hash table entries: 262144 (order: 9, 2097152 bytes)
+[    0.000000] Inode-cache hash table entries: 131072 (order: 8, 1048576 bytes)
+[    0.000000] software IO TLB [mem 0xbfe02000-0xbfe42000] (0MB) mapped at [ffffffc07ee02000-ffffffc07ee41fff]
+[    0.000000] Memory: 1914812K/1960960K available (5468K kernel code, 633K rwdata, 2340K rodata, 228K init, 395K bss, 46148K reserved, 0K cma-reserved)
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     vmalloc : 0xffffff8000000000 - 0xffffffbdbfff0000   (   246 GB)
+[    0.000000]     vmemmap : 0xffffffbdc0000000 - 0xffffffbfc0000000   (     8 GB maximum)
+[    0.000000]               0xffffffbdc0040000 - 0xffffffbdc2000000   (    31 MB actual)
+[    0.000000]     fixed   : 0xffffffbffa7fd000 - 0xffffffbffac00000   (  4108 KB)
+[    0.000000]     PCI I/O : 0xffffffbffae00000 - 0xffffffbffbe00000   (    16 MB)
+[    0.000000]     modules : 0xffffffbffc000000 - 0xffffffc000000000   (    64 MB)
+[    0.000000]     memory  : 0xffffffc000000000 - 0xffffffc07f000000   (  2032 MB)
+[    0.000000]       .init : 0xffffffc000822000 - 0xffffffc00085b000   (   228 KB)
+[    0.000000]       .text : 0xffffffc000080000 - 0xffffffc000822000   (  7816 KB)
+[    0.000000]       .data : 0xffffffc00086a000 - 0xffffffc000908600   (   634 KB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[    0.000000] Preemptible hierarchical RCU implementation.
+[    0.000000] 	Build-time adjustment of leaf fanout to 64.
+[    0.000000] NR_IRQS:64 nr_irqs:64 0
+[    0.000000] Architected cp15 timer(s) running at 19.20MHz (virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x46d987e47, max_idle_ns: 440795202767 ns
+[    0.000005] sched_clock: 56 bits at 19MHz, resolution 52ns, wraps every 4398046511078ns
+[    0.000417] Calibrating delay loop (skipped), value calculated using timer frequency.. 38.40 BogoMIPS (lpj=192000)
+[    0.000429] pid_max: default: 32768 minimum: 301
+[    0.000526] Mount-cache hash table entries: 4096 (order: 3, 32768 bytes)
+[    0.000537] Mountpoint-cache hash table entries: 4096 (order: 3, 32768 bytes)
+[    0.001119] Initializing cgroup subsys io
+[    0.001136] Initializing cgroup subsys memory
+[    0.001162] Initializing cgroup subsys devices
+[    0.001174] Initializing cgroup subsys freezer
+[    0.001186] Initializing cgroup subsys net_cls
+[    0.001197] Initializing cgroup subsys pids
+[    0.001445] EFI services will not be available.
+[    0.001471] ASID allocator initialised with 65536 entries
+[    0.051949] MSM Memory Dump base table set up
+[    0.051970] MSM Memory Dump apps data table set up
+[    0.090102] Detected VIPT I-cache on CPU1
+[    0.090146] CPU1: Booted secondary processor [410fd034]
+[    0.120102] Detected VIPT I-cache on CPU2
+[    0.120133] CPU2: Booted secondary processor [410fd034]
+[    0.150139] Detected VIPT I-cache on CPU3
+[    0.150169] CPU3: Booted secondary processor [410fd034]
+[    0.150233] Brought up 4 CPUs
+[    0.150260] SMP: Total of 4 processors activated.
+[    0.150271] CPU: All CPU(s) started at EL1
+[    0.150299] alternatives: patching kernel code
+[    0.167093] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
+[    0.167121] futex hash table entries: 1024 (order: 5, 131072 bytes)
+[    0.167513] pinctrl core: initialized pinctrl subsystem
+[    0.168433] NET: Registered protocol family 16
+[    0.190084] cpuidle: using governor ladder
+[    0.220107] cpuidle: using governor menu
+[    0.220313] NET: Registered protocol family 42
+[    0.220443] vdso: 2 pages (1 code @ ffffffc000871000, 1 data @ ffffffc000870000)
+[    0.220473] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[    0.221132] DMA: preallocated 2048 KiB pool for atomic allocations
+[    0.221265] CPU: IPQ8072A, SoC Version: 2.0
+[    0.221705] IPC logging disabled
+[    0.221712] IPC logging disabled
+[    0.221718] IPC logging disabled
+[    0.221724] IPC logging disabled
+[    0.221729] IPC logging disabled
+[    0.224349] Soc version is not 1, changing clock offsets
+[    0.233146] irq: no irq domain found for /soc/smp2p-wcss/slave-kernel !
+[    0.235689] irq: no irq domain found for /soc/smp2p-wcss/slave-kernel !
+[    0.239115] sps:sps is ready.
+[    0.244165] spmi spmi-0: PMIC Arb Version-2 (0x20010000)
+[    0.250720] qcom,cpr4-apss-regulator b018000.cpr4-ctrl: CPR valid fuse count: 4
+[    0.251013] qcom,cpr3-npu-regulator a4000.npu-cpr: NPU CPR valid fuse count: 2
+[    0.292204] pps_core: LinuxPPS API ver. 1 registered
+[    0.292213] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti &lt;giometti@linux.it&gt;
+[    0.292236] PTP clock support registered
+[    0.293666] Advanced Linux Sound Architecture Driver Initialized.
+[    0.294365] clocksource: Switched to clocksource arch_sys_counter
+[    0.297586] NET: Registered protocol family 2
+[    0.298214] TCP established hash table entries: 16384 (order: 5, 131072 bytes)
+[    0.298419] TCP bind hash table entries: 16384 (order: 6, 262144 bytes)
+[    0.298781] TCP: Hash tables configured (established 16384 bind 16384)
+[    0.298842] UDP hash table entries: 1024 (order: 3, 32768 bytes)
+[    0.298908] UDP-Lite hash table entries: 1024 (order: 3, 32768 bytes)
+[    0.299125] NET: Registered protocol family 1
+[    0.299655] hw perfevents: enabled with armv8_cortex_a53 PMU driver, 7 counters available
+[    0.307642] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.307659] jffs2: version 2.2 (NAND) (SUMMARY) (LZMA) (RTIME) (CMODE_PRIORITY) (c) 2001-2006 Red Hat, Inc.
+[    0.311359] Key type asymmetric registered
+[    0.311375] Asymmetric key parser 'x509' registered
+[    0.311403] io scheduler noop registered
+[    0.311417] io scheduler deadline registered (default)
+[    0.318019] msm_rpm_log_probe: OK
+[    0.318353] msm-dcc b3000.dcc: DCC XPU is not specified
+[    0.318597] msm-dcc b3000.dcc: jiffies_64: 0xffff8aef, cntvct_64: 0x95db534
+[    0.318610] msm-dcc b3000.dcc: gcnt_hi: 0x00000000(0xffffff800027e004)
+[    0.318622] msm-dcc b3000.dcc: gcnt_lo: 0x095db73b(0xffffff800027e000)
+[    0.319193] TZ SMMU State: SMMU Stage2 Enabled
+[    0.319249] TZ Log : Will warn on Access Violation, as paniconaccessviolation is not set
+[    0.320833] msm_serial 78b3000.serial: msm_serial: detected port #0
+[    0.320876] msm_serial 78b3000.serial: uartclk = 3686400
+[    0.320913] 78b3000.serial: ttyMSM0 at MMIO 0x78b3000 (irq = 78, base_baud = 230400) is a MSM
+[    0.320934] msm_serial: console setup on port #0
+[    1.033593] console [ttyMSM0] enabled
+[    1.038603] msm_serial: driver initialized
+[    1.042111] msm_serial_hsl_init: driver initialized
+[    1.054972] brd: module loaded
+[    1.055740] spi_qup 78b8000.spi: IN:block:16, fifo:64, OUT:block:16, fifo:64
+[    1.059042] libphy: Fixed MDIO Bus: probed
+[    1.504816] qca-mdio 90000.mdio: Could not find phy-reset-gpio
+[    1.504930] libphy: qca_mdio: probed
+[    1.511026] qca-mdio 90000.mdio: qca-mdio driver was registered
+[    1.513459] Unable to create IPC log context!
+[    1.519224] Skip QCA8074V1 in V2 platform
+[    1.523666] cnss[2]: INFO: Platform driver probed successfully. plat ffffffc07b830018 tgt 0xfffe
+[    1.527680] i2c /dev entries driver
+[    1.543583] device-mapper: ioctl: 4.34.0-ioctl (2015-10-28) initialised: dm-devel@redhat.com
+[    1.544017] sdhci: Secure Digital Host Controller Interface driver
+[    1.551148] sdhci: Copyright(c) Pierre Ossman
+[    1.557113] sdhci-pltfm: SDHCI platform and OF driver helper
+[    1.561938] mmc:emmc actual mid 0x15 and syscon select node DsLow,syscon
+[    1.567308] mmc:syscon reg base 0xa000 regval 0x9e5b
+[    1.573926] qcom_ice_get_pdevice: invalid device list
+[    1.578881] sdhci_msm 7824900.sdhci: sdhci_msm_ice_get_dev: ICE device not probed yet
+[    1.583815] sdhci_msm 7824900.sdhci: sdhci_msm_probe: required ICE device not probed yet err = -517
+[    1.592335] qcom_ice_get_device_tree_data: No vdd-hba-supply regulator, assuming not needed
+[    1.600567] ICE IRQ = 81
+[    1.609356] 
+[    1.609356] Version Rollback Feature Disabled
+[    1.614147] remoteproc remoteproc0: releasing cd00000.qcom_q6v5_wcss
+[    1.618533] SPMI VADC - Min ch: 0 Max ch: 15
+[    1.625551] of_graph_get_next_endpoint(): no port node found in /soc/csr@6001000
+[    1.628072] coresight-csr 6001000.csr: CSR initialized
+[    1.635565] of_graph_get_next_endpoint(): no port node found in /soc/cti@6010000
+[    1.640488] of_graph_get_next_endpoint(): no port node found in /soc/cti@6011000
+[    1.648058] of_graph_get_next_endpoint(): no port node found in /soc/cti@6012000
+[    1.655418] of_graph_get_next_endpoint(): no port node found in /soc/cti@6013000
+[    1.662779] of_graph_get_next_endpoint(): no port node found in /soc/cti@6014000
+[    1.670170] of_graph_get_next_endpoint(): no port node found in /soc/cti@6015000
+[    1.677553] of_graph_get_next_endpoint(): no port node found in /soc/cti@6016000
+[    1.684937] of_graph_get_next_endpoint(): no port node found in /soc/cti@6017000
+[    1.692290] of_graph_get_next_endpoint(): no port node found in /soc/cti@6018000
+[    1.699681] of_graph_get_next_endpoint(): no port node found in /soc/cti@6019000
+[    1.707073] of_graph_get_next_endpoint(): no port node found in /soc/cti@601a000
+[    1.714441] of_graph_get_next_endpoint(): no port node found in /soc/cti@601b000
+[    1.721801] of_graph_get_next_endpoint(): no port node found in /soc/cti@601c000
+[    1.729204] of_graph_get_next_endpoint(): no port node found in /soc/cti@601d000
+[    1.736576] of_graph_get_next_endpoint(): no port node found in /soc/cti@601e000
+[    1.743942] of_graph_get_next_endpoint(): no port node found in /soc/cti@601f000
+[    1.751338] of_graph_get_next_endpoint(): no port node found in /soc/cti@6198000
+[    1.758727] of_graph_get_next_endpoint(): no port node found in /soc/cti@6199000
+[    1.766103] of_graph_get_next_endpoint(): no port node found in /soc/cti@619a000
+[    1.773465] of_graph_get_next_endpoint(): no port node found in /soc/cti@619b000
+[    1.780870] of_graph_get_next_endpoint(): no port node found in /soc/cti@610c000
+[    1.788396] sps_register_bam_device : unable to create IPC Logging 0 for bam 0x0000000006044000
+[    1.795466] sps_register_bam_device : unable to create IPC Logging 1 for bam 0x0000000006044000sps_register_bam_device : unable to create IPC Logging 2 for bam 0x0000000006044000
+[    1.812561] sps_register_bam_device : unable to create IPC Logging 3 for bam 0x0000000006044000sps_register_bam_device : unable to create IPC Logging 4 for bam 0x0000000006044000
+[    1.828444] sps:BAM 0x0000000006044000 is registered.[    1.836193] coresight-tmc 6028000.tmc: TMC initialized
+[    1.840888] coresight-tmc 6027000.tmc: TMC initialized
+[    1.846050] coresight-funnel 6021000.funnel: FUNNEL initialized
+[    1.851063] coresight-funnel 6100000.funnel: FUNNEL initialized
+[    1.856895] coresight-funnel 6120000.funnel: FUNNEL initialized
+[    1.862776] coresight-funnel 6130000.funnel: FUNNEL initialized
+[    1.868722] coresight-funnel 61a1000.funnel: FUNNEL initialized
+[    1.875093] coresight-etm4x 619c000.etm: ETM 4.0 initialized
+[    1.880732] coresight-etm4x 619d000.etm: ETM 4.0 initialized
+[    1.886668] coresight-etm4x 619e000.etm: ETM 4.0 initialized
+[    1.892288] coresight-etm4x 619f000.etm: ETM 4.0 initialized
+[    1.897730] coresight-replicator-qcom 6026000.replicator: REPLICATOR 1.0 initialized
+[    1.903306] ------------[ cut here ]------------
+[    1.910801] WARNING: at drivers/clk/clk.c:689
+[    1.915399] Modules linked in:
+[    1.922595] 
+[    1.922691] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.4.60 #1
+[    1.924258] Hardware name: Askey RT5010W-D187/REV6 (DT)
+[    1.929899] task: ffffffc010778000 ti: ffffffc010778000 task.ti: ffffffc010778000
+[    1.935119] PC is at clk_core_disable+0x98/0xa0
+[    1.942747] LR is at clk_disable+0x2c/0x44
+[    1.947084] pc : [&lt;ffffffc0004581ec&gt;] lr : [&lt;ffffffc000459678&gt;] pstate: 60000085
+[    1.951257] sp : ffffffc010783bd0
+[    1.958801] x29: ffffffc010783bd0 x28: 0000000000000000 
+[    1.967127] x27: ffffffc000854620 x26: ffffffc00084e100 
+[    1.972423] x25: 0000000000000000 x24: ffffffc000943000 
+[    1.977718] x23: ffffffc0008dbda8 x22: ffffffc0008dbd00 
+[    1.983012] x21: ffffffc07bc7ad70 x20: 0000000000000000 
+[    1.988308] x19: ffffffc07b973e00 x18: 0000000000000008 
+[    1.993603] x17: 0000000000000000 x16: 0000000000000000 
+[    1.998898] x15: 0000000000000000 x14: ffffffffffffffff 
+[    2.004193] x13: 0000000000000010 x12: 0101010101010101 
+[    2.009489] x11: 0000000000000001 x10: 0000000000000720 
+[    2.014784] x9 : ffffffc010783ab0 x8 : ffffffc010778780 
+[    2.020079] x7 : 0000000000000000 x6 : ffffffc07ef4dde8 
+[    2.025374] x5 : 0000000000000001 x4 : 0000000000000000 
+[    2.030669] x3 : 00000000ffff8b8d x2 : 0000000000000804 
+[    2.035964] x1 : 0000000000000001 x0 : ffffffc07bc26a00 
+[    2.041258] 
+[    2.041450] ---[ end trace 2d292889cb4d943b ]---
+[    2.043005] Call trace:
+[    2.047606] [&lt;ffffffc0004581ec&gt;] clk_core_disable+0x98/0xa0
+[    2.049784] [&lt;ffffffc000308288&gt;] amba_put_disable_pclk.isra.4+0x1c/0x38
+[    2.055337] [&lt;ffffffc00030845c&gt;] amba_probe+0xc0/0x124
+[    2.061935] [&lt;ffffffc00035710c&gt;] driver_probe_device+0x19c/0x3dc
+[    2.067145] [&lt;ffffffc0003573b0&gt;] __driver_attach+0x64/0x90
+[    2.073307] [&lt;ffffffc00035546c&gt;] bus_for_each_dev+0x68/0x98
+[    2.078601] [&lt;ffffffc000356b34&gt;] driver_attach+0x20/0x28
+[    2.084070] [&lt;ffffffc000356674&gt;] bus_add_driver+0x130/0x248
+[    2.089625] [&lt;ffffffc000357c54&gt;] driver_register+0x90/0xdc
+[    2.094920] [&lt;ffffffc000307e38&gt;] amba_driver_register+0x54/0x5c
+[    2.100476] [&lt;ffffffc000845628&gt;] stm_init+0x14/0x1c
+[    2.106292] [&lt;ffffffc000082a18&gt;] do_one_initcall+0x19c/0x1b8
+[    2.111157] [&lt;ffffffc000822b20&gt;] kernel_init_freeable+0x18c/0x22c
+[    2.117060] [&lt;ffffffc0005ca13c&gt;] kernel_init+0x10/0xec
+[    2.123045] [&lt;ffffffc000085d50&gt;] ret_from_fork+0x10/0x40
+[    2.128167] ------------[ cut here ]------------
+[    2.133544] WARNING: at drivers/clk/clk.c:581
+[    2.138142] Modules linked in:
+[    2.145338] 
+[    2.145434] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W       4.4.60 #1
+[    2.147003] Hardware name: Askey RT5010W-D187/REV6 (DT)
+[    2.154031] task: ffffffc010778000 ti: ffffffc010778000 task.ti: ffffffc010778000
+[    2.159074] PC is at clk_core_unprepare+0x78/0x80
+[    2.166708] LR is at clk_unprepare+0x28/0x3c
+[    2.171391] pc : [&lt;ffffffc000457dec&gt;] lr : [&lt;ffffffc000458e98&gt;] pstate: 60000005
+[    2.175737] sp : ffffffc010783bd0
+[    2.183106] x29: ffffffc010783bd0 x28: 0000000000000000 
+[    2.191434] x27: ffffffc000854620 x26: ffffffc00084e100 
+[    2.196727] x25: 0000000000000000 x24: ffffffc000943000 
+[    2.202023] x23: ffffffc0008dbda8 x22: ffffffc0008dbd00 
+[    2.207318] x21: ffffffc07bc7ad70 x20: ffffffc07b973e00 
+[    2.212614] x19: ffffffc07b973e00 x18: 0000000000000008 
+[    2.217908] x17: 0000000000000000 x16: 0000000000000000 
+[    2.223203] x15: 0000000000000000 x14: ffffffffffffffff 
+[    2.228499] x13: 0000000000000010 x12: 0101010101010101 
+[    2.233794] x11: 0000000000000001 x10: 0000000000000720 
+[    2.239089] x9 : ffffffc010783b00 x8 : ffffffc010778780 
+[    2.244384] x7 : 0000000000000000 x6 : ffffffc07ef4cb80 
+[    2.249679] x5 : 0000000000000001 x4 : 0000000000000000 
+[    2.254974] x3 : 0000000000000000 x2 : 0000000000000804 
+[    2.260269] x1 : 0000000000000001 x0 : ffffffc07bc26a00 
+[    2.265563] 
+[    2.265741] ---[ end trace 2d292889cb4d943c ]---
+[    2.267310] Call trace:
+[    2.271911] [&lt;ffffffc000457dec&gt;] clk_core_unprepare+0x78/0x80
+[    2.274088] [&lt;ffffffc000308290&gt;] amba_put_disable_pclk.isra.4+0x24/0x38
+[    2.279990] [&lt;ffffffc00030845c&gt;] amba_probe+0xc0/0x124
+[    2.286415] [&lt;ffffffc00035710c&gt;] driver_probe_device+0x19c/0x3dc
+[    2.291624] [&lt;ffffffc0003573b0&gt;] __driver_attach+0x64/0x90
+[    2.297785] [&lt;ffffffc00035546c&gt;] bus_for_each_dev+0x68/0x98
+[    2.303080] [&lt;ffffffc000356b34&gt;] driver_attach+0x20/0x28
+[    2.308549] [&lt;ffffffc000356674&gt;] bus_add_driver+0x130/0x248
+[    2.314104] [&lt;ffffffc000357c54&gt;] driver_register+0x90/0xdc
+[    2.319398] [&lt;ffffffc000307e38&gt;] amba_driver_register+0x54/0x5c
+[    2.324955] [&lt;ffffffc000845628&gt;] stm_init+0x14/0x1c
+[    2.330769] [&lt;ffffffc000082a18&gt;] do_one_initcall+0x19c/0x1b8
+[    2.335635] [&lt;ffffffc000822b20&gt;] kernel_init_freeable+0x18c/0x22c
+[    2.341536] [&lt;ffffffc0005ca13c&gt;] kernel_init+0x10/0xec
+[    2.347523] [&lt;ffffffc000085d50&gt;] ret_from_fork+0x10/0x40
+[    2.352605] coresight-stm: probe of 6002000.stm failed with error -1
+[    2.359327] of_graph_get_next_endpoint(): no port node found in /soc/hwevent@6101000
+[    2.364494] coresight-hwevent 6101000.hwevent: Hardware Event driver initialized
+[    2.375574] NET: Registered protocol family 10
+[    2.380206] MAP-T DMR module registered. enter 
+[    2.383716] Registering family.
+[    2.388199] NET: Registered protocol family 17
+[    2.391311] bridge: automatic filtering via arp/ip/ip6tables has been deprecated. Update your scripts to load br_netfilter if you need this.
+[    2.395844] Bridge firewalling registered
+[    2.408564] 8021q: 802.1Q VLAN Support v1.8
+[    2.413826] qcom,cpr4-apss-regulator b018000.cpr4-ctrl: CPR valid fuse count: 4
+[    2.416679] pmd9655_s3: supplied by e-smps1-reg
+[    2.423886] cpr4_ipq807x_apss_read_fuse_data: apc_corner: speed bin = 0
+[    2.428277] cpr4_ipq807x_apss_read_fuse_data: apc_corner: CPR fusing revision = 1
+[    2.434877] cpr4_ipq807x_apss_read_fuse_data: apc_corner: CPR misc fuse value = 0
+[    2.442516] cpr4_ipq807x_apss_read_fuse_data: apc_corner: Voltage boost fuse config = 0 boost = disable
+[    2.450047] cpr3_mem_acc_init: apc: not using memory accelerator regulator
+[    2.459181] cpr4_ipq807x_apss_calculate_open_loop_voltages: apc_corner: fused      SVS: open-loop= 704000 uV
+[    2.466126] cpr4_ipq807x_apss_calculate_open_loop_voltages: apc_corner: fused      NOM: open-loop= 832000 uV
+[    2.476107] cpr4_ipq807x_apss_calculate_open_loop_voltages: apc_corner: fused    TURBO: open-loop= 888000 uV
+[    2.485916] cpr4_ipq807x_apss_calculate_open_loop_voltages: apc_corner: fused   STURBO: open-loop= 976000 uV
+[    2.495782] cpr4_ipq807x_apss_calculate_target_quotients: apc_corner: fused      SVS: quot[ 7]= 701, quot_offset[ 7]=   0
+[    2.505540] cpr4_ipq807x_apss_calculate_target_quotients: apc_corner: fused      NOM: quot[ 7]= 941, quot_offset[ 7]= 240
+[    2.516388] cpr4_ipq807x_apss_calculate_target_quotients: apc_corner: fused    TURBO: quot[ 7]=1032, quot_offset[ 7]=  90
+[    2.527324] cpr4_ipq807x_apss_calculate_target_quotients: apc_corner: fused   STURBO: quot[ 7]=1187, quot_offset[ 7]= 155
+[    2.538388] cpr3_regulator_init_ctrl: apc: Default CPR mode = closed-loop
+[    2.549741] qcom,cpr3-npu-regulator a4000.npu-cpr: NPU CPR valid fuse count: 2
+[    2.556039] pmd9655_s4: supplied by e-smps1-reg
+[    2.563179] cpr3_mem_acc_init: npu: not using memory accelerator regulator
+[    2.567511] npu_corner: fused      NOM: open-loop= 792000 uV
+[    2.574448] npu_corner: fused    TURBO: open-loop= 872000 uV
+[    2.580288] npu_corner: fused      NOM: open-loop= 792000 uV
+[    2.585906] npu_corner: fused    TURBO: open-loop= 872000 uV
+[    2.591556] npu_corner: Normal and Cold condition init done. Default to normal.
+[    2.598125] cpufreq: cpufreq_online: CPU0: Running at unlisted freq: 800000 KHz
+[    2.604397] cpufreq: cpufreq_online: CPU0: Unlisted initial frequency changed to: 1017600 KHz
+[    2.612018] mmc:emmc actual mid 0x15 and syscon select node DsLow,syscon
+[    2.620209] mmc:syscon reg base 0xa000 regval 0x9e5b
+[    2.626968] qcom_ice_get_pdevice: found ice device ffffffc07bfcd200
+[    2.631896] qcom_ice_get_pdevice: matching platform device ffffffc07bc3d000
+[    2.637930] sdhci_msm 7824900.sdhci: No vreg data found for vdd
+[    2.644844] sdhci_msm 7824900.sdhci: No vreg data found for vdd-io
+[    2.650894] qcom_ice 7803000.sdcc1ice: QC ICE 2.1.44 device found @0xffffff8000f3c000
+[    2.658053] sdhci_msm 7824900.sdhci: No vmmc regulator found
+[    2.664891] sdhci_msm 7824900.sdhci: No vqmmc regulator found
+[    2.714371] mmc0: SDHCI controller on 7824900.sdhci [7824900.sdhci] using ADMA 64-bit
+[    2.720336] qcom-q6v5-wcss-pil cd00000.qcom_q6v5_wcss: ssr registeration success qcom_q6v5_wcss
+[    2.721213] remoteproc remoteproc0: cd00000.qcom_q6v5_wcss is available
+[    2.731960] hctosys: unable to open rtc device (rtc0)
+[    2.740923] pmd9655_ldo11: disabling
+[    2.741899] ALSA device list:
+[    2.745150]   No soundcards found.
+[    2.748245] Waiting for root device PARTUUID=3f6c8b45-381d-2e4d-a72c-4a59900be353...
+[    2.787084] mmc0: MAN_BKOPS_EN bit is not set
+[    2.828060] mmc0: new HS200 MMC card at address 0001
+[    2.828379] mmcblk0: mmc0:0001 8GTF4R 7.28 GiB 
+[    2.832194] mmcblk0rpmb: mmc0:0001 8GTF4R partition 3 512 KiB
+[    2.837318] Alternate GPT is invalid, using primary GPT.
+[    2.842255] GPT: device [179:20] (rootfs) set to be root filesystem
+[    2.847646]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 p16 p17 p18 p19 p20 p21 p22 p23 p24 p25 p26 p27 p28 p29 p30 p31 p32 p33 p34 p35 p36 p37 p38
+[    2.966125] VFS: Mounted root (squashfs filesystem) readonly on device 179:20.
+[    2.966226] Freeing unused kernel memory: 228K (ffffffc000822000 - ffffffc00085b000)
+[    2.972246] Freeing alternatives memory: 44K (ffffffc00085b000 - ffffffc000866000)
+failed to open /proc/modules
+[    3.143863] init: Console is alive
+[    3.143959] init: - watchdog -
+[    3.710640] Button Hotplug driver version 0.4.1
+[    3.711666] device-mapper: req-crypt: dm-req-crypt successfully initalized.
+[    3.711666] 
+[    3.716474] SCSI subsystem initialized
+[    4.146523] init: - preinit -
+[    4.150006] led_smooth init
+[    4.150112] 
+Before mount_root
+[    4.454442] 
+/dev/mmcblk0p24: recovering journal
+/dev/mmcblk0p24: clean, 202/32768 files, 10897/131072 blocks
+/dev/mmcblk0p24: clean, 202/32768 files, 10897/131072 blocks
+/dev/mmcblk0p25: clean, 11/32768 files, 6257/131072 blocks
+/dev/mmcblk0p25: clean, 11/32768 files, 6257/131072 blocks
+</code></pre>
+<p>我草，开了secure boot，这还刷个毛啊</p>
+<h1 id="绕过安全启动">绕过安全启动</h1>
+<p>编程器在公司，不想等到周一上班再拆flash用编程器读了，所以目前没固件可以直接分析。</p>
+<h2 id="获取u-boot-shell执行权限">获取U-Boot Shell执行权限</h2>
+<p>串口直接打断，要输入用户名和密码。图忘了存，长这样</p>
+<pre><code>Hit space key to stop autoboot: %2d
+%2d 
+Username#
+root
+Password#
+You have %d times left to enter correct password.
+You have %d times left to enter correct username.
+</code></pre>
+<p>要是有固件dump可以逆向一下，问题是没有。。。</p>
+<p>所以想办法让bootcmd报错，它可能会fallback到tftpboot或者什么恢复模式</p>
+<p>这个设备只有一个emmc存储器，只要在Hit space key to stop autoboot之后，短接emmc时钟或者供电，就会让bootcmd找不到东西读了。</p>
+<p><img src="/images/2023-07-29-20-26-46.png" alt=""></p>
+<p>那么短接哪里呢？量了一下emmc附近，找到了emmc的1.8V供电，短接。不行，串口那边看到设备直接重启了。说明这货的CPU 1.8V和emmc 1.8V是连到一起的。</p>
+<p>也可以试试短接clk，但是不好找。</p>
+<p>emmc一般有个内部电压，在设计的时候要求那里对外挂个电容。把那个对地短接就会让emmc内部逻辑死掉，我猜是这个</p>
+<p><img src="/images/2023-07-29-20-28-35.png" alt=""></p>
+<p>这个是emmc背面的图。蓝色框标识emmc的位置，红圈这个电容感觉比较可疑。我们这么做</p>
+<ol>
+<li>不要短接，直接插电开机，等U-Boot跑到<code>Hit space key to stop autoboot:</code>
+<ul>
+<li>这个时候短接，就没法启动了，因为U-Boot在emmc里面呢</li>
+</ul>
+</li>
+<li>这个时候有3秒倒数，用镊子夹住上面那张图的红圈里面的电容，让emmc挂掉</li>
+<li>等串口提示报错的时候，松开镊子。然后就可以进入U-Boot shell了</li>
+</ol>
+<pre><code>U-Boot 1.3.3 [spf11.1_csu2] (Apr 22 2021 - 18:02:25 +0800)
+
+DRAM:  smem ram ptable found: ver: 1 len: 4
+2 GiB
+[Askey] Led init ...
+NAND:  Could not find nand_gpio in dts, using defaults
+Not an ONFI device
+ONFI probe failed
+ID = ffffffff
+Vendor = ff
+Device = ff
+qpic_nand: unknown NAND device manufacturer: ff device: ff
+U-Boot BUG at drivers/mtd/mtdcore.c:420!
+SF: Unsupported flash IDs: manuf ff, jedec ffff, ext_jedec ffff
+ipq_spi: SPI Flash not found (bus/cs/speed/mode) = (0/0/48000000/0)
+0 MiB
+MMC:   &lt;NULL&gt;: 0 (eMMC)
+In:    serial@78B3000
+Out:   serial@78B3000
+Err:   serial@78B3000
+machid: 8750106
+eth5 MAC Address from ART is not valid
+Hit space key to stop autoboot:  0 
+
+
+[Askey] do_bootaskey()
+ check temperature of soc 36 ,and threshold 80
+
+[Askey] thermal_check_temp pass
+mmc:mmcargs=mmc_mid=15
+[Askey] do_boot_signedimg_askey()
+*** ERROR: Can't read GPT header ***
+get_partition_info_efi: *** ERROR: Invalid GPT ***
+*** ERROR: Can't read GPT header ***
+get_partition_info_efi: *** ERROR: Invalid Backup GPT ***
+bootipq: unsupported partition name rootfs
+
+Net:   *** ERROR: Can't read GPT header ***
+get_partition_info_efi: *** ERROR: Invalid GPT ***
+*** ERROR: Can't read GPT header ***
+get_partition_info_efi: *** ERROR: Invalid Backup GPT ***
+ART partition read failed..
+MAC0 addr:0:3:7f:ba:db:ad
+PHY ID1: 0x4d
+PHY ID2: 0xd0b1
+PHY ID1: 0x4d
+PHY ID2: 0xd101
+EDMA ver 1 hw init
+Num rings - TxDesc:1 (0-0) TxCmpl:1 (7-7)
+RxDesc:1 (15-15) RxFill:1 (7-7)
+ipq807x_edma_alloc_rings: successfull
+ipq807x_edma_setup_ring_resources: successfull
+ipq807x_edma_configure_rings: successfull
+ipq807x_edma_hw_init: successfull
+eth0
+Warning: eth0 MAC addresses don't match:
+Address in SROM is         00:03:7f:ba:db:ad
+Address in environment is  fc:12:63:09:65:01
+
+IPQ807x#
+</code></pre>
+<h2 id="回读固件">回读固件</h2>
+<p>先看一下分区</p>
+<pre><code>IPQ807x# mmc part
+
+Partition Map for MMC device 0  --   Partition Type: EFI
+
+Part	Start LBA	End LBA		Name
+	Attributes
+	Type GUID
+	Partition GUID
+  1	0x00000022	0x00000821	&quot;0:SBL1&quot;
+	attrs:	0x0000000000000000
+	type:	dea0ba2c-cbdd-4805-b4f9-f428251c3e98
+	guid:	b11f979c-a6a1-7dad-766a-52ec9d1f69a2
+  2	0x00000822	0x00000c21	&quot;0:BOOTCONFIG&quot;
+	attrs:	0x0000000000000000
+	type:	2b7d04ff-31f0-4e6a-be9a-da50314dad58
+	guid:	e1cc547d-3706-17f9-7b07-efaa332e3a54
+  3	0x00000c22	0x00001021	&quot;0:BOOTCONFIG1&quot;
+	attrs:	0x0000000000000000
+	type:	7bd25378-5c39-11e5-8a77-40a8f05f1418
+	guid:	d064f02d-802e-f97c-2196-7d9a28862e19
+  4	0x00001022	0x00002821	&quot;0:QSEE&quot;
+	attrs:	0x0000000000000000
+	type:	a053aa7f-40b8-4b1c-ba08-2f68ac71a4f4
+	guid:	e024699e-a604-64c3-af91-dd7f2d3d8d9c
+  5	0x00002822	0x00004021	&quot;0:QSEE_1&quot;
+	attrs:	0x0000000000000000
+	type:	a6dd74a1-c8bf-4dbc-ae39-62b8e78c4038
+	guid:	a32ee7af-b10b-5926-b6d5-a415ef787b67
+  6	0x00004022	0x00004421	&quot;0:DEVCFG&quot;
+	attrs:	0x0000000000000000
+	type:	f65d4b16-343d-4e25-aafc-be99b6556a6d
+	guid:	f2068355-7423-87b6-6ffb-6c0db243402e
+  7	0x00004422	0x00004821	&quot;0:DEVCFG_1&quot;
+	attrs:	0x0000000000000000
+	type:	48bfa451-9443-46f7-b400-892a6b1bfc16
+	guid:	aad4ffbc-ba9f-8756-4cf6-e47818b36a23
+  8	0x00004822	0x00004c21	&quot;0:APDP&quot;
+	attrs:	0x0000000000000000
+	type:	e6e98da2-e22a-4d12-ab33-169e7deaa507
+	guid:	9a09c33a-d949-b53f-2b81-bb728f607f45
+  9	0x00004c22	0x00005021	&quot;0:APDP_1&quot;
+	attrs:	0x0000000000000000
+	type:	bdabad63-8404-4ed1-b20b-132247ab7232
+	guid:	8d596925-14cd-d5fa-cb3f-0d46f67e8502
+ 10	0x00005022	0x00005421	&quot;0:RPM&quot;
+	attrs:	0x0000000000000000
+	type:	098df793-d712-413d-9d4e-89d711772228
+	guid:	057659e1-6366-df5d-4fd6-ef67f745b428
+ 11	0x00005422	0x00005821	&quot;0:RPM_1&quot;
+	attrs:	0x0000000000000000
+	type:	2d2be762-890b-11e5-aaf3-40a8f05f1418
+	guid:	7ec0012c-752a-8898-d38e-9dde8864465d
+ 12	0x00005822	0x00005c21	&quot;0:CDT&quot;
+	attrs:	0x0000000000000000
+	type:	a19f205f-ccd8-4b6d-8f1e-2d9bc24cffb1
+	guid:	a9968e42-3bc2-0d62-0dc0-6d6c953edc27
+ 13	0x00005c22	0x00006021	&quot;0:CDT_1&quot;
+	attrs:	0x0000000000000000
+	type:	7a795379-c250-4282-a2c7-fc4e13f4a43d
+	guid:	06727772-3e7d-60c3-416f-59d60246529a
+ 14	0x00006022	0x00006221	&quot;0:APPSBLENV&quot;
+	attrs:	0x0000000000000000
+	type:	300ffdcd-22e0-47e7-9a23-f16ed9382387
+	guid:	ca5fe99e-3630-cc58-f03a-4c223b60377f
+ 15	0x00006222	0x00007221	&quot;0:APPSBL&quot;
+	attrs:	0x0000000000000000
+	type:	400ffdcd-22e0-47e7-9a23-f16ed9382388
+	guid:	8323e484-0b7e-b74e-e344-95a264b7f669
+ 16	0x00007222	0x00008221	&quot;0:APPSBL_1&quot;
+	attrs:	0x0000000000000000
+	type:	c126787d-3eef-444c-9e43-feff3f103e22
+	guid:	e147448f-28eb-4877-468a-46841023239f
+ 17	0x00008222	0x00008a21	&quot;0:ART&quot;
+	attrs:	0x0000000000000000
+	type:	a72e50c1-d37c-429d-9620-35fca612b9a8
+	guid:	209d5e03-9f46-58f1-f475-a1682fd502a7
+ 18	0x00008a22	0x0000ca21	&quot;0:HLOS&quot;
+	attrs:	0x0000000000000000
+	type:	b51f2982-3ebe-46de-8721-ee641e1f9997
+	guid:	fc9f02d9-646f-4b01-00d1-4d696a2b7c0a
+ 19	0x0000ca22	0x00010a21	&quot;0:HLOS_1&quot;
+	attrs:	0x0000000000000000
+	type:	a71da577-7f81-4626-b4a2-e377f9174525
+	guid:	926aaabd-bf15-b4b6-1082-1541fc02c402
+ 20	0x00010a22	0x00050a21	&quot;rootfs&quot;
+	attrs:	0x0000000000000000
+	type:	98d2248d-7140-449f-a954-39d67bd6c3b4
+	guid:	3f6c8b45-381d-2e4d-a72c-4a59900be353
+ 21	0x00050a22	0x00054a21	&quot;0:WIFIFW&quot;
+	attrs:	0x0000000000000000
+	type:	888d8069-8d27-40a8-95a9-6006e1ce9b3b
+	guid:	76635aec-3b11-8f3e-ccdb-fa07684ea781
+ 22	0x00054a22	0x00094a21	&quot;rootfs_1&quot;
+	attrs:	0x0000000000000000
+	type:	5647b280-dc2a-485d-9913-cf53ac40fa32
+	guid:	fca50a80-6d83-9a4a-665a-07ece7f995bf
+ 23	0x00094a22	0x00098a21	&quot;0:WIFIFW_1&quot;
+	attrs:	0x0000000000000000
+	type:	981476f5-5cd7-42db-9ce9-87b3a31aadbd
+	guid:	b2288cbf-7e91-3317-78bf-8bd7d5ca32a1
+ 24	0x00098a22	0x00198a21	&quot;rootfs_data&quot;
+	attrs:	0x0000000000000000
+	type:	ab1760da-a8bb-4d6f-98d2-9ad3ab9009cd
+	guid:	069840ca-3ca3-d716-3143-e3e7249caa52
+ 25	0x00198a22	0x00298a21	&quot;rootfs_data_1&quot;
+	attrs:	0x0000000000000000
+	type:	1119cee3-a4f1-43d0-90d1-2d226e401189
+	guid:	be7ad292-7f2e-3a7f-8569-48a1460346a4
+ 26	0x00298a22	0x00298e21	&quot;0:ETHPHYFW&quot;
+	attrs:	0x0000000000000000
+	type:	c1dc4cab-430b-4cdc-a8c5-7115912b74fe
+	guid:	82a73814-ce17-9078-74aa-5df43ec665e2
+ 27	0x00298e22	0x0029ce21	&quot;econfig&quot;
+	attrs:	0x0000000000000000
+	type:	e0aaf192-cad4-4128-9f05-d2831ca67b58
+	guid:	8ee63329-427f-740f-0822-bf92fcf20365
+ 28	0x0029ce22	0x002a4e21	&quot;edata&quot;
+	attrs:	0x0000000000000000
+	type:	a917ab5a-6c83-48af-95db-1004bc925c52
+	guid:	2861eaca-97f3-89ef-1966-94df053ce852
+ 29	0x002a4e22	0x002e4e21	&quot;log&quot;
+	attrs:	0x0000000000000000
+	type:	2dd625ce-bc7a-4b6a-933a-57bc0d338e9c
+	guid:	41b339d2-35c1-f85b-06a8-f98dd5694207
+ 30	0x002e4e22	0x002ece21	&quot;persist&quot;
+	attrs:	0x0000000000000000
+	type:	2f4bbc39-e2dd-4882-87c9-8a402ace35b2
+	guid:	3f470a3a-2170-4dac-ee79-1df7c7e49e4a
+ 31	0x002ece22	0x004ece21	&quot;usr_app&quot;
+	attrs:	0x0000000000000000
+	type:	bd65288f-d717-4c23-8f2b-ead6a8a229eb
+	guid:	cbaa1cc8-b7ec-5125-f2cb-c1ec8d7e481c
+ 32	0x004ece22	0x004eee21	&quot;rsvd_1&quot;
+	attrs:	0x0000000000000000
+	type:	2cba182a-d45e-4f7d-8b40-c8e206aa227a
+	guid:	379a0b90-8ce7-20ba-7ad2-1ac28d9f2ac1
+ 33	0x004eee22	0x004f0e21	&quot;rsvd_2&quot;
+	attrs:	0x0000000000000000
+	type:	1094c6ff-3a45-4ba1-acc5-f94717881e0f
+	guid:	02772c71-7bdc-1333-2f64-f3afa49c5478
+ 34	0x004f0e22	0x004f1e21	&quot;rsvd_3&quot;
+	attrs:	0x0000000000000000
+	type:	f6b84fe9-4030-44f6-8842-42cf6d6ab37a
+	guid:	4d8fc9fe-7b22-af55-a893-0434e538abe7
+ 35	0x004f1e22	0x004f9e21	&quot;rsvd_4&quot;
+	attrs:	0x0000000000000000
+	type:	8ecb9dd2-5907-4d9e-87af-7edc799ac7be
+	guid:	50bb92fa-e6d3-3e3e-344c-c90126d3e6b6
+ 36	0x004f9e22	0x00509e21	&quot;rsvd_5&quot;
+	attrs:	0x0000000000000000
+	type:	5eb110b9-88ef-461f-8867-e601a9e12ac7
+	guid:	ff00255a-1899-2e4f-ca5d-043026fa3e15
+ 37	0x00509e22	0x00529e25	&quot;rsvd_6&quot;
+	attrs:	0x0000000000000000
+	type:	27e70c71-5403-4cd7-8b7d-d53cbaf9bd89
+	guid:	13c4dfe2-cd9f-08fd-99a4-bb882dfa8915
+ 38	0x00529e26	0x00e7ffe1	&quot;user_data&quot;
+	attrs:	0x0000000000000000
+	type:	173f1230-bab4-4505-8c1c-665e95867ea2
+	guid:	97e1c59d-739c-dd4c-9635-4f34003d0d5b
+</code></pre>
+<p>发现这个uboot功能还挺全，有tftpput。尝试用这个把固件读回来，我是这么做的</p>
+<ol>
+<li>先插网线，dhcp，可以拿到IP</li>
+<li>把flash读到内存里
+<ul>
+<li>高通这个一般内核加载地址在0x44000000，uboot在0x4a000000，所以从0x50000000读比较安全，内存一共2G，我们读个1G多点，到persist分区那里就行</li>
+<li><code>mmc read 0x50000000 0 0x002ece22</code></li>
+<li>这个<code>0x002ece22</code>是persist分区末尾扇区来的</li>
+</ul>
+</li>
+<li>用tftpput把分区发回来
+<ul>
+<li><code>tftpput 0x50000000 10.114.51.4:sax1v1k_emmc.img</code></li>
+<li>这个<code>0x5d9c4400</code>是persist分区末尾扇区<code>0x002ece22*512</code>来的</li>
+</ul>
+</li>
+</ol>
+<p>就可以拿到固件辣</p>
+<p><img src="/images/2023-07-29-20-41-00.png" alt=""></p>
+<h2 id="逆向固件">逆向固件</h2>
+<h3 id="u-boot密码">U-Boot密码</h3>
+<p>在这里，findcrypt一下，发现是个sha256，哈希是<code>1154C605385F2B69CF1E42B9692C124A7A35F2D6719394246A3A3F73A5D52B56</code>，解不出来</p>
+<p><img src="/images/2023-07-29-20-44-46.png" alt=""></p>
+<p>放弃</p>
+<h3 id="安全启动验证">安全启动验证</h3>
+<p>逆了一下bootipq，没搞定，太恶心了，而且它这个HLOS也不是标准的FIT Image，前面加了0x28字节的怪东西</p>
+<p><img src="/images/2023-07-29-20-48-20.png" alt=""></p>
+<p>问了@暗云 说可以直接mmc read然后bootm，试试</p>
+<pre><code>IPQ807x# bootm
+Not allowed command, use bootipq.resetting ...
+</code></pre>
+<p>那就要逆向一下看看哪里限制的，然后在U-Boot里patch掉就行</p>
+<p><img src="/images/2023-07-29-20-53-20.png" alt=""></p>
+<p>转换成uboot命令：<code>mw.l 0x4a910f80 e3a00001</code></p>
+<p>然后读HLOS，开机：<code>mmc read 0x44000000 0x8a22 0x4000; bootm 0x44000000#config@rt5010w-d187-rev6;</code>，炸了</p>
+<p>肯定起不来，因为目前HLOS里是厂家魔改的数据结构，开头多了0x28</p>
+<h1 id="刷固件进去">刷固件进去</h1>
+<p>按照一般套路，刷固件进去是先tftpboot下载到内存，再mmc write写进emmc</p>
+<p>但是tftpboot被干了，发现它在检查证书</p>
+<pre><code>IPQ807x# tftpboot 192.168.4.3:sax1v1k_kernel
+secure boot fuse is enabled
+*** ERROR: Can't read GPT header ***
+get_partition_info_efi: *** ERROR: Invalid GPT ***
+*** ERROR: Can't read GPT header ***
+get_partition_info_efi: *** ERROR: Invalid Backup GPT ***
+** Invalid partition 34 **
+debug cert - not found
+resetting ...
+
+Format: Log Type - Time(microsec) - Message - Optional Info
+Log Type: B - Since Boot(Power On Reset),  D - Delta,  S - Statistic
+S - QC_IMAGE_VERSION_STRING=BOOT.BF.3.3.1-00163
+S - IMAGE_VARIANT_STRING=HAASANAZA
+S - OEM_IMAGE_VERSION_STRING=CRM
+S - Boot Config, 0x000002e3
+B -       203 - PBL, Start
+B -      2739 - bootable_media_detect_entry, Start
+B -     88791 - bootable_media_detect_success, Start
+</code></pre>
+<p>也可能是emmc读报错导致的，先重新扫描下emmc</p>
+<pre><code>IPQ807x# mmc rescan
+IPQ807x# tftpboot 192.168.4.3:sax1v1k_kernel
+secure boot fuse is enabled
+debug cert - not found
+resetting ...
+
+Format: Log Type - Time(microsec) - Message - Optional Info
+Log Type: B - Since Boot(Power On Reset),  D - Delta,  S - Statistic
+S - QC_IMAGE_VERSION_STRING=BOOT.BF.3.3.1-00163
+S - IMAGE_VARIANT_STRING=HAASANAZA
+S - OEM_IMAGE_VERSION_STRING=CRM
+S - Boot Config, 0x000002e3
+B -       203 - PBL, Start
+</code></pre>
+<p>一样的问题，没这个debug cert</p>
+<p>那就一样的方法，Patch掉校验逻辑，让sub_4A90596C这个函数直接返回0就行</p>
+<p><img src="/images/2023-07-29-20-57-36.png" alt=""></p>
+<p>之后就可以把kernel和rootfs刷进去了</p>
+<pre><code>IPQ807x# mw.l 4A90597C e3a00000
+IPQ807x# mw.l 4A905980 ea000138
+IPQ807x# tftpboot 0x44000000 192.168.4.3:sax1v1k_kernel
+secure boot fuse is enabled
+ipq807x_eth_halt: done
+eth0 PHY0 Down Speed :10 Half duplex
+eth0 PHY1 up Speed :1000 Full duplex
+eth0 PHY2 Down Speed :10 Half duplex
+eth0 PHY3 Down Speed :10 Half duplex
+eth0 PHY4 Down Speed :10 Half duplex
+eth0 PHY5 Down Speed :10 Half duplex
+ipq807x_eth_init: done
+Using eth0 device
+TFTP from server 192.168.4.3; our IP address is 192.168.4.236
+Filename 'sax1v1k_kernel'.
+Load address: 0x44000000
+Loading: *
+Got TFTP_OACK: TFTP remote port: changes from 69 to 63845
+#################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #########################################################
+	 4.7 MiB/s
+done
+Bytes transferred = 4647816 (46eb88 hex)
+ipq807x_eth_halt: done
+IPQ807x# flash 0:HLOS
+*** ERROR: Can't read GPT header ***
+get_partition_info_efi: *** ERROR: Invalid GPT ***
+*** ERROR: Can't read GPT header ***
+get_partition_info_efi: *** ERROR: Invalid Backup GPT ***
+IPQ807x# mmc rescan
+IPQ807x# flash 0:HLOS
+
+MMC erase: dev # 0, block # 35362, count 16384 ... 16384 blocks erased: OK
+
+MMC write: dev # 0, block # 35362, count 9078 ... 9078 blocks written: OK
+IPQ807x# tftpboot 0x44000000 192.168.4.3:sax1v1k_root
+secure boot fuse is enabled
+ipq807x_eth_halt: done
+eth0 PHY0 Down Speed :10 Half duplex
+eth0 PHY1 up Speed :1000 Full duplex
+eth0 PHY2 Down Speed :10 Half duplex
+eth0 PHY3 Down Speed :10 Half duplex
+eth0 PHY4 Down Speed :10 Half duplex
+eth0 PHY5 Down Speed :10 Half duplex
+ipq807x_eth_init: done
+Using eth0 device
+TFTP from server 192.168.4.3; our IP address is 192.168.4.236
+Filename 'sax1v1k_root'.
+Load address: 0x44000000
+Loading: *
+Got TFTP_OACK: TFTP remote port: changes from 69 to 61202
+#################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 #################################################################
+	 ############################################
+	 4.7 MiB/s
+done
+Bytes transferred = 9229312 (8cd400 hex)
+ipq807x_eth_halt: done
+IPQ807x# flash rootfs
+
+MMC erase: dev # 0, block # 68130, count 262144 ... 262144 blocks erased: OK
+
+MMC write: dev # 0, block # 68130, count 18026 ... 18026 blocks written: OK
+</code></pre>
+<h1 id="持久化">持久化</h1>
+<p>我们肯定不想每次开机都短接一次，虽然可以塞个MCU进去这么干，但是太麻烦了，能不能持久化呢？</p>
+<p>显然是可以的，因为高通这个安全启动是个<strong>假的</strong>安全启动，并不验证U-Boot ENV的签名。所以我们把bootcmd改掉就行</p>
+<pre><code>mmc rescan
+setenv bootcmd &quot;mw.l 0x4a910f80 e3a00001; mmc read 0x44000000 0x8a22 0x4000; bootm 0x44000000#config@rt5010w-d187-rev6;&quot;
+saveenv
+</code></pre>
+<ul>
+<li>干掉uboot里面对bootm的限制</li>
+<li>加载内核</li>
+<li>开跑</li>
+</ul>
+<p>之后就能自动开机了，固件用的是https://github.com/MeisterLone/Askey-RT5010W-D187-REV6/blob/master/OpenWrt-r22241/openwrt-ipq807x-generic-askey_rt5010w-d187-squashfs-sysupgrade.bin</p>
+<p>固件没有NSS加速，没有闭源wifi驱动，没有160M频宽，只拿来测试一下能开机就行</p>
+<p>还是得看我们Chinese QSDK: <a href="https://github.com/coolsnowwolf/lede">https://github.com/coolsnowwolf/lede</a> （大雕打钱）</p>
+<p>修改后的启动log，开机直接进系统</p>
+<pre><code>Format: Log Type - Time(microsec) - Message - Optional Info
+Log Type: B - Since Boot(Power On Reset),  D - Delta,  S - Statistic
+S - QC_IMAGE_VERSION_STRING=BOOT.BF.3.3.1-00163
+S - IMAGE_VARIANT_STRING=HAASANAZA
+S - OEM_IMAGE_VERSION_STRING=CRM
+S - Boot Config, 0x000002e3
+B -       203 - PBL, Start
+B -      2740 - bootable_media_detect_entry, Start
+B -     83485 - bootable_media_detect_success, Start
+B -     83489 - elf_loader_entry, Start
+B -     84913 - auth_hash_seg_entry, Start
+B -    123001 - auth_hash_seg_exit, Start
+B -    137593 - elf_segs_hash_verify_entry, Start
+B -    200226 - PBL, End
+B -    324977 - SBL1, Start
+B -    404704 - GCC [RstStat:0x10, RstDbg:0x600000] WDog Stat : 0x4
+B -    414617 - pm_device_init, Start
+B -    606218 - PM_SET_VAL:Skip
+D -    189649 - pm_device_init, Delta
+B -    608658 - pm_driver_init, Start
+D -      5215 - pm_driver_init, Delta
+B -    614758 - clock_init, Start
+D -      2135 - clock_init, Delta
+B -    618936 - boot_flash_init, Start
+D -      7869 - boot_flash_init, Delta
+B -    630587 - boot_config_data_table_init, Start
+D -      1067 - boot_config_data_table_init, Delta - (575 Bytes)
+B -    638212 - Boot Setting :  0x00000618
+B -    642055 - CDT version:2,Platform ID:8,Major ID:117,Minor ID:1,Subtype:6
+B -    649070 - sbl1_ddr_set_params, Start
+B -    652883 - CPR configuration: 0x30c
+B -    656329 - cpr_init, Start
+B -    659105 - Rail:0 Mode: 5 Voltage: 808000
+B -    664320 - CL CPR settled at 760000mV
+B -    667157 - Rail:1 Mode: 5 Voltage: 880000
+B -    671335 - Rail:1 Mode: 7 Voltage: 920000
+D -     16531 - cpr_init, Delta
+B -    678137 - Pre_DDR_clock_init, Start
+B -    682224 - Pre_DDR_clock_init, End
+B -    685548 - DDR Type : PCDDR4
+B -    692380 - do ddr sanity test, Start
+D -      1037 - do ddr sanity test, Delta
+B -    696071 - DDR: Start of HAL DDR Boot Training
+B -    700737 - DDR: End of HAL DDR Boot Training
+B -    706502 - DDR: Checksum to be stored on flash is -1525685476
+B -    716902 - Image Load, Start
+D -    344833 - QSEE Image Loaded, Delta - (1380440 Bytes)
+B -   1061827 - Image Load, Start
+D -       427 - SEC Image Loaded, Delta - (0 Bytes)
+B -   1069360 - Image Load, Start
+D -    287859 - DEVCFG Image Loaded, Delta - (32468 Bytes)
+B -   1357311 - Image Load, Start
+D -    292800 - RPM Image Loaded, Delta - (93060 Bytes)
+B -   1650202 - Image Load, Start
+D -    312808 - APPSBL Image Loaded, Delta - (617384 Bytes)
+B -   1963132 - QSEE Execution, Start
+D -        61 - QSEE Execution, Delta
+B -   1968927 - USB D+ check, Start
+D -         0 - USB D+ check, Delta
+B -   1975332 - SBL1, End
+D -   1652643 - SBL1, Delta
+S - Flash Throughput, 34388 KB/s  (2124599 Bytes,  61782 us)
+S - DDR Frequency, 600 MHz
+S - Core 0 Frequency, 1651 MHz
+
+
+U-Boot 1.3.3 [spf11.1_csu2] (Apr 22 2021 - 18:02:25 +0800)
+
+DRAM:  smem ram ptable found: ver: 1 len: 4
+2 GiB
+[Askey] Led init ...
+NAND:  Could not find nand_gpio in dts, using defaults
+Not an ONFI device
+ONFI probe failed
+ID = ffffffff
+Vendor = ff
+Device = ff
+qpic_nand: unknown NAND device manufacturer: ff device: ff
+U-Boot BUG at drivers/mtd/mtdcore.c:420!
+SF: Unsupported flash IDs: manuf ff, jedec ffff, ext_jedec ffff
+ipq_spi: SPI Flash not found (bus/cs/speed/mode) = (0/0/48000000/0)
+0 MiB
+MMC:   &lt;NULL&gt;: 0 (eMMC)
+In:    serial@78B3000
+Out:   serial@78B3000
+Err:   serial@78B3000
+machid: 8750106
+eth5 MAC Address from ART is not valid
+Hit space key to stop autoboot:  0 
+
+MMC read: dev # 0, block # 35362, count 16384 ... 16384 blocks read: OK
+## Loading kernel from FIT Image at 44000000 ...
+   Using 'config@rt5010w-d187-rev6' configuration
+   Trying 'kernel-1' kernel subimage
+     Description:  ARM64 OpenWrt Linux-5.15.98
+     Type:         Kernel Image
+     Compression:  gzip compressed
+     Data Start:   0x440000e8
+     Data Size:    4604026 Bytes = 4.4 MiB
+     Architecture: AArch64
+     OS:           Linux
+     Load Address: 0x41000000
+     Entry Point:  0x41000000
+     Hash algo:    crc32
+     Hash value:   0d057821
+     Hash algo:    sha1
+     Hash value:   4d78bca5c451229651bfbf2ef2ad784fc9b1f815
+   Verifying Hash Integrity ... crc32+ sha1+ OK
+## Loading fdt from FIT Image at 44000000 ...
+   Using 'config@rt5010w-d187-rev6' configuration
+   Trying 'fdt-1' fdt subimage
+     Description:  ARM64 OpenWrt askey_rt5010w-d187 device tree blob
+     Type:         Flat Device Tree
+     Compression:  uncompressed
+     Data Start:   0x444642a8
+     Data Size:    41845 Bytes = 40.9 KiB
+     Architecture: AArch64
+     Hash algo:    crc32
+     Hash value:   dea9b9d9
+     Hash algo:    sha1
+     Hash value:   82f3894f9de7075706476c00c3fc1c56e2934df4
+   Verifying Hash Integrity ... crc32+ sha1+ OK
+   Booting using the fdt blob at 0x444642a8
+   Uncompressing Kernel Image ... OK
+   Loading Device Tree to 4a1f2000, end 4a1ff374 ... OK
+Using machid 0x8750106 from environment
+
+Starting kernel ...
+
+Jumping to AARCH64 kernel via monitor
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
+[    0.000000] Linux version 5.15.98 (ubuntu@DESKTOP-F7F31J2) (aarch64-openwrt-linux-musl-gcc (OpenWrt GCC 12.2.0 r22236-a6fe02c018) 12.2.0, GNU ld (GNU Binutils) 2.40.0) #0 SMP Thu Mar 9 04:14:40 2023
+[    0.000000] Machine model: Askey RT5010W-D187
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000]   DMA32    empty
+[    0.000000]   Normal   empty
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000040000000-0x0000000040ffffff]
+[    0.000000]   node   0: [mem 0x0000000041000000-0x000000004a3fffff]
+[    0.000000]   node   0: [mem 0x000000004a400000-0x00000000510fffff]
+[    0.000000]   node   0: [mem 0x0000000051100000-0x00000000bfffffff]
+</code></pre>
+<h1 id="修复建议">修复建议</h1>
+<p>开了安全启动之后不要给能切断可信链的机会</p>
+<h2 id="防止通过故障注入进入u-boot-shell">防止通过故障注入进入U-Boot Shell</h2>
+<p>绝大多数开了安全启动的高通路由器都能这么干，应该是某种设计缺陷。</p>
+<p>除了Norton Core这个路由器。这里能找到它的U-Boot源码</p>
+<ul>
+<li><a href="https://github.com/larrikinist/Norton-Core/blob/b34e7aabcc42be45e1f853c68b80ee6f48129a33/qsdk/qca/src/u-boot/arch/arm/cpu/armv7/ipq/cmd_bootipq.c#L786">https://github.com/larrikinist/Norton-Core/blob/b34e7aabcc42be45e1f853c68b80ee6f48129a33/qsdk/qca/src/u-boot/arch/arm/cpu/armv7/ipq/cmd_bootipq.c#L786</a></li>
+</ul>
+<p>可以看到它在bootipq失败之后直接卡死循环，而不是fallback到U-Boot Shell。这样会提高攻击门槛，如果想要像本文一样改uboot env，每次都必须拆flash用编程器刷</p>
+<h2 id="防止通过编程器刷u-boot-env">防止通过编程器刷U-Boot Env</h2>
+<p>把flash拆了，刷APPSBL ENV分区，可以在bootcmd里插入指令，修改内存里的uboot代码逻辑，打破可信链</p>
+<p>应该写死uboot env不能动，hard code进uboot里</p>
+
+    </div>
+    <div class="article-footer">
+<blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <li class="post-copyright-link hidden-xs">
+      <strong>Permalink: </strong>
+      <a href="https://naivekun.com/2023/07/spectrum-sax1v1k-secboot-bypass/" title="Spectrum SAX1V1K 安全启动绕过" target="_blank" rel="external">https://naivekun.com/2023/07/spectrum-sax1v1k-secboot-bypass/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>License：</strong><a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN</a>
+    </li>
+  </ul>
+</blockquote>
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/naivekun" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://naivekun.com/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/naivekun" target="_blank"><span class="text-dark">naivekun</span><small class="ml-1x"></small></a></h3>
+        <div>Security Research</div>
+      </div>
+    </figure>
+  </div>
+</div>
+    </div>
+  </article>
+<section id="comments">
+</section>
+
+</div><nav class="bar bar-footer clearfix" data-stick-bottom>
+    <div class="bar-inner">
+        <ul class="pager pull-left">
+            <li class="prev">
+                <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" title="68块钱MA5671A猫棒刷Openwrt"><i
+                        class="icon icon-angle-left"
+                        aria-hidden="true"></i><span>&nbsp;&nbsp;Older</span></a>
+            </li>
+            <li class="next">
+                <a href="https://naivekun.com/2023/12/loongson-3a6000-overclock/"
+                    title="Loongson 3A6000官方EVB超频"><span>Newer&nbsp;&nbsp;</span><i
+                        class="icon icon-angle-right" aria-hidden="true"></i></a>
+            </li>
+            
+            <li class="toggle-toc">
+                <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false"
+                    title="Catalogue" role="button">
+                    <span>[&nbsp;</span><span>Catalogue</span>
+                    <i class="text-collapsed icon icon-anchor"></i>
+                    <i class="text-in icon icon-close"></i>
+                    <span>]</span>
+                </a>
+            </li>
+        </ul>
+        <div class="bar-right">
+        </div>
+    </div>
+</nav>
+
+</main><footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<ul class="social-links">
+    <li><a href="https://github.com/naivekun" target="_blank" title="github" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-github"></i></a></li>
+    <li><a href="https://naivekun.com/index.xml" target="_blank" title="rss" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-rss"></i></a></li>
+</ul>
+  <div class="copyright">
+    &copy;&nbsp;2018  -
+    2023
+    <div class="publishby">
+        Theme by naivekun base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/python.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/javascript.min.js" defer></script><script>
+    hljs.configure({
+        tabReplace: '    ', 
+        classPrefix: ''     
+        
+    })
+    hljs.initHighlightingOnLoad();
+</script>
+<script src="https://naivekun.com/js/application.min.bdeb64b910570b6c41badc6a05b7afb0c8ad9efd8525de3c7257d59e786326a3.js"></script>
+<script src="https://naivekun.com/js/plugin.min.51ff8c7317566f82259170fa36e09c4493adc9b9378b427a01ad3f017ebac7dd.js"></script>
+
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            ROOT_URL: 'https:\/\/naivekun.com',
+            CONTENT_URL: 'https:\/\/naivekun.com\/searchindex.json ',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script type="text/javascript" src="https://naivekun.com/js/insight.min.a343cd9a5a7698336b28ef3a7c16a3a1b1d2d5fb17dc8ed04022bbe08cc5459073a15bdafa3a8a58cdd56080784bdd69fa70b1ae8597565c799c57ed00f0e120.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+<script>
+    tocbot.init({
+        
+        tocSelector: '.js-toc',
+        
+        contentSelector: '.js-toc-content',
+        
+        headingSelector: 'h1, h2, h3',
+        
+        hasInnerContainers: true,
+    });
+</script>
+
+
+  </body>
+</html>

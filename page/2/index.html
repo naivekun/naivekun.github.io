@@ -65,8 +65,8 @@
             <img class="img-circle img-rotate" src="https://naivekun.com/avatar.jpg" width="200" height="200">
           </a>
           <h2 id="name" class="hidden-xs hidden-sm">naivekun</h2>
-          <h3 id="title" class="hidden-xs hidden-sm hidden-md">CTFer</h3>
-          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>Wuhan, China</small>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>BeiJing, China</small>
         </div><div class="search" id="search-form-wrap">
     <form class="search-form sidebar-form">
         <div class="input-group">
@@ -194,6 +194,26 @@
             <li>
                 <div class="item-inner">
                     <p class="item-title">
+                        <a href="https://naivekun.com/2023/12/loongson-3a6000-overclock/" class="title">Loongson 3A6000官方EVB超频</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2023-12-06 01:59:26 &#43;0800 &#43;0800" itemprop="datePublished">2023-12-06</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2023/07/spectrum-sax1v1k-secboot-bypass/" class="title">Spectrum SAX1V1K 安全启动绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2023-07-29 20:00:35 &#43;0800 &#43;0800" itemprop="datePublished">2023-07-29</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
                         <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" class="title">68块钱MA5671A猫棒刷Openwrt</a>
                     </p>
                     <p class="item-date">
@@ -221,26 +241,6 @@
                     </p>
                 </div>
             </li>
-            <li>
-                <div class="item-inner">
-                    <p class="item-title">
-                        <a href="https://naivekun.com/2020/07/tn3399-more/" class="title">TN3399板子填坑</a>
-                    </p>
-                    <p class="item-date">
-                        <time datetime="2020-07-23 18:03:36 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-23</time>
-                    </p>
-                </div>
-            </li>
-            <li>
-                <div class="item-inner">
-                    <p class="item-title">
-                        <a href="https://naivekun.com/2020/07/tn3399/" class="title">闲鱼便宜板子TN3399折腾全攻略</a>
-                    </p>
-                    <p class="item-date">
-                        <time datetime="2020-07-14 16:51:10 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-14</time>
-                    </p>
-                </div>
-            </li>
         </ul>
     </div>
 </div>
@@ -256,6 +256,70 @@
     
     
     
+    <article
+      class="article article-type-page"
+      itemscope
+      itemtype="http://schema.org/BlogPosting"
+    >
+      <div class="article-header">
+        <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2020/07/htb-book-and-forward-slash/"
+    >Hackthebox Book and ForwardSlash</a
+  >
+</h1>
+
+      </div>
+      <div class="article-entry text-muted" itemprop="description">
+        Book 扫端口，只有80和22 80是个。。。图书cms 注册登录进入后台 没注入上传没法绕xss打了没反应 有个admin 注意到一段js 搜一下，发现了这
+      </div>
+      <p class="article-meta">
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2020/07/htb-book-and-forward-slash/" class="">
+  <time datetime="2020-07-13 21:39:34 &#43;0800 &#43;0800" itemprop="datePublished">2020-07-13</time>
+</a>
+</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> &nbsp;<a href="/2020/07/htb-book-and-forward-slash/#comments" class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1072words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3minutes </span>
+      </p>
+    </article>
+    <article
+      class="article article-type-page"
+      itemscope
+      itemtype="http://schema.org/BlogPosting"
+    >
+      <div class="article-header">
+        <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2020/05/whuctf-2020-wp/"
+    >WHUCTF 2020 WriteUp</a
+  >
+</h1>
+
+      </div>
+      <div class="article-entry text-muted" itemprop="description">
+        Crypto Bivibivi from pwn import * r=remote(&quot;218.197.154.9&quot;,16387) r.recvline() po = r.recvline() import re nums_str = re.findall(&quot;\d+&quot;,po) nums=[] for i in nums_str: nums.append(int(i)) ans=0 for i in range(10000): if (i*nums[0]+nums[1] )%nums[3] == nums[2]%nums[3]: ans=i break r.recvuntil(&quot;x :&quot;) r.sendline(str(ans)) r.recvline() r.recvline() r.recvline() r.recvline() r.recvline() r.recvline() # r.interactive() table='fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF' tr={} for i in range(58): tr[table[i]]=i s=[11,10,3,8,4,6] xor=177451812 add=8728348608 def dec(x): r=0 for i in range(6): r+=tr[x[s[i]]]*58**i return (r-add)^xor def enc(x): x=(x^xor)+add r=list('BV1 4
+      </div>
+      <p class="article-meta">
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2020/05/whuctf-2020-wp/" class="">
+  <time datetime="2020-05-29 20:36:11 &#43;0000 UTC" itemprop="datePublished">2020-05-29</time>
+</a>
+</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> &nbsp;<a href="/2020/05/whuctf-2020-wp/#comments" class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 2119words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 5minutes </span>
+      </p>
+    </article>
     <article
       class="article article-type-page"
       itemscope
@@ -419,84 +483,6 @@
 		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1106words</span>
 		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3minutes </span>
       </p>
-    </article>
-    <article
-      class="article article-type-page"
-      itemscope
-      itemtype="http://schema.org/BlogPosting"
-    >
-      <div class="article-header">
-        <h1 itemprop="name">
-  <a
-    class="article-title"
-    href="/2019/09/a-awd-at-2019-8-31/"
-    >20190831记一次AWD</a
-  >
-</h1>
-
-      </div>
-      <div class="article-entry text-muted" itemprop="description">
-        0 星盟团队的内部awd训练，邀请我们团队参加，然后想着也没什么事情才怪就报名了。 0x1 日常操作 经常打比赛的师傅们都有事，Web方向就我一个打过a
-      </div>
-      <p class="article-meta">
-<span class="article-date">
-  <i class="icon icon-calendar-check"></i>&nbsp;
-<a href="https://naivekun.com/2019/09/a-awd-at-2019-8-31/" class="">
-  <time datetime="2019-09-01 16:31:40 &#43;0000 UTC" itemprop="datePublished">2019-09-01</time>
-</a>
-</span>
-<span class="article-category">
-  <i class="icon icon-folder"></i>&nbsp;
-  <a class="article-category-link" href="/categories/ctf/"> ctf </a>
-</span>  
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>&nbsp;
-    <a class="article-tag-link" href="/tags/ctf/"> ctf </a>
-  </span>
-
-        <span class="post-comment"><i class="icon icon-comment"></i> &nbsp;<a href="/2019/09/a-awd-at-2019-8-31/#comments" class="article-comment-link">Comments</a></span>
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 982words</span>
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 2minutes </span>
-      </p>
-    </article>
-    <article
-      class="article article-type-page"
-      itemscope
-      itemtype="http://schema.org/BlogPosting"
-    >
-      <div class="article-header">
-        <h1 itemprop="name">
-  <a
-    class="article-title"
-    href="/2019/06/htb-conceal/"
-    >[Hackthebox] - Conceal</a
-  >
-</h1>
-
-      </div>
-      <div class="article-entry text-muted" itemprop="description">
-        咕了几个月。。。 扫端口，啥都没开 常见套路，SNMP看看 解出md5 Dudecake1! google一下ike咋连 然后 ipsec start --nofork即可连接 另外之前snmp
-      </div>
-      <p class="article-meta">
-<span class="article-date">
-  <i class="icon icon-calendar-check"></i>&nbsp;
-<a href="https://naivekun.com/2019/06/htb-conceal/" class="">
-  <time datetime="2019-06-02 21:54:33 &#43;0000 UTC" itemprop="datePublished">2019-06-02</time>
-</a>
-</span>
-<span class="article-category">
-  <i class="icon icon-folder"></i>&nbsp;
-  <a class="article-category-link" href="/categories/hackthebox/"> HackTheBox </a>
-</span>  
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>&nbsp;
-    <a class="article-tag-link" href="/tags/hackthebox/"> HackTheBox </a>
-  </span>
-
-        <span class="post-comment"><i class="icon icon-comment"></i> &nbsp;<a href="/2019/06/htb-conceal/#comments" class="article-comment-link">Comments</a></span>
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 323words</span>
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1minutes </span>
-      </p>
     </article></div>
   
 <nav class="bar bar-footer clearfix" data-stick-bottom>
@@ -514,7 +500,7 @@
       </li>
     </ul>
     <div class="total-article bar-right">
-      Page:2/7
+      Page:2/8
     </div>
   </div>
 </nav>

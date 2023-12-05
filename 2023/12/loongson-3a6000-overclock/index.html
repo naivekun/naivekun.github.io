@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        Loongson 3A6000官方EVB超频 - Naivekun&#39;s blog
+      </title>
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  
+  <meta name="theme-color" content="#000000" />
+  
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <meta name="description" content="最近这个3A6000比较火，买了一个发现性能还不错 华硕有一个主板支持超频，性能也能提升不少，但是暂时买不到：https://www.bili" />
+  <meta name="generator" content="Hugo 0.70.0 with theme pure" />
+  <title>Loongson 3A6000官方EVB超频 - Naivekun&#39;s blog</title>
+  
+  
+  <link rel="stylesheet" href="https://naivekun.com/css/style.min.c4bc7071f132c964c2116bca53b392933f377e5ca7b7051ed245187c621a2d3e.css">
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
+  <meta property="og:title" content="Loongson 3A6000官方EVB超频" />
+<meta property="og:description" content="最近这个3A6000比较火，买了一个发现性能还不错 华硕有一个主板支持超频，性能也能提升不少，但是暂时买不到：https://www.bili" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://naivekun.com/2023/12/loongson-3a6000-overclock/" />
+<meta property="article:published_time" content="2023-12-06T01:59:26+08:00" />
+<meta property="article:modified_time" content="2023-12-06T01:59:26+08:00" />
+<meta itemprop="name" content="Loongson 3A6000官方EVB超频">
+<meta itemprop="description" content="最近这个3A6000比较火，买了一个发现性能还不错 华硕有一个主板支持超频，性能也能提升不少，但是暂时买不到：https://www.bili">
+<meta itemprop="datePublished" content="2023-12-06T01:59:26&#43;08:00" />
+<meta itemprop="dateModified" content="2023-12-06T01:59:26&#43;08:00" />
+<meta itemprop="wordCount" content="1013">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Loongson 3A6000官方EVB超频"/>
+<meta name="twitter:description" content="最近这个3A6000比较火，买了一个发现性能还不错 华硕有一个主板支持超频，性能也能提升不少，但是暂时买不到：https://www.bili"/>
+
+  <!--[if lte IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+    <![endif]-->
+
+  <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+  </head>
+
+  
+  
+
+  <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage"><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="slimContent">
+      <div class="navbar-header">
+        <div class="profile-block text-center">
+          <a id="avatar" href="https://github.com/naivekun" target="_blank">
+            <img class="img-circle img-rotate" src="https://naivekun.com/avatar.jpg" width="200" height="200">
+          </a>
+          <h2 id="name" class="hidden-xs hidden-sm">naivekun</h2>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>BeiJing, China</small>
+        </div><div class="search" id="search-form-wrap">
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i
+                        class="icon icon-search"></i></button>
+            </span>
+        </div>
+        <div class="ins-search">
+            <div class="ins-search-mask"></div>
+            <div class="ins-search-container">
+                <div class="ins-input-wrapper">
+                    <input type="text" class="ins-search-input" placeholder="Type something..."
+                        x-webkit-speech />
+                    <button type="button" class="close ins-close ins-selectable" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="ins-section-wrapper">
+                    <div class="ins-section-container"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+        <ul class="nav navbar-nav main-nav">
+            <li class="menu-item menu-item-home">
+                <a href="/">
+                    <i class="icon icon-home-fill"></i>
+                  <span class="menu-title">Home</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-archives">
+                <a href="/posts/">
+                    <i class="icon icon-archives-fill"></i>
+                  <span class="menu-title">Archives</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-categories">
+                <a href="/categories/">
+                    <i class="icon icon-folder"></i>
+                  <span class="menu-title">Categories</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-tags">
+                <a href="/tags/">
+                    <i class="icon icon-tags"></i>
+                  <span class="menu-title">Tags</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-friends">
+                <a href="/friends/">
+                    <i class="icon icon-friendship"></i>
+                  <span class="menu-title">Friends</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-about">
+                <a href="/about/">
+                    <i class="icon icon-cup-fill"></i>
+                  <span class="menu-title">About</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content"><script src="https://www.hackthebox.eu/badge/60818"></script>
+            </div>
+        </div>
+    </div>
+</div>
+
+      <div class="widget">
+    <h3 class="widget-title"> Categories</h3>
+    <div class="widget-body">
+        <ul class="category-list">
+            <li class="category-list-item"><a href="https://naivekun.com/categories/ctf/" class="category-list-link">ctf</a><span class="category-list-count">1</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/hackthebox/" class="category-list-link">hackthebox</a><span class="category-list-count">13</span></li>
+            <li class="category-list-item"><a href="https://naivekun.com/categories/vulnhub/" class="category-list-link">vulnhub</a><span class="category-list-count">21</span></li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> Tags</h3>
+    <div class="widget-body">
+        <ul class="tag-list">
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/ctf/" class="tag-list-link">ctf</a><span
+                    class="tag-list-count">2</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/hackthebox/" class="tag-list-link">hackthebox</a><span
+                    class="tag-list-count">13</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://naivekun.com/tags/vulnhub/" class="tag-list-link">vulnhub</a><span
+                    class="tag-list-count">21</span></li>
+            
+        </ul>
+
+    </div>
+</div>
+      
+<div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+        <ul class="recent-post-list list-unstyled no-thumbnail">
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2023/12/loongson-3a6000-overclock/" class="title">Loongson 3A6000官方EVB超频</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2023-12-06 01:59:26 &#43;0800 &#43;0800" itemprop="datePublished">2023-12-06</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2023/07/spectrum-sax1v1k-secboot-bypass/" class="title">Spectrum SAX1V1K 安全启动绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2023-07-29 20:00:35 &#43;0800 &#43;0800" itemprop="datePublished">2023-07-29</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2021/12/ma5671a-flash-openwrt/" class="title">68块钱MA5671A猫棒刷Openwrt</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-12-09 02:46:52 &#43;0800 &#43;0800" itemprop="datePublished">2021-12-09</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/10/hack-on-nrf/" class="title">nRF51系列单片机读取保护绕过</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-10-03 23:58:09 &#43;0800 &#43;0800" itemprop="datePublished">2020-10-03</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://naivekun.com/2020/08/hack-bmc/" class="title">一次对服务器主板IPMI BMC的漏洞挖掘</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2020-08-19 01:58:07 &#43;0800 &#43;0800" itemprop="datePublished">2020-08-19</time>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+  </div>
+</aside>
+
+    
+    
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <h4 class="toc-title">Catalogue</h4>
+    <nav id="toc" class="js-toc toc">
+
+    </nav>
+  </div>
+</aside>
+<main class="main" role="main"><div class="content">
+  <article id="-" class="article article-type-" itemscope
+    itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/2023/12/loongson-3a6000-overclock/"
+    >Loongson 3A6000官方EVB超频</a
+  >
+</h1>
+
+      <div class="article-meta">
+        
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://naivekun.com/2023/12/loongson-3a6000-overclock/" class="article-date">
+  <time datetime="2023-12-06 01:59:26 &#43;0800 &#43;0800" itemprop="datePublished">2023-12-06</time>
+</a>
+</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i>&nbsp;<a href="/2023/12/loongson-3a6000-overclock/#comments"
+            class="article-comment-link">Comments</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1013words</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3minutes </span>
+      </div>
+    </div>
+    <div class="article-entry marked-body js-toc-content" itemprop="articleBody">
+      <blockquote>
+<p>最近这个3A6000比较火，买了一个发现性能还不错</p>
+</blockquote>
+<blockquote>
+<p>华硕有一个主板支持超频，性能也能提升不少，但是暂时买不到：https://www.bilibili.com/video/BV15u4y1A7aK</p>
+</blockquote>
+<h1 id="研究一下">研究一下</h1>
+<h2 id="串口">串口</h2>
+<p>第一件事，接串口。这个板子UEFI会打印比较完整的log，输出在前面板的RS232串口上</p>
+<p><img src="/images/2023-12-06-02-03-21.png" alt=""></p>
+<p>有了</p>
+<p><img src="/images/2023-12-06-02-04-01.png" alt=""></p>
+<h2 id="哪里设置的频率呢">哪里设置的频率呢？</h2>
+<p>看手册 <code>https://www.loongson.cn/uploads/images/2023112818504442157.Loongson3A6000%20user%20book_V1.0.pdf</code></p>
+<p>可以看到cpu clock是从main clock分频出来的，那么我们要改main clock</p>
+<p><img src="/images/2023-12-06-02-05-45.png" alt=""></p>
+<p>找到寄存器表</p>
+<p><img src="/images/2023-12-06-02-06-39.png" alt=""></p>
+<p>按这个算频率</p>
+<p><img src="/images/2023-12-06-02-07-36.png" alt=""></p>
+<p>我们先看看它怎么算出来原生的2.5Ghz的，只需要确定这三个参数</p>
+<p><img src="/images/2023-12-06-02-08-09.png" alt=""></p>
+<h2 id="逆一下固件">逆一下固件</h2>
+<p>根据串口log输出的信息</p>
+<pre><code>CPU CLK SEL : 00000002
+MEM CLK SEL : 00000014
+HT CLK SEL : 00000010
+Change the scale of HT0 clock
+Disable HT1/HT2/HT3 clock
+Change the scale of HT1 clock
+Soft CLK SEL adjust begin
+</code></pre>
+<p>搜字符串，定位到PreSecMain模块里</p>
+<p><img src="/images/2023-12-06-02-09-29.png" alt=""></p>
+<p>捞出来塞进ghidra里</p>
+<p><img src="/images/2023-12-06-02-10-51.png" alt=""></p>
+<p>右下角这坨就是在写0x01b0配置时钟，左上角这坨tX寄存器操作ghidra没有识别出来，需要手工跟一下</p>
+<p>继续往前跟，发现它是这个逻辑</p>
+<ul>
+<li>从eFUSE里读板卡类型，读到是3A6000-HV，跳第一个switch-case</li>
+<li>t2寄存器写入2500</li>
+<li>算出寄存器各个参数，拼成0x01b0寄存器</li>
+<li>写进去</li>
+</ul>
+<p><img src="/images/2023-12-06-02-14-37.png" alt=""></p>
+<p>所以我们把</p>
+<pre><code>                             LAB_ram_1c000a38                                XREF[2]:     ram:1c0009f0 (j) , 
+                                                                                          ram:1c000a00 (j)   
+    ram:1c000a38 0e  10  a7  03    ori        t2,zero ,0x9c4
+    ram:1c000a3c 00  1c  00  50    b          LAB_ram_1c000a58
+</code></pre>
+<p>这里改成<code>ori t2, zero, &lt;freq_mhz&gt;</code>
+就可以改成任意频率了</p>
+<p>这里提供个汇编脚本</p>
+<pre><code>#!/bin/bash
+
+opcode32() {
+  echo $* &gt; tmp.S &amp;&amp; ./loongarch64-linux-gnu-gcc -c tmp.S -o tmp.o &amp;&amp; ./loongarch64-linux-gnu-objdump -d tmp.o
+  rm -f tmp.o tmp.S
+}
+</code></pre>
+<p>改到2600mhz，看一下汇编长啥样</p>
+<p><img src="/images/2023-12-06-02-17-05.png" alt=""></p>
+<p>所以只要把原来的<code>0e 10 a7 03</code>改成<code>0e a0 a8 03</code>就行了</p>
+<p><img src="/images/2023-12-06-02-18-13.png" alt=""></p>
+<p>改完是不行的，因为这个main clock被太多东西用了，需要合理分频后才能用，参考手册</p>
+<p><img src="/images/2023-12-06-02-18-27.png" alt=""></p>
+<p>这个满足</p>
+<p><img src="/images/2023-12-06-02-18-55.png" alt=""></p>
+<p>这个是不满足的。我们看一下这个HT怎么分的频</p>
+<p>可以看到这个HT分频写了个0xb进去</p>
+<p><img src="/images/2023-12-06-02-19-36.png" alt=""></p>
+<p><img src="/images/2023-12-06-02-20-18.png" alt=""></p>
+<p>0xb就是<code>1011</code>，即开启分频，频率为<code>main_freq*(0b11+1)/8</code>就是<code>main_freq/2</code>，本来2.5G主频的时候/2正好是1.25G，但是我们改高了之后这个HT Freq就超过1.25G了，所以这里我们要改一下分频让它小点</p>
+<p>不妨改成<code>1010</code>，即开启分频，频率为<code>main_freq*(0b10+1)/8</code>就是<code>main_freq*3/8</code>，975Mhz</p>
+<p>所以这里我们也要改一下</p>
+<p><img src="/images/2023-12-06-02-23-24.png" alt=""></p>
+<p>改成<code>lu12i.w a1, 0xb000000</code></p>
+<p><img src="/images/2023-12-06-02-24-13.png" alt=""></p>
+<p>然后替换hex</p>
+<h2 id="重打包">重打包</h2>
+<p>龙芯这个UEFI非常阳间，不搞骚操作，uefitool直接rebuild就行</p>
+<p><img src="/images/2023-12-06-02-25-21.png" alt=""></p>
+<h1 id="插电开机">插电，开机</h1>
+<blockquote>
+<p>屏幕轻松点亮</p>
+</blockquote>
+<p><img src="/images/2023-12-06-02-26-28.png" alt=""></p>
+<p>但是lscpu显示有毛病，BogoMIPS是对的，频率字符串也是对的，但是Max Freq是错的</p>
+<p><img src="/images/2023-12-06-02-27-31.png" alt=""></p>
+<p>不管了，跑个分，确实有提升</p>
+<p>直接读寄存器算出来也是对的</p>
+<p><img src="/images/2023-12-06-02-28-08.png" alt=""></p>
+
+    </div>
+    <div class="article-footer">
+<blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <li class="post-copyright-link hidden-xs">
+      <strong>Permalink: </strong>
+      <a href="https://naivekun.com/2023/12/loongson-3a6000-overclock/" title="Loongson 3A6000官方EVB超频" target="_blank" rel="external">https://naivekun.com/2023/12/loongson-3a6000-overclock/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>License：</strong><a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN</a>
+    </li>
+  </ul>
+</blockquote>
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/naivekun" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://naivekun.com/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/naivekun" target="_blank"><span class="text-dark">naivekun</span><small class="ml-1x"></small></a></h3>
+        <div>Security Research</div>
+      </div>
+    </figure>
+  </div>
+</div>
+    </div>
+  </article>
+<section id="comments">
+</section>
+
+</div><nav class="bar bar-footer clearfix" data-stick-bottom>
+    <div class="bar-inner">
+        <ul class="pager pull-left">
+            <li class="prev">
+                <a href="https://naivekun.com/2023/07/spectrum-sax1v1k-secboot-bypass/" title="Spectrum SAX1V1K 安全启动绕过"><i
+                        class="icon icon-angle-left"
+                        aria-hidden="true"></i><span>&nbsp;&nbsp;Older</span></a>
+            </li>
+            
+            <li class="toggle-toc">
+                <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false"
+                    title="Catalogue" role="button">
+                    <span>[&nbsp;</span><span>Catalogue</span>
+                    <i class="text-collapsed icon icon-anchor"></i>
+                    <i class="text-in icon icon-close"></i>
+                    <span>]</span>
+                </a>
+            </li>
+        </ul>
+        <div class="bar-right">
+        </div>
+    </div>
+</nav>
+
+</main><footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<ul class="social-links">
+    <li><a href="https://github.com/naivekun" target="_blank" title="github" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-github"></i></a></li>
+    <li><a href="https://naivekun.com/index.xml" target="_blank" title="rss" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-rss"></i></a></li>
+</ul>
+  <div class="copyright">
+    &copy;&nbsp;2018  -
+    2023
+    <div class="publishby">
+        Theme by naivekun base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/python.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/javascript.min.js" defer></script><script>
+    hljs.configure({
+        tabReplace: '    ', 
+        classPrefix: ''     
+        
+    })
+    hljs.initHighlightingOnLoad();
+</script>
+<script src="https://naivekun.com/js/application.min.bdeb64b910570b6c41badc6a05b7afb0c8ad9efd8525de3c7257d59e786326a3.js"></script>
+<script src="https://naivekun.com/js/plugin.min.51ff8c7317566f82259170fa36e09c4493adc9b9378b427a01ad3f017ebac7dd.js"></script>
+
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            ROOT_URL: 'https:\/\/naivekun.com',
+            CONTENT_URL: 'https:\/\/naivekun.com\/searchindex.json ',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script type="text/javascript" src="https://naivekun.com/js/insight.min.a343cd9a5a7698336b28ef3a7c16a3a1b1d2d5fb17dc8ed04022bbe08cc5459073a15bdafa3a8a58cdd56080784bdd69fa70b1ae8597565c799c57ed00f0e120.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+<script>
+    tocbot.init({
+        
+        tocSelector: '.js-toc',
+        
+        contentSelector: '.js-toc-content',
+        
+        headingSelector: 'h1, h2, h3',
+        
+        hasInnerContainers: true,
+    });
+</script>
+
+
+  </body>
+</html>

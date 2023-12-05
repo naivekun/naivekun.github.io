@@ -5,10 +5,28 @@
     <link>https://naivekun.com/posts/</link>
     <description>Recent content in Posts on Naivekun&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 09 Dec 2021 02:46:52 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 06 Dec 2023 01:59:26 +0800</lastBuildDate>
     
         <atom:link href="https://naivekun.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>[vulnhub] 6days - Writeup</title>
+      <link>https://naivekun.com/2019/02/vulnhub-6days-wp/</link>
+      <pubDate>Thu, 14 Feb 2019 21:30:05 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/02/vulnhub-6days-wp/</guid>
+      <description>玄学waf+注入盒子 注意到8080是filtered 先看web checkpromo.php可以POST，image.php可能有SSRF 但是</description>
+    </item>
+    
+    <item>
+      <title>[hackthebox] Dab - Writeup</title>
+      <link>https://naivekun.com/2019/02/htb-dab-wp/</link>
+      <pubDate>Sun, 03 Feb 2019 21:07:47 +0000</pubDate>
+      
+      <guid>https://naivekun.com/2019/02/htb-dab-wp/</guid>
+      <description>暴力睡眠盒子 各种爆破。。。 扫端口 ftp允许匿名登录，但里面没东西 80端口看看 挂字典爆破 admin:Password1成功登录 然而里面没东西 源</description>
+    </item>
     
     <item>
       <title>[hackthebox] Reddish - Writeup</title>
@@ -170,24 +188,6 @@
       
       <guid>https://naivekun.com/2018/12/htb-active-wp/</guid>
       <description>是个辣鸡windows 无从下手.jpg 先从445入手 ms17什么的不用想了，这盒子不可能这么水 smbmap看看有什么可以访问的 发现Repli</description>
-    </item>
-    
-    <item>
-      <title>[HackTheBox] Hawk - WriteUp</title>
-      <link>https://naivekun.com/2018/12/htb-hawk-wp/</link>
-      <pubDate>Sun, 02 Dec 2018 23:31:13 +0000</pubDate>
-      
-      <guid>https://naivekun.com/2018/12/htb-hawk-wp/</guid>
-      <description>扫端口 ftp允许匿名登录 列文件，发现 把那个.drupal.txt.enc下载下来，发现是一个加密的文件 网上找到个工具 bruteforce-salted-openssl 直接apt安装就行 翻翻</description>
-    </item>
-    
-    <item>
-      <title>[Vulnhub] Moonraker:1 - Writeup</title>
-      <link>https://naivekun.com/2018/11/vulnhub-moonraker-wp/</link>
-      <pubDate>Fri, 30 Nov 2018 21:02:11 +0000</pubDate>
-      
-      <guid>https://naivekun.com/2018/11/vulnhub-moonraker-wp/</guid>
-      <description>扫端口 太长了，截图放不下 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.4p1 Debian 10+deb9u4 (protocol 2.0) | ssh-hostkey: | 2048 5f:bf:c0:33:51:4f:4a:a7:4a:7e:15:80:aa:d7:2a:0b (RSA) | 256 53:59:87:1e:a4:46:bd:a7:fd:9a:5f:f9:b7:40:9d:2f (ECDSA) |_ 256 0d:88:d9:fa:af:08:ce:2b:13:66:a7:70:ec:49:02:10 (ED25519) 80/tcp open http Apache httpd 2.4.25 ((Debian)) | http-methods: |_ Supported Methods: OPTIONS HEAD GET POST | http-robots.txt: 1 disallowed entry |_/ |_http-server-header: Apache/2.4.25 (Debian) |_http-title: MOONRAKER 3000/tcp open http Node.js</description>
     </item>
     
   </channel>

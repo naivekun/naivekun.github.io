@@ -3,14 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://naivekun.com/2021/12/ma5671a-flash-openwrt/</loc>
-    <lastmod>2021-12-09T02:46:52+08:00</lastmod>
+    <loc>https://naivekun.com/2023/12/loongson-3a6000-overclock/</loc>
+    <lastmod>2023-12-06T01:59:26+08:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://naivekun.com/posts/</loc>
+    <lastmod>2023-12-06T01:59:26+08:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://naivekun.com/2023/07/spectrum-sax1v1k-secboot-bypass/</loc>
+    <lastmod>2023-07-29T20:00:35+08:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://naivekun.com/2021/12/ma5671a-flash-openwrt/</loc>
     <lastmod>2021-12-09T02:46:52+08:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

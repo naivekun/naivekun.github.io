@@ -11,6 +11,24 @@
     
     
     <item>
+      <title>Loongson 3A6000官方EVB超频</title>
+      <link>https://naivekun.com/2023/12/loongson-3a6000-overclock/</link>
+      <pubDate>Wed, 06 Dec 2023 01:59:26 +0800</pubDate>
+      
+      <guid>https://naivekun.com/2023/12/loongson-3a6000-overclock/</guid>
+      <description>最近这个3A6000比较火，买了一个发现性能还不错 华硕有一个主板支持超频，性能也能提升不少，但是暂时买不到：https://www.bili</description>
+    </item>
+    
+    <item>
+      <title>Spectrum SAX1V1K 安全启动绕过</title>
+      <link>https://naivekun.com/2023/07/spectrum-sax1v1k-secboot-bypass/</link>
+      <pubDate>Sat, 29 Jul 2023 20:00:35 +0800</pubDate>
+      
+      <guid>https://naivekun.com/2023/07/spectrum-sax1v1k-secboot-bypass/</guid>
+      <description>貌似高通的QSDK默认都有这个安全问题 背景 最近发现一个便宜路由器Spectrum SAX1V1K，配置挺高的，只要200 RMB IPQ8072A + QCN5054 + QCN5024 4x4 WiFi 6 2G RAM</description>
+    </item>
+    
+    <item>
       <title>68块钱MA5671A猫棒刷Openwrt</title>
       <link>https://naivekun.com/2021/12/ma5671a-flash-openwrt/</link>
       <pubDate>Thu, 09 Dec 2021 02:46:52 +0800</pubDate>
@@ -125,10 +143,8 @@
       
       <guid>https://naivekun.com/about/</guid>
       <description>Naivekun&amp;rsquo;s blog
-CTFer
-HUST
-Web/Pentest/Android
-naivekun0817#gmail.com</description>
+Contact me naivekun0817#gmail.com
+2018 - 2022  CTFer at L3H_Sec HUST Web/Pentest/Android  2022 - now  Security Research at __mm256i_dance Hardware/IoT  </description>
     </item>
     
     <item>
@@ -174,24 +190,6 @@ naivekun0817#gmail.com</description>
       
       <guid>https://naivekun.com/2019/02/htb-giddy-wp/</guid>
       <description>windows骚操作盒子 扫端口，有个80,443,3389 证书没啥东西 看web 并不是隐写 扫目录 发现两个 /remote /mvc 第一个是个web上的powersh</description>
-    </item>
-    
-    <item>
-      <title>[vulnhub] 6days - Writeup</title>
-      <link>https://naivekun.com/2019/02/vulnhub-6days-wp/</link>
-      <pubDate>Thu, 14 Feb 2019 21:30:05 +0000</pubDate>
-      
-      <guid>https://naivekun.com/2019/02/vulnhub-6days-wp/</guid>
-      <description>玄学waf+注入盒子 注意到8080是filtered 先看web checkpromo.php可以POST，image.php可能有SSRF 但是</description>
-    </item>
-    
-    <item>
-      <title>[hackthebox] Dab - Writeup</title>
-      <link>https://naivekun.com/2019/02/htb-dab-wp/</link>
-      <pubDate>Sun, 03 Feb 2019 21:07:47 +0000</pubDate>
-      
-      <guid>https://naivekun.com/2019/02/htb-dab-wp/</guid>
-      <description>暴力睡眠盒子 各种爆破。。。 扫端口 ftp允许匿名登录，但里面没东西 80端口看看 挂字典爆破 admin:Password1成功登录 然而里面没东西 源</description>
     </item>
     
   </channel>
