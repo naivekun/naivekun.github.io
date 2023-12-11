@@ -372,7 +372,7 @@ opcode32() {
 <p>不妨改成<code>1010</code>，即开启分频，频率为<code>main_freq*(0b10+1)/8</code>就是<code>main_freq*3/8</code>，975Mhz</p>
 <p>所以这里我们也要改一下</p>
 <p><img src="/images/2023-12-06-02-23-24.png" alt=""></p>
-<p>改成<code>lu12i.w a1, 0xb000000</code></p>
+<p>改成<code>lu12i.w a1, 0xa000000</code></p>
 <p><img src="/images/2023-12-06-02-24-13.png" alt=""></p>
 <p>然后替换hex</p>
 <h2 id="重打包">重打包</h2>
